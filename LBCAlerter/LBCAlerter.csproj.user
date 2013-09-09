@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PublishUrlHistory>D:\Publications\LBCAlerter\|ftp://eddymontus.fr/www/LBCAlerter/|C:\Users\Eddy\Desktop\|http://eddymontus.fr/package/LBCAlerter/|ftp://eddymontus.fr/www/package/LBCAlerter/</PublishUrlHistory>
+    <InstallUrlHistory>http://www.eddymontus.fr/package/LBCAlerter/|http://www.eddymontus.fr/LBCAlerter/</InstallUrlHistory>
+    <SupportUrlHistory />
+    <UpdateUrlHistory>http://www.eddymontus.fr/LBCAlerter/</UpdateUrlHistory>
+    <BootstrapperUrlHistory />
+    <ErrorReportUrlHistory />
+    <FallbackCulture>fr-FR</FallbackCulture>
+    <VerifyUploadedFiles>false</VerifyUploadedFiles>
+  </PropertyGroup>
+</Project>
