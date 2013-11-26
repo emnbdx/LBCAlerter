@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBCAlerterForm", "LBCAlerter\LBCAlerterForm.csproj", "{FCD6EF38-CF45-4DA7-AB2B-1C069F0B8AD2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBCAlerterForm", "LBCAlerterForm\LBCAlerterForm.csproj", "{FCD6EF38-CF45-4DA7-AB2B-1C069F0B8AD2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBCMapping", "LBCMapping\LBCMapping.csproj", "{7825E753-0093-4429-89ED-B4DA3CFCDEE3}"
 EndProject
