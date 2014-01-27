@@ -13,10 +13,16 @@ namespace LBCAlerterWeb.Controllers
             return View();
         }
 
-        [Authorize]
-        public ActionResult Search()
+        public ActionResult About()
         {
-            ViewBag.Message = "Your search ma gueule.";
+            ViewBag.Message = "Your application description page.";
+
+            return View();
+        }
+
+        public ActionResult Contact()
+        {
+            ViewBag.Message = "Your contact page.";
 
             return View();
         }
