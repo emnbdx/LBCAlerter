@@ -17,6 +17,9 @@
         <th>
             @Html.DisplayNameFor(model => model.KeyWord)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.User.UserName)
+        </th>
         <th></th>
     </tr>
 
@@ -27,6 +30,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.KeyWord)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.User.UserName)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.SearchId }) |

@@ -21,7 +21,15 @@ namespace LBCAlerterWeb.Models
         public DbSet<Search> Searches { get; set; }
     }
 
-    public class MyDbInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
+    public class ProductionInitializer : IDatabaseInitializer<ApplicationDbContext>
+    {
+        public void InitializeDatabase(ApplicationDbContext context)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public class DebugInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
     {
         protected override void Seed(ApplicationDbContext context)
         {

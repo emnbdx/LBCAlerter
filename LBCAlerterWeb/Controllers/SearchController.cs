@@ -26,9 +26,9 @@ namespace LBCAlerterWeb.Controllers
         }       
 
         // GET: /Search/
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var currentUser = userManager.FindById(User.Identity.GetUserId());
+            var currentUser = await userManager.FindByIdAsync(User.Identity.GetUserId());
             return View(db.Searches.ToList().Where(search => search.User.Id == currentUser.Id));
         }
 
@@ -39,7 +39,7 @@ namespace LBCAlerterWeb.Controllers
         }
 
         // GET: /Search/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -49,6 +49,11 @@ namespace LBCAlerterWeb.Controllers
             if (search == null)
             {
                 return HttpNotFound();
+            }
+            var currentUser = await userManager.FindByIdAsync(User.Identity.GetUserId()); 
+            if (search.User.Id != currentUser.Id)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
             }
             return View(search);
         }
@@ -104,19 +109,19 @@ namespace LBCAlerterWeb.Controllers
         // plus de détails, voir  http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="SearchId,Url,KeyWord")] Search search)
+        public async Task<ActionResult> Edit([Bind(Include = "SearchId,Url,KeyWord")] Search search)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(search).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(search);
         }
 
         // GET: /Search/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -127,17 +132,22 @@ namespace LBCAlerterWeb.Controllers
             {
                 return HttpNotFound();
             }
+            var currentUser = await userManager.FindByIdAsync(User.Identity.GetUserId());
+            if (search.User.Id != currentUser.Id)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            }
             return View(search);
         }
 
         // POST: /Search/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Search search = db.Searches.Find(id);
+            Search search = await db.Searches.FindAsync(id);
             db.Searches.Remove(search);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

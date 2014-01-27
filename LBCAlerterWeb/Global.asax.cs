@@ -19,7 +19,10 @@ namespace LBCAlerterWeb
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            Database.SetInitializer<ApplicationDbContext>(new MyDbInitializer());
+            //Debug mode
+            Database.SetInitializer<ApplicationDbContext>(new DebugInitializer());
+            //Production mode
+            //Database.SetInitializer<ApplicationDbContext>(new ProductionInitializer());
         }
     }
 }
