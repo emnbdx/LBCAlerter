@@ -1,0 +1,24 @@
+﻿/* Iframe mask */
+table #TableContentTop {
+    display: none;
+}
+
+span .SeparatorText {
+    display: none;
+}
+
+div .Deposer {
+    display: none;
+}
+
+div #incr_renc_home_button {
+    display: none;
+}
+
+div #Footer {
+    display: none;
+}
+
+div #Banner_sky {
+    display: none;
+}

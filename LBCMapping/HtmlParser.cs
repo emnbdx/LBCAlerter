@@ -149,14 +149,21 @@ namespace LBCMapping
         {
             HtmlWeb web = new HtmlWeb();
             web.OverrideEncoding = Encoding.GetEncoding(ENCODING);
-            HtmlDocument doc = web.Load(URL_BASE);
+            HtmlDocument doc = web.Load(URL_BASE, "bdx2-tt-proxy", 3128, "emontus", "Averdun12");
 
             //Delete unused div
-            doc.DocumentNode.SelectSingleNode("//table[@id='TableContentTop']").Remove();
-            doc.DocumentNode.SelectSingleNode("//span[@class='SeparatorText']//..").Remove();
-            doc.DocumentNode.SelectSingleNode("//div[@class='Deposer']").Remove();
-            doc.DocumentNode.SelectSingleNode("//div[@id='Footer']").Remove();
-            doc.DocumentNode.SelectSingleNode("//div[@id='Banner_sky']").Remove();
+            if (doc.DocumentNode.SelectSingleNode("//table[@id='TableContentTop']") != null)
+                doc.DocumentNode.SelectSingleNode("//table[@id='TableContentTop']").Remove();
+            if (doc.DocumentNode.SelectSingleNode("//span[@class='SeparatorText']//..") != null)
+                doc.DocumentNode.SelectSingleNode("//span[@class='SeparatorText']//..").Remove();
+            if (doc.DocumentNode.SelectSingleNode("//div[@class='Deposer']") != null)
+                doc.DocumentNode.SelectSingleNode("//div[@class='Deposer']").Remove();
+            if (doc.DocumentNode.SelectSingleNode("//div[@id='incr_renc_home_button']") != null)
+                doc.DocumentNode.SelectSingleNode("//div[@id='incr_renc_home_button']").Remove();
+            if (doc.DocumentNode.SelectSingleNode("//div[@id='Footer']") != null)
+                doc.DocumentNode.SelectSingleNode("//div[@id='Footer']").Remove();
+            if (doc.DocumentNode.SelectSingleNode("//div[@id='Banner_sky']") != null)
+                doc.DocumentNode.SelectSingleNode("//div[@id='Banner_sky']").Remove();
 
             //Replace relative link by absolute
             foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//script"))

@@ -61,6 +61,8 @@ namespace LBCAlerterWeb.Controllers
         // GET: /Search/Create
         public ActionResult Create()
         {
+            String htmlCode = LBCMapping.HtmlParser.GetHomePage();
+            ViewBag.Iframe = htmlCode;
             return View();
         }
 
@@ -77,7 +79,7 @@ namespace LBCAlerterWeb.Controllers
             {
                 search.User = currentUser;
                 db.Searches.Add(search);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 

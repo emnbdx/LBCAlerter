@@ -6,6 +6,7 @@
 
 <h2>Create</h2>
 
+<iframe id="lbcContainer" name="lbcContainer" src="http://www.leboncoin.fr/" style="width: 1140px; height: 800px;"></iframe>
 
 @using (Html.BeginForm()) 
 {
@@ -46,4 +47,29 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        //$(window).load(function () {
+            //$('#lbcContainer').ready(function () {
+            setTimeout(function() {
+               /* alert("test");
+                $("#lbcContainer").contents().find("table#TableContentTop").hide();
+                alert("TableContentTop");
+                $("#lbcContainer").contents().find("span.SeparatorText").hide();
+                alert("SeparatorText");
+                $("#lbcContainer").contents().find("div.Deposer").hide();
+                alert("Deposer");*/
+                $("#lbcContainer").contents().find("#incr_renc_home_button").hide();
+                alert("incr_renc_home_button");
+                /*$("#lbcContainer").contents().find("div#Footer").hide();
+                alert("Footer");
+                $("#lbcContainer").contents().find("div#Banner_sky").hide();
+                alert("Banner_sky");
+
+                var $head = $("#lbcContainer").contents().find("head");
+                $head.append($("<link/>",
+                { rel: "stylesheet", href: "/Content/lbc.css", type: "text/css" }));*/
+            }, 1);
+        //});
+    </script>
 }
