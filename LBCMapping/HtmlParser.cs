@@ -188,11 +188,15 @@ namespace LBCMapping
         /// <returns>Html code of page</returns>
         public static string GetCriteriaPage(string path)
         {
-            string requestUrl = String.Format(URL_BASE + CleanCriteria(path), 0);
+            string requestUrl;
+            if(path.StartsWith(URL_BASE))
+                requestUrl = String.Format(CleanCriteria(path), 0);
+            else
+                requestUrl = String.Format(URL_BASE + CleanCriteria(path), 0);
 
             HtmlWeb web = new HtmlWeb();
             web.OverrideEncoding = Encoding.GetEncoding(ENCODING);
-            HtmlDocument doc = web.Load(requestUrl);
+            HtmlDocument doc = web.Load(requestUrl, "bdx2-tt-proxy", 3128, "emontus", "Averdun12");
 
             //Delete unused div
             doc.DocumentNode.SelectSingleNode("//div[@id='account_login_f']").Remove();

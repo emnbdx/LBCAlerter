@@ -10,6 +10,7 @@ using LBCAlerterWeb.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 
 namespace LBCAlerterWeb.Controllers
 {
@@ -61,9 +62,14 @@ namespace LBCAlerterWeb.Controllers
         // GET: /Search/Create
         public ActionResult Create()
         {
-            String htmlCode = LBCMapping.HtmlParser.GetHomePage();
-            ViewBag.Iframe = htmlCode;
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult DisplaySecondPage(string url)
+        {
+            String htmlCode = LBCMapping.HtmlParser.GetCriteriaPage(url);
+            return Json(new { html = htmlCode });
         }
 
         // POST: /Search/Create
