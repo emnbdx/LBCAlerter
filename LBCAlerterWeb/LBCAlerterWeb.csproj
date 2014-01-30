@@ -40,6 +40,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -155,8 +159,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\JobHost.cs" />
-    <Compile Include="App_Start\AspNetTimer.cs" />
+    <Compile Include="App_Code\JobHost.cs" />
+    <Compile Include="App_Code\AspNetTimer.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -239,6 +243,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\EMToolBox\EMToolBox\EMToolBox.csproj">
+      <Project>{cb581fed-faff-4450-9eba-129b0bb2a446}</Project>
+      <Name>EMToolBox</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LBCMapping\LBCMapping.csproj">
       <Project>{7825e753-0093-4429-89ed-b4da3cfcdee3}</Project>
       <Name>LBCMapping</Name>

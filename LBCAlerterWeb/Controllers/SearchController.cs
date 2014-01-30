@@ -11,12 +11,15 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity;
 using System.Threading.Tasks;
 using System.Web.Helpers;
+using log4net;
 
 namespace LBCAlerterWeb.Controllers
 {
     [Authorize]
     public class SearchController : Controller
     {
+        private static ILog log = LogManager.GetLogger(typeof(SearchController));
+
         private ApplicationDbContext db;
         private UserManager<ApplicationUser> userManager { get; set; }
 
@@ -87,6 +90,9 @@ namespace LBCAlerterWeb.Controllers
                 search.User = currentUser;
                 db.Searches.Add(search);
                 db.SaveChanges();
+
+                log.Info("Add search #" + search.SearchId + " Url [" + search.Url + "] Keyword [" + search.KeyWord + "] by [" + search.User + "]");
+
                 return Json(new { status = 0, message = "ok" });
             }
 
