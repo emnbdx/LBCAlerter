@@ -17,7 +17,8 @@ namespace LBCAlerterWeb.Models
         [DisplayName("Url de recherche")]
         public string Url { get; set; }
         [DisplayName("Description")]
-        public String KeyWord { get; set; }
+        public string KeyWord { get; set; }
         public virtual ApplicationUser User { get; set; }
+        public string LastSearch { get; set; }
     }
 }
