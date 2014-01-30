@@ -8,8 +8,6 @@
 
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
-
     <div id="iframeContainer">
         <iframe id="firstPage" srcdoc="@LBCMapping.HtmlParser.GetHomePage()" style="width: 100%; height: 520px;"></iframe>
     </div>
@@ -41,9 +39,9 @@
                             '$.ajax({ ' +
                             '   url: \'@Url.Action("Create", "Search")\', ' +
                             '   type: \'POST\', ' +
-                            '   data: { Url: searchUrl, KeyWord: null }, ' +
+                            '   data: { Url: searchUrl }, ' +
                             '   success: function (data) { ' +
-                            '       alert("coolos");' +
+                            '       window.top.location.href = \'@Url.Action("Index", "Search")\' ' +
                             '   } ' +
                             '}); ' +
                             'return false;')

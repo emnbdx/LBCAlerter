@@ -68,6 +68,30 @@ namespace LBCMapping
         }
 
         /// <summary>
+        /// Extract keyword &q= param from url
+        /// </summary>
+        /// <returns>Keyword extracted and well formated</returns>
+        public static string ExtractKeyWordFromCriteria(string criteria)
+        {
+            string keyword;
+
+            //Cut path to get keyword
+            int startIndex = criteria.IndexOf(HtmlParser.KEYWORD_URL_PARAM);
+            int endIndex = criteria.IndexOf("&", startIndex + HtmlParser.KEYWORD_URL_PARAM.Length);
+            if (endIndex == -1)
+            {
+                keyword = criteria.Substring(startIndex + HtmlParser.KEYWORD_URL_PARAM.Length, criteria.Length - (startIndex + HtmlParser.KEYWORD_URL_PARAM.Length));
+            }
+            else
+            {
+                keyword = criteria.Substring(startIndex + HtmlParser.KEYWORD_URL_PARAM.Length, endIndex - (startIndex + HtmlParser.KEYWORD_URL_PARAM.Length));
+            }
+            keyword = keyword.Replace("+", " ");
+
+            return keyword;
+        }
+
+        /// <summary>
         /// Parse html div and return Ad instance
         /// </summary>
         /// <param name="link">Base node for parsing</param>

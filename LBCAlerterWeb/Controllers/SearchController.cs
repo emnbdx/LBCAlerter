@@ -76,20 +76,21 @@ namespace LBCAlerterWeb.Controllers
         // Afin de déjouer les attaques par sur-validation, activez les propriétés spécifiques que vous voulez lier. Pour 
         // plus de détails, voir  http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "SearchId,Url,KeyWord")] Search search)
+        public ActionResult Create([Bind(Include = "SearchId,Url,KeyWord")] Search search)
         {
-            var currentUser = await userManager.FindByIdAsync(User.Identity.GetUserId()); 
+            var currentUser = userManager.FindById(User.Identity.GetUserId()); 
 
             if (ModelState.IsValid)
             {
+                search.Url = LBCMapping.HtmlParser.CleanCriteria(search.Url);
+                search.KeyWord = LBCMapping.HtmlParser.ExtractKeyWordFromCriteria(search.Url);
                 search.User = currentUser;
                 db.Searches.Add(search);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                db.SaveChanges();
+                return Json(new { status = 0, message = "ok" });
             }
 
-            return View(search);
+            return Json(new { status = 1, message = "invalid model" });
         }
 
         // GET: /Search/Edit/5

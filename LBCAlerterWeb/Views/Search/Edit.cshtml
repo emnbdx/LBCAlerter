@@ -16,14 +16,7 @@
         <hr />
         @Html.ValidationSummary(true)
         @Html.HiddenFor(model => model.SearchId)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Url, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Url)
-                @Html.ValidationMessageFor(model => model.Url)
-            </div>
-        </div>
+        @Html.HiddenFor(model => model.Url)
 
         <div class="form-group">
             @Html.LabelFor(model => model.KeyWord, new { @class = "control-label col-md-2" })

@@ -21,31 +21,6 @@ namespace LBCMapping
         private List<IAlerter> m_alerter = new List<IAlerter>();
         private ISaver m_saver;
 
-        /// <summary>
-        /// Extract keyword &q= param from url
-        /// </summary>
-        /// <returns>Keyword extracted and well formated</returns>
-        private string ExtractKeyWordFromCriteria()
-        {
-            if (!String.IsNullOrEmpty(m_keyword))
-                return m_keyword;
-
-            //Cut path to get keyword
-            int startIndex = m_criteria.IndexOf(HtmlParser.KEYWORD_URL_PARAM);
-            int endIndex = m_criteria.IndexOf("&", startIndex + HtmlParser.KEYWORD_URL_PARAM.Length);
-            if (endIndex == -1)
-            {
-                m_keyword = m_criteria.Substring(startIndex + HtmlParser.KEYWORD_URL_PARAM.Length, m_criteria.Length - (startIndex + HtmlParser.KEYWORD_URL_PARAM.Length));
-            }
-            else
-            {
-                m_keyword = m_criteria.Substring(startIndex + HtmlParser.KEYWORD_URL_PARAM.Length, endIndex - (startIndex + HtmlParser.KEYWORD_URL_PARAM.Length));
-            }
-            m_keyword = m_keyword.Replace("+", " ");
-
-            return m_keyword;
-        }
-
         public Search()
         { }
 
@@ -66,7 +41,13 @@ namespace LBCMapping
         [XmlElement("Keyword")]
         public string Keyword
         {
-            get { return ExtractKeyWordFromCriteria(); }
+            get
+            {
+                if (String.IsNullOrEmpty(m_keyword))
+                    m_keyword = HtmlParser.ExtractKeyWordFromCriteria(m_criteria); 
+                
+                return m_keyword;
+            }
             set { m_keyword = value; }
         }
 
@@ -79,7 +60,10 @@ namespace LBCMapping
 
         public override string ToString()
         {
-            return ExtractKeyWordFromCriteria();
+            if (String.IsNullOrEmpty(m_keyword)) 
+                m_keyword = HtmlParser.ExtractKeyWordFromCriteria(m_criteria); 
+            
+            return m_keyword;
         }
 
         /// <summary>
