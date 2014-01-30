@@ -58,7 +58,7 @@
     <Compile Include="Alerter\RSSAlerter.cs" />
     <Compile Include="Ad.cs" />
     <Compile Include="HtmlParser.cs" />
-    <Compile Include="Search.cs" />
+    <Compile Include="SearchJob.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Saver\FileSaver.cs" />
     <Compile Include="Saver\ISaver.cs" />
