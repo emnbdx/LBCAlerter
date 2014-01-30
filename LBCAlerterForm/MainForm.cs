@@ -28,9 +28,9 @@ namespace LBCAlerter
 
         private LicenseInfo m_license;
 
-        private List<Search> GetSearchList()
+        private List<SearchJob> GetSearchList()
         {
-            List<Search> searchList = new List<Search>();
+            List<SearchJob> searchList = new List<SearchJob>();
 
             Control[] controls = flowLayoutPanel1.Controls.Find("SearchControl", true);
             foreach (Control control in controls)
@@ -42,7 +42,7 @@ namespace LBCAlerter
             return searchList;
         }
 
-        private void AddSearchToList(Search s)
+        private void AddSearchToList(SearchJob s)
         {
             SearchControl searchControl = new SearchControl(m_license, s);
             searchControl.SearchDeleted += new EventHandler(searchControl_SearchDeleted);
@@ -55,7 +55,7 @@ namespace LBCAlerter
             Settings.Default.AlertMode = (string)cbAlertMode.SelectedItem;
             Settings.Default.Save();
 
-            Search.Save(GetSearchList());
+            SearchJob.Save(GetSearchList());
         }
 
         private void DisplayAboutBox()
@@ -110,8 +110,8 @@ namespace LBCAlerter
             else
                 cbAlertMode.SelectedIndex = 0;
 
-            List<Search> searchs = Search.Load();
-            foreach (Search search in searchs)
+            List<SearchJob> searchs = SearchJob.Load();
+            foreach (SearchJob search in searchs)
                 AddSearchToList(search);
 
             DisplayAboutBox();
@@ -169,11 +169,11 @@ namespace LBCAlerter
 
             if (!String.IsNullOrEmpty(tmp))
             {
-                Search search;
+                SearchJob search;
                 if(m_license.Status == LicenseStatus.Trial)
-                    search = new Search(tmp, "", 60);
+                    search = new SearchJob(tmp, "", 60);
                 else
-                    search = new Search(tmp, "", 5);
+                    search = new SearchJob(tmp, "", 5);
 
                 AddSearchToList(search);
             }
@@ -185,7 +185,7 @@ namespace LBCAlerter
             foreach (Control control in controls)
             {
                 SearchControl sc = control as SearchControl;
-                if (sc.Search == sender as Search)
+                if (sc.Search == sender as SearchJob)
                     flowLayoutPanel1.Controls.Remove(control);
             }
         }

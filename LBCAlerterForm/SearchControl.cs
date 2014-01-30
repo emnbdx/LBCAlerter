@@ -14,11 +14,11 @@ namespace LBCAlerter
     {
         private static System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchControl));
 
-        private Search m_search;
+        private SearchJob m_search;
         private RandomJobLauncher m_job;
         private LicenseInfo m_license;
 
-        public Search Search
+        public SearchJob Search
         {
             get { return m_search; }
             set { m_search = value; }
@@ -43,7 +43,7 @@ namespace LBCAlerter
                 m_search.SetSaveMode(new FileSaver(m_search.Keyword.Replace(' ', '+')));
         }
 
-        public SearchControl(LicenseInfo license, Search search)
+        public SearchControl(LicenseInfo license, SearchJob search)
         {
             InitializeComponent();
 
