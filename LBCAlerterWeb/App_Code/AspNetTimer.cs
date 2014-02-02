@@ -1,5 +1,6 @@
 ﻿using LBCAlerterWeb.Models;
 using LBCMapping;
+using LBCMapping.Alerter;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,9 @@ namespace LBCAlerterWeb
                     if(job == null)
                     {
                         job = new SearchJob(s.Url, s.KeyWord, 30);
+                        job.SetSaveMode(new EFSaver(s.SearchId));
+                        LogAlerter alerter = new LogAlerter();
+                        job.AddAlerter(alerter);
                         log.Info("Add job [" + s.User.UserName + "_" + s.Url + "] to list");
                         jobs.Add(s.User.UserName + "_" + s.Url, job);
                         log.Info("Launch job...");
