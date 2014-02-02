@@ -173,7 +173,7 @@ namespace LBCMapping
         {
             HtmlWeb web = new HtmlWeb();
             web.OverrideEncoding = Encoding.GetEncoding(ENCODING);
-            HtmlDocument doc = web.Load(URL_BASE, "bdx2-tt-proxy", 3128, "emontus", "Averdun12");
+            HtmlDocument doc = web.Load(URL_BASE);
 
             //Delete unused div
             if (doc.DocumentNode.SelectSingleNode("//table[@id='TableContentTop']") != null)
@@ -220,7 +220,7 @@ namespace LBCMapping
 
             HtmlWeb web = new HtmlWeb();
             web.OverrideEncoding = Encoding.GetEncoding(ENCODING);
-            HtmlDocument doc = web.Load(requestUrl, "bdx2-tt-proxy", 3128, "emontus", "Averdun12");
+            HtmlDocument doc = web.Load(requestUrl);
 
             //Delete unused div
             doc.DocumentNode.SelectSingleNode("//div[@id='account_login_f']").Remove();
