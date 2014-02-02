@@ -1,4 +1,5 @@
 ﻿using LBCAlerterWeb.Models;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -18,6 +19,9 @@ namespace LBCAlerterWeb
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            //Init log
+            log4net.Config.XmlConfigurator.Configure();
 
             //Debug mode
             Database.SetInitializer<ApplicationDbContext>(new DebugInitializer());
