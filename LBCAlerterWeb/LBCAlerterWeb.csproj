@@ -159,6 +159,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Code\EFSaver.cs" />
     <Compile Include="App_Code\JobHost.cs" />
     <Compile Include="App_Code\AspNetTimer.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
