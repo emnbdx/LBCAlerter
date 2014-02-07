@@ -136,6 +136,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="SearchJobSerializer.cs" />
     <Compile Include="Service References\Identifier\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -55,7 +55,7 @@ namespace LBCAlerter
             Settings.Default.AlertMode = (string)cbAlertMode.SelectedItem;
             Settings.Default.Save();
 
-            SearchJob.Save(GetSearchList());
+            SearchJobSerializer.Save(GetSearchList());
         }
 
         private void DisplayAboutBox()
@@ -110,7 +110,7 @@ namespace LBCAlerter
             else
                 cbAlertMode.SelectedIndex = 0;
 
-            List<SearchJob> searchs = SearchJob.Load();
+            List<SearchJob> searchs = SearchJobSerializer.Load();
             foreach (SearchJob search in searchs)
                 AddSearchToList(search);
 
