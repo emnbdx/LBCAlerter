@@ -13,12 +13,12 @@ namespace LBCAlerterWeb.Models
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int SearchId { get; set; }
+        public int ID { get; set; }
         [DisplayName("Url de recherche")]
         public string Url { get; set; }
         [DisplayName("Description")]
         public string KeyWord { get; set; }
         public virtual ApplicationUser User { get; set; }
-        public string LastSearch { get; set; }
+        public virtual List<Ad> Ads { get; set; }
     }
 }

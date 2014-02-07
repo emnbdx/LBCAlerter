@@ -91,7 +91,7 @@ namespace LBCAlerterWeb.Controllers
                 db.Searches.Add(search);
                 db.SaveChanges();
 
-                log.Info("Add search #" + search.SearchId + " Url [" + search.Url + "] Keyword [" + search.KeyWord + "] by [" + search.User.UserName + "]");
+                log.Info("Add search #" + search.ID + " Url [" + search.Url + "] Keyword [" + search.KeyWord + "] by [" + search.User.UserName + "]");
 
                 return Json(new { status = 0, message = "ok" });
             }

@@ -13,25 +13,27 @@ namespace LBCAlerterWeb
     public class EFSaver : ISaver
     {
         private static ApplicationDbContext db = new ApplicationDbContext();
-        private int m_searchId;
+        private Search m_search;
 
-        public EFSaver(int searchId)
+        public EFSaver(Search search)
         {
-            m_searchId = searchId;
+            m_search = search;
         }
 
-        public bool Store(Ad ad)
+        public bool Store(LBCMapping.Ad ad)
         {
-            Search s = db.Searches.FirstOrDefault(search => search.SearchId == m_searchId);
-
-            if (s.LastSearch == ad.AdUrl)
-                return false;
-            else
+            Models.Ad ads = db.Ads.FirstOrDefault(dbAd => dbAd.Search.ID == m_search.ID && dbAd.Url == ad.AdUrl);
+            
+            if(ads == null)
             {
-                s.LastSearch = ad.AdUrl;
+                ads = new Models.Ad();
+                ads.Search = m_search;
+                ads.Url = ad.AdUrl;
                 db.SaveChanges();
                 return true;
             }
+            else
+                return false;
         }
     }
 }

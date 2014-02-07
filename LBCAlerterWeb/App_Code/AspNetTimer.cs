@@ -1,4 +1,5 @@
-﻿using LBCAlerterWeb.Models;
+﻿using EMToolBox.Job;
+using LBCAlerterWeb.Models;
 using LBCMapping;
 using LBCMapping.Alerter;
 using log4net;
@@ -35,13 +36,14 @@ namespace LBCAlerterWeb
                     if(job == null)
                     {
                         job = new SearchJob(s.Url, s.KeyWord, 30);
-                        job.SetSaveMode(new EFSaver(s.SearchId));
+                        job.SetSaveMode(new EFSaver(s));
                         LogAlerter alerter = new LogAlerter();
                         job.AddAlerter(alerter);
                         log.Info("Add job [" + s.User.UserName + "_" + s.Url + "] to list");
                         jobs.Add(s.User.UserName + "_" + s.Url, job);
                         log.Info("Launch job...");
-                        job.Launch();
+                        RandomJobLauncher launcher = new RandomJobLauncher(job, job.RefreshTime);
+                        launcher.Start();
                     }
                 }
             });
