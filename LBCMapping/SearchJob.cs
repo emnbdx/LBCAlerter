@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Xml.Serialization;
 using EMToolBox.Job;
 using HtmlAgilityPack;
 using LBCMapping.Alerter;
 using LBCMapping.Saver;
 using log4net;
+using System.Xml.Serialization;
 
 namespace LBCMapping
 {
@@ -151,31 +150,5 @@ namespace LBCMapping
                     timer.Stop();
             }
         }
-
-        #region serialization
-
-        private static string m_fileName = "criterion.xml";
-
-        public static List<SearchJob> Load()
-        {
-            if (!File.Exists(m_fileName))
-                File.Create(m_fileName);
-
-            var serializer = new XmlSerializer(typeof(List<SearchJob>));
-            using (StreamReader sr = new StreamReader(m_fileName))
-                return (List<SearchJob>)serializer.Deserialize(sr);
-        }
-
-        public static void Save(List<SearchJob> search)
-        {
-            if (!File.Exists(m_fileName))
-                File.Create(m_fileName);
-
-            var serializer = new XmlSerializer(typeof(List<SearchJob>));
-            using (StreamWriter sw = new StreamWriter(m_fileName))
-                serializer.Serialize(sw, search);
-        }
-
-        #endregion serialization
     }
 }
