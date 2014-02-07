@@ -147,7 +147,7 @@ namespace LBCMapping
                     month = 10;
                 else if (dayMonth[1] == "nov")
                     month = 11;
-                else if (dayMonth[1] == "dec")
+                else if (dayMonth[1] == "déc")
                     month = 12;
                 else
                     month = DateTime.Now.Month;
@@ -157,12 +157,16 @@ namespace LBCMapping
             hour = Convert.ToInt32(hourMinute[0]);
             minute = Convert.ToInt32(hourMinute[1]);
 
-            return new Ad(new DateTime(DateTime.Now.Year, month, day, hour, minute, 0),
-                                        link.GetAttributeValue("href", ""),
-                                        imgNode != null ? imgNode.GetAttributeValue("src", "") : "",
-                                        placementNode != null ? placementNode.InnerText.Replace("\r", "").Replace("\n", "").Replace(" ", "") : "",
-                                        priceNode != null ? priceNode.InnerText.Trim() : "",
-                                        titleNode != null ? titleNode.InnerText.Trim() : "");
+            DateTime adDate = new DateTime(DateTime.Now.Year, month, day, hour, minute, 0);
+            if (adDate > DateTime.Now)
+                adDate = adDate.AddYears(-1);
+
+            return new Ad(adDate,
+                            link.GetAttributeValue("href", ""),
+                            imgNode != null ? imgNode.GetAttributeValue("src", "") : "",
+                            placementNode != null ? placementNode.InnerText.Replace("\r", "").Replace("\n", "").Replace(" ", "") : "",
+                            priceNode != null ? priceNode.InnerText.Trim() : "",
+                            titleNode != null ? titleNode.InnerText.Trim() : "");
         }
 
         /// <summary>
