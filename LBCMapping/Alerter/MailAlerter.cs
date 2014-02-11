@@ -13,6 +13,7 @@ namespace LBCMapping.Alerter
         #region private
 
         private static ILog log = LogManager.GetLogger(typeof(MailAlerter));
+        private EMMail mailer = new EMMail();
 
         private string m_to;
         private string m_subject;
@@ -56,7 +57,7 @@ namespace LBCMapping.Alerter
                     if (attemps != 0)
                         log.Info("Nouvelle tentative #" + attemps + " après erreur");
 
-                    new MailerSoapClient().SendSmtpMail(m_subject, body, m_to);
+                    mailer.SendSmtpMail(m_subject, body, m_to);
                     break;
                 }
                 catch (Exception e)

@@ -63,39 +63,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Saver\FileSaver.cs" />
     <Compile Include="Saver\ISaver.cs" />
-    <Compile Include="Service References\Mailer\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\Mailer\mailer.wsdl" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\Mailer\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\Mailer\configuration.svcinfo" />
-    <None Include="Service References\Mailer\configuration91.svcinfo" />
-    <None Include="Service References\Mailer\mailer.disco" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\EMToolBox\EMToolBox\EMToolBox.csproj">
       <Project>{CB581FED-FAFF-4450-9EBA-129B0BB2A446}</Project>
       <Name>EMToolBox</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\Mailer\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

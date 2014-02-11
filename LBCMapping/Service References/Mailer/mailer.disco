@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
-  <contractRef ref="http://www.eddymontus.fr/emappmanager/mailer.asmx?wsdl" docRef="http://www.eddymontus.fr/emappmanager/mailer.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
-  <soap address="http://www.eddymontus.fr/emappmanager/mailer.asmx" xmlns:q1="EmAppManager" binding="q1:MailerSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
-  <soap address="http://www.eddymontus.fr/emappmanager/mailer.asmx" xmlns:q2="EmAppManager" binding="q2:MailerSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
-</discovery>
