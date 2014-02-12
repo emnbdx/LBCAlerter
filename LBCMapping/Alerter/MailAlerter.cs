@@ -1,7 +1,6 @@
 ﻿using System;
 using EMToolBox;
 using log4net;
-using LBCMapping.Mailer;
 
 namespace LBCMapping.Alerter
 {
