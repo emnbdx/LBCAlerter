@@ -16,7 +16,6 @@ namespace LBCMapping
 
         private string m_criteria;
         private string m_keyword;
-        private int m_refreshTime;
         private List<IAlerter> m_alerter = new List<IAlerter>();
         private ISaver m_saver;
 
@@ -31,11 +30,10 @@ namespace LBCMapping
         public SearchJob()
         { }
 
-        public SearchJob(string criteria, string keyword, int refreshTime)
+        public SearchJob(string criteria, string keyword)
         {
             m_criteria = HtmlParser.CleanCriteria(criteria);
             m_keyword = keyword;
-            m_refreshTime = refreshTime;
         }
 
         [XmlElement("Criteria")]
@@ -50,13 +48,6 @@ namespace LBCMapping
         {
             get { return KeyWordNeeded(); }
             set { m_keyword = value; }
-        }
-
-        [XmlElement("RefreshTime")]
-        public int RefreshTime
-        {
-            get { return m_refreshTime; }
-            set { m_refreshTime = value; }
         }
 
         public override string ToString()

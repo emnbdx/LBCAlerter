@@ -51,7 +51,10 @@ namespace LBCAlerter
             m_search = search;
 
             lbKeyWord.Text = m_search.Keyword;
-            nudRefreshTime.Value = m_search.RefreshTime;
+            if (m_license.Status == LicenseStatus.Trial)
+                nudRefreshTime.Value = 60;
+            else
+                nudRefreshTime.Value = 5;
         }
 
         private void nudRefreshTime_ValueChanged(object sender, EventArgs e)
@@ -61,10 +64,9 @@ namespace LBCAlerter
                 FlexibleMessageBox.Show(resources.GetString("TrialTimeLimit").Replace(@"\line", Environment.NewLine));
                 nudRefreshTime.Value = 60;
             }
-            
-            m_search.RefreshTime = (int)nudRefreshTime.Value;
+
             if (m_job != null)
-                m_job.UpdateIntervalTime(m_search.RefreshTime);
+                m_job.UpdateIntervalTime((int)nudRefreshTime.Value);
         }
 
         private void btnStartStop_Click(object sender, EventArgs e)
@@ -72,7 +74,7 @@ namespace LBCAlerter
             if (m_job == null)
             {
                 PrepareForWork();
-                m_job = new RandomJobLauncher(m_search, m_search.RefreshTime);
+                m_job = new RandomJobLauncher(m_search, (int)nudRefreshTime.Value);
             }
 
             if (!m_job.Started)

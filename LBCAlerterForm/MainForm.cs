@@ -171,9 +171,9 @@ namespace LBCAlerter
             {
                 SearchJob search;
                 if(m_license.Status == LicenseStatus.Trial)
-                    search = new SearchJob(tmp, "", 60);
+                    search = new SearchJob(tmp, "");
                 else
-                    search = new SearchJob(tmp, "", 5);
+                    search = new SearchJob(tmp, "");
 
                 AddSearchToList(search);
             }
