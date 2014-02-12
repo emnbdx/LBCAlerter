@@ -31,8 +31,10 @@ namespace LBCAlerterWeb.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Nom d’utilisateur")]
-        public string UserName { get; set; }
+        [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage="Email invalide")]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -44,10 +46,12 @@ namespace LBCAlerterWeb.Models
     }
 
     public class RegisterViewModel
-    {
+    {       
         [Required]
-        [Display(Name = "Nom d’utilisateur")]
-        public string UserName { get; set; }
+        [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage = "Email invalide")]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "La chaîne {0} doit comporter au moins {2} caractères.", MinimumLength = 6)]

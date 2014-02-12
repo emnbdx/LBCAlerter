@@ -1,0 +1,42 @@
+﻿@model IEnumerable<LBCAlerterWeb.Models.Ad>
+
+@{
+    ViewBag.Title = "Annonces";
+}
+
+<h2>Annonces</h2>
+
+<h4>Liste des 50 dernières annonces trouvées</h4>
+
+<table class="table">
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            <a href="@Html.DisplayFor(modelItem => item.Url)">@Html.DisplayFor(modelItem => item.Title)</a>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            <img src="@Html.DisplayFor(modelItem => item.PictureUrl)" />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Place)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price).ToString().Replace("&amp;nbsp;&amp;euro;", " €")
+        </td>
+    </tr>
+}
+
+</table>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        @Html.ActionLink("Retour à la liste des recherches", "Index")
+    </div>
+}

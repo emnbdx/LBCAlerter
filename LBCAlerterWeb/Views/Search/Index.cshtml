@@ -1,14 +1,28 @@
 ﻿@model IEnumerable<LBCAlerterWeb.Models.Search>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Liste des recherches";
 }
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+<h2>Liste des recherches</h2>
+@if(Model.Count() >= 1 && !Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium"))
+{
+    <p style="color: red;">
+        Version beta, limité à une recherche<br />
+    </p>
+    <!--<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="hosted_button_id" value="N6SJGHGSKKX4S">
+        <input type="image" src="https://www.paypalobjects.com/fr_FR/FR/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - la solution de paiement en ligne la plus simple et la plus sécurisée !">
+        <img alt="" border="0" src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" width="1" height="1">
+    </form>-->
+}
+else
+{
+    <p>
+        @Html.ActionLink("Ajouter", "Create")
+    </p>
+}
 <table class="table">
     <tr>
         <th>
@@ -16,6 +30,9 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.KeyWord)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Ads)
         </th>
         <th></th>
     </tr>
@@ -29,9 +46,11 @@
             @Html.DisplayFor(modelItem => item.KeyWord)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+            @Html.ActionLink("Liste", "AdList", new { id = item.ID })
+        </td>
+        <td>
+            @Html.ActionLink("Editer", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Supprimer", "Delete", new { id=item.ID })
         </td>
     </tr>
 }

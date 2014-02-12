@@ -26,7 +26,26 @@ namespace LBCAlerterWeb.Models
     {
         public void InitializeDatabase(ApplicationDbContext context)
         {
-            throw new System.NotImplementedException();
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            var RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+
+            string[] roles = { "admin", "premium", "user" };
+            foreach (string role in roles)
+            {
+                if (!RoleManager.RoleExists(role))
+                {
+                    var roleresult = RoleManager.Create(new IdentityRole(role));
+                }
+            }
+
+            var user = new ApplicationUser();
+            user.UserName = "eddy.montus@gmail.com";
+            var adminresult = UserManager.Create(user, "password");
+
+            if (adminresult.Succeeded)
+            {
+                var result = UserManager.AddToRole(user.Id, "admin");
+            }
         }
     }
 
@@ -37,7 +56,7 @@ namespace LBCAlerterWeb.Models
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             var RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
 
-            string[] roles = {"admin", "user"};
+            string[] roles = { "admin", "premium", "user" };
             foreach (string role in roles)
             {
                 if (!RoleManager.RoleExists(role))
@@ -46,7 +65,7 @@ namespace LBCAlerterWeb.Models
                 }
             }
 
-            string[] names = { "admin", "eddy" };
+            string[] names = { "admin", "eddy.montus@gmail.com" };
             string password = "123456";
 
             foreach (string name in names)

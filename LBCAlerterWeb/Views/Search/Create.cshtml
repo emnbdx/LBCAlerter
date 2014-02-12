@@ -1,10 +1,10 @@
 ﻿@model LBCAlerterWeb.Models.Search
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Ajouter";
 }
 
-<h2>Create</h2>
+<h2>Ajouter</h2>
 
 @using (Html.BeginForm())
 {
@@ -13,7 +13,7 @@
     </div>
 
     <div>
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Retour à la liste", "Index")
     </div>
 }
 
@@ -41,7 +41,9 @@
                             '   type: \'POST\', ' +
                             '   data: { Url: searchUrl }, ' +
                             '   success: function (data) { ' +
-                            '       window.top.location.href = \'@Url.Action("Index", "Search")\' ' +
+                            '       if(!data["success"]) ' +
+                            '          alert(data["message"]); ' +             
+                            '       window.top.location.href = \'@Url.Action("Index", "Search")\'; ' +
                             '   } ' +
                             '}); ' +
                             'return false;')

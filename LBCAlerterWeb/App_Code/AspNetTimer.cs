@@ -5,6 +5,7 @@ using LBCMapping.Alerter;
 using log4net;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading;
 using System.Web;
@@ -15,7 +16,7 @@ namespace LBCAlerterWeb
     {
         private static readonly Timer _timer = new Timer(OnTimerElapsed);
         private static readonly JobHost _jobHost = new JobHost();
-        private static Dictionary<String, SearchJob> jobs = new Dictionary<string, SearchJob>();
+        private static Dictionary<String, RandomJobLauncher> jobs = new Dictionary<string, RandomJobLauncher>();
 
         private static ILog log = LogManager.GetLogger(typeof(AspNetTimer));
 
@@ -30,23 +31,48 @@ namespace LBCAlerterWeb
                 ApplicationDbContext db = new ApplicationDbContext();
                 foreach(Search s in db.Searches)
                 {
-                    SearchJob job;
-                    jobs.TryGetValue(s.User.UserName + "_" + s.Url, out job);
+                    RandomJobLauncher jobLauncher;
+                    jobs.TryGetValue(s.User.UserName + "_" + s.Url, out jobLauncher);
 
-                    if(job == null)
+                    if (jobLauncher == null)
                     {
-                        job = new SearchJob(s.Url, s.KeyWord, 30);
-                        job.SetSaveMode(new EFSaver(s));
-                        LogAlerter alerter = new LogAlerter();
-                        job.AddAlerter(alerter);
+                        SearchJob job = new SearchJob(s.Url, s.KeyWord);
+                        job.SetSaveMode(new EFSaver(db, s));
+                        if(Convert.ToBoolean(ConfigurationManager.AppSettings["logAlerter"]))
+                        {
+                            LogAlerter logAlerter = new LogAlerter();
+                            job.AddAlerter(logAlerter);
+                        }
+                        if (Convert.ToBoolean(ConfigurationManager.AppSettings["mailAlerter"]))
+                        {
+                            MailAlerter mailAlerter = new MailAlerter(s.User.UserName, "Nouvelle annonce", 5);
+                            job.AddAlerter(mailAlerter);
+                        }
+                        if (Convert.ToBoolean(ConfigurationManager.AppSettings["rssAlerter"]))
+                        {
+                            RSSAlerter rssAlerter = new RSSAlerter();
+                            job.AddAlerter(rssAlerter);
+                        }
                         log.Info("Add job [" + s.User.UserName + "_" + s.Url + "] to list");
-                        jobs.Add(s.User.UserName + "_" + s.Url, job);
+                        RandomJobLauncher launcher = new RandomJobLauncher(job, 5);
+                        jobs.Add(s.User.UserName + "_" + s.Url, launcher);
                         log.Info("Launch job...");
-                        RandomJobLauncher launcher = new RandomJobLauncher(job, job.RefreshTime);
                         launcher.Start();
                     }
                 }
             });
+        }
+
+        public static void StopJob(Search s)
+        {
+            RandomJobLauncher jobLauncher;
+            jobs.TryGetValue(s.User.UserName + "_" + s.Url, out jobLauncher);
+
+            if (jobLauncher != null)
+            {
+                jobLauncher.Stop();
+                jobs.Remove(s.User.UserName + "_" + s.Url);
+            }
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<LBCAlerterWeb.Models.Search>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Liste de toutes les recherches";
 }
 
-<h2>Index</h2>
+<h2>Liste de toutes les recherches</h2>
 
 <table class="table">
     <tr>
@@ -32,9 +32,8 @@
             @Html.DisplayFor(modelItem => item.User.UserName)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+            @Html.ActionLink("Editer", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Supprimer", "Delete", new { id = item.ID })
         </td>
     </tr>
 }

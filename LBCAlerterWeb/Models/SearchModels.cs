@@ -19,6 +19,7 @@ namespace LBCAlerterWeb.Models
         [DisplayName("Description")]
         public string KeyWord { get; set; }
         public virtual ApplicationUser User { get; set; }
+        [DisplayName("Annonces")]
         public virtual List<Ad> Ads { get; set; }
     }
 }

@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity;
 using System.Threading.Tasks;
 using System.Web.Helpers;
 using log4net;
+using System.Web.Security;
 
 namespace LBCAlerterWeb.Controllers
 {
@@ -42,26 +43,6 @@ namespace LBCAlerterWeb.Controllers
             return View(await db.Searches.ToListAsync());
         }
 
-        // GET: /Search/Details/5
-        public async Task<ActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Search search = db.Searches.Find(id);
-            if (search == null)
-            {
-                return HttpNotFound();
-            }
-            var currentUser = await userManager.FindByIdAsync(User.Identity.GetUserId()); 
-            if (search.User.Id != currentUser.Id)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
-            }
-            return View(search);
-        }
-
         // GET: /Search/Create
         public ActionResult Create()
         {
@@ -72,16 +53,30 @@ namespace LBCAlerterWeb.Controllers
         public ActionResult DisplaySecondPage(string url)
         {
             String htmlCode = LBCMapping.HtmlParser.GetCriteriaPage(url);
-            return Json(new { html = htmlCode });
+            return Json(new { success = true, html = htmlCode });
+        }
+
+        public ActionResult AdList(int? id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            return View(db.Ads.ToList().Where(entity => entity.Search.ID == id).Take(50));
         }
 
         // POST: /Search/Create
         // Afin de déjouer les attaques par sur-validation, activez les propriétés spécifiques que vous voulez lier. Pour 
         // plus de détails, voir  http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Create([Bind(Include = "SearchId,Url,KeyWord")] Search search)
+        public ActionResult Create([Bind(Include = "ID,Url,KeyWord")] Search search)
         {
-            var currentUser = userManager.FindById(User.Identity.GetUserId()); 
+            var currentUser = userManager.FindById(User.Identity.GetUserId());
+
+            //Does user have already search
+            IEnumerable<Search> searches = db.Searches.ToList().Where(entity => entity.User.Id == currentUser.Id);
+
+            if (searches.Count() >= 1 && !Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium"))
+                return Json(new { success = false, message = "Vous devez avoir un compte premium pour ajouter plus d'une recherche" });
 
             if (ModelState.IsValid)
             {
@@ -93,10 +88,10 @@ namespace LBCAlerterWeb.Controllers
 
                 log.Info("Add search #" + search.ID + " Url [" + search.Url + "] Keyword [" + search.KeyWord + "] by [" + search.User.UserName + "]");
 
-                return Json(new { status = 0, message = "ok" });
+                return Json(new { success = true, message = "ok" });
             }
 
-            return Json(new { status = 1, message = "invalid model" });
+            return Json(new { success = false, message = "Something bad..." });
         }
 
         // GET: /Search/Edit/5
@@ -112,7 +107,7 @@ namespace LBCAlerterWeb.Controllers
                 return HttpNotFound();
             }
             var currentUser = await userManager.FindByIdAsync(User.Identity.GetUserId());
-            if (search.User.Id != currentUser.Id)
+            if (search.User.Id != currentUser.Id && currentUser.UserName != "admin")
             {
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
             }
@@ -124,7 +119,7 @@ namespace LBCAlerterWeb.Controllers
         // plus de détails, voir  http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "SearchId,Url,KeyWord")] Search search)
+        public async Task<ActionResult> Edit([Bind(Include = "ID,Url,KeyWord")] Search search)
         {
             if (ModelState.IsValid)
             {
@@ -148,7 +143,7 @@ namespace LBCAlerterWeb.Controllers
                 return HttpNotFound();
             }
             var currentUser = await userManager.FindByIdAsync(User.Identity.GetUserId());
-            if (search.User.Id != currentUser.Id)
+            if (search.User.Id != currentUser.Id && currentUser.UserName != "admin")
             {
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
             }
@@ -161,7 +156,9 @@ namespace LBCAlerterWeb.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Search search = await db.Searches.FindAsync(id);
-            db.Searches.Remove(search);
+            AspNetTimer.StopJob(search);
+            db.Ads.RemoveRange(db.Ads.ToList().Where(entity => entity.Search.ID == search.ID));
+            db.Searches.Remove(search);   
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

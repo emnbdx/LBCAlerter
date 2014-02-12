@@ -2,6 +2,7 @@
 using log4net;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
@@ -23,10 +24,10 @@ namespace LBCAlerterWeb
             //Init log
             log4net.Config.XmlConfigurator.Configure();
 
-            //Debug mode
-            Database.SetInitializer<ApplicationDbContext>(new DebugInitializer());
-            //Production mode
-            //Database.SetInitializer<ApplicationDbContext>(new ProductionInitializer());
+            if(ConfigurationManager.AppSettings["dbMode"] == "debug")
+                Database.SetInitializer<ApplicationDbContext>(new DebugInitializer());
+            else
+                Database.SetInitializer<ApplicationDbContext>(new ProductionInitializer());
 
             AspNetTimer.Start();
         }

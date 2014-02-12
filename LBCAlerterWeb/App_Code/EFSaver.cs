@@ -1,5 +1,4 @@
 ﻿using LBCAlerterWeb.Models;
-using LBCMapping;
 using LBCMapping.Saver;
 using System;
 using System.Collections.Generic;
@@ -12,24 +11,25 @@ namespace LBCAlerterWeb
 {
     public class EFSaver : ISaver
     {
-        private static ApplicationDbContext db = new ApplicationDbContext();
+        private static ApplicationDbContext m_db;
         private Search m_search;
 
-        public EFSaver(Search search)
+        public EFSaver(ApplicationDbContext db, Search search)
         {
+            m_db = db;
             m_search = search;
         }
 
         public bool Store(LBCMapping.Ad ad)
         {
-            Models.Ad ads = db.Ads.FirstOrDefault(dbAd => dbAd.Search.ID == m_search.ID && dbAd.Url == ad.AdUrl);
+            Ad dbAd = m_db.Ads.FirstOrDefault(entity => entity.Search.ID == m_search.ID && entity.Url == ad.AdUrl);
             
-            if(ads == null)
+            if(dbAd == null)
             {
-                ads = new Models.Ad();
-                ads.Search = m_search;
-                ads.Url = ad.AdUrl;
-                db.SaveChanges();
+                Ad tmpAd = Ad.ConvertLBCAd(ad);
+                tmpAd.Search = m_search;
+                m_db.Ads.Add(tmpAd);
+                m_db.SaveChanges();
                 return true;
             }
             else
