@@ -22,11 +22,12 @@ namespace LBCAlerterWeb.Models
         public DbSet<Ad> Ads { get; set; }
     }
 
-    public class ProductionInitializer : IDatabaseInitializer<ApplicationDbContext>
+    public class ProductionInitializer : CreateDatabaseIfNotExists<ApplicationDbContext>
     {
-        public void InitializeDatabase(ApplicationDbContext context)
+        protected override void Seed(ApplicationDbContext context)
         {
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            UserManager.UserValidator = new UserValidator<ApplicationUser>(UserManager) { AllowOnlyAlphanumericUserNames = false };
             var RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
 
             string[] roles = { "admin", "premium", "user" };
@@ -37,6 +38,7 @@ namespace LBCAlerterWeb.Models
                     var roleresult = RoleManager.Create(new IdentityRole(role));
                 }
             }
+            context.SaveChanges();
 
             var user = new ApplicationUser();
             user.UserName = "eddy.montus@gmail.com";
@@ -46,6 +48,9 @@ namespace LBCAlerterWeb.Models
             {
                 var result = UserManager.AddToRole(user.Id, "admin");
             }
+            context.SaveChanges();
+
+            base.Seed(context);
         }
     }
 
@@ -54,6 +59,7 @@ namespace LBCAlerterWeb.Models
         protected override void Seed(ApplicationDbContext context)
         {
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            UserManager.UserValidator = new UserValidator<ApplicationUser>(UserManager) { AllowOnlyAlphanumericUserNames = false };
             var RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
 
             string[] roles = { "admin", "premium", "user" };

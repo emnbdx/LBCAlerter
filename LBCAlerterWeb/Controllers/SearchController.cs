@@ -22,18 +22,19 @@ namespace LBCAlerterWeb.Controllers
         private static ILog log = LogManager.GetLogger(typeof(SearchController));
 
         private ApplicationDbContext db;
-        private UserManager<ApplicationUser> userManager { get; set; }
+        private UserManager<ApplicationUser> UserManager { get; set; }
 
         public SearchController()
         {
             db = new ApplicationDbContext();
-            userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            UserManager.UserValidator = new UserValidator<ApplicationUser>(UserManager) { AllowOnlyAlphanumericUserNames = false };
         }       
 
         // GET: /Search/
         public async Task<ActionResult> Index()
         {
-            var currentUser = await userManager.FindByIdAsync(User.Identity.GetUserId());
+            var currentUser = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             return View(db.Searches.ToList().Where(search => search.User.Id == currentUser.Id));
         }
 
@@ -70,7 +71,7 @@ namespace LBCAlerterWeb.Controllers
         [HttpPost]
         public ActionResult Create([Bind(Include = "ID,Url,KeyWord")] Search search)
         {
-            var currentUser = userManager.FindById(User.Identity.GetUserId());
+            var currentUser = UserManager.FindById(User.Identity.GetUserId());
 
             //Does user have already search
             IEnumerable<Search> searches = db.Searches.ToList().Where(entity => entity.User.Id == currentUser.Id);
@@ -106,7 +107,7 @@ namespace LBCAlerterWeb.Controllers
             {
                 return HttpNotFound();
             }
-            var currentUser = await userManager.FindByIdAsync(User.Identity.GetUserId());
+            var currentUser = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             if (search.User.Id != currentUser.Id && currentUser.UserName != "admin")
             {
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
@@ -142,7 +143,7 @@ namespace LBCAlerterWeb.Controllers
             {
                 return HttpNotFound();
             }
-            var currentUser = await userManager.FindByIdAsync(User.Identity.GetUserId());
+            var currentUser = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             if (search.User.Id != currentUser.Id && currentUser.UserName != "admin")
             {
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
