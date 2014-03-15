@@ -28,8 +28,6 @@ namespace LBCAlerterWeb
                 Database.SetInitializer<ApplicationDbContext>(new DebugInitializer());
             else
                 Database.SetInitializer<ApplicationDbContext>(new ProductionInitializer());
-
-            AspNetTimer.Start();
         }
     }
 }

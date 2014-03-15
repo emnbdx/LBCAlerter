@@ -157,7 +157,6 @@ namespace LBCAlerterWeb.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Search search = await db.Searches.FindAsync(id);
-            AspNetTimer.StopJob(search);
             db.Ads.RemoveRange(db.Ads.ToList().Where(entity => entity.Search.ID == search.ID));
             db.Searches.Remove(search);   
             await db.SaveChangesAsync();

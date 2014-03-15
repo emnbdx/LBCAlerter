@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMToolBox", "..\EMToolBox\E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBCAlerterWeb", "LBCAlerterWeb\LBCAlerterWeb.csproj", "{EAE129C3-0BF2-4CCB-A59C-85F3AD4F94F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBCService", "LBCService\LBCService.csproj", "{C9D49FEB-BD21-48A2-BD0F-48C13771EA2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,16 @@ Global
 		{EAE129C3-0BF2-4CCB-A59C-85F3AD4F94F5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{EAE129C3-0BF2-4CCB-A59C-85F3AD4F94F5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{EAE129C3-0BF2-4CCB-A59C-85F3AD4F94F5}.Release|x86.ActiveCfg = Release|Any CPU
+		{C9D49FEB-BD21-48A2-BD0F-48C13771EA2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9D49FEB-BD21-48A2-BD0F-48C13771EA2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9D49FEB-BD21-48A2-BD0F-48C13771EA2A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C9D49FEB-BD21-48A2-BD0F-48C13771EA2A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C9D49FEB-BD21-48A2-BD0F-48C13771EA2A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C9D49FEB-BD21-48A2-BD0F-48C13771EA2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9D49FEB-BD21-48A2-BD0F-48C13771EA2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9D49FEB-BD21-48A2-BD0F-48C13771EA2A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C9D49FEB-BD21-48A2-BD0F-48C13771EA2A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C9D49FEB-BD21-48A2-BD0F-48C13771EA2A}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
