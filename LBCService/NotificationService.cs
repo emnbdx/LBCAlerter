@@ -27,36 +27,38 @@ namespace LBCService
         {
             base.Process();
 
-            ApplicationDbContext db = new ApplicationDbContext();
-            foreach (Search s in db.Searches)
+            using (ApplicationDbContext db = new ApplicationDbContext())
             {
-                RandomJobLauncher jobLauncher;
-                jobs.TryGetValue(s.User.UserName + "_" + s.Url, out jobLauncher);
-
-                if (jobLauncher == null)
+                foreach (Search s in db.Searches)
                 {
-                    SearchJob job = new SearchJob(s.Url, s.KeyWord);
-                    job.SetSaveMode(new EFSaver(db, s));
-                    if (Convert.ToBoolean(ConfigurationManager.AppSettings["logAlerter"]))
+                    RandomJobLauncher jobLauncher;
+                    jobs.TryGetValue(s.User.UserName + "_" + s.Url, out jobLauncher);
+
+                    if (jobLauncher == null)
                     {
-                        LogAlerter logAlerter = new LogAlerter();
-                        job.AddAlerter(logAlerter);
+                        SearchJob job = new SearchJob(s.Url, s.KeyWord);
+                        job.SetSaveMode(new EFSaver(db, s));
+                        if (Convert.ToBoolean(ConfigurationManager.AppSettings["logAlerter"]))
+                        {
+                            LogAlerter logAlerter = new LogAlerter();
+                            job.AddAlerter(logAlerter);
+                        }
+                        if (Convert.ToBoolean(ConfigurationManager.AppSettings["mailAlerter"]))
+                        {
+                            MailAlerter mailAlerter = new MailAlerter(s.User.UserName, "Nouvelle annonce", 5);
+                            job.AddAlerter(mailAlerter);
+                        }
+                        if (Convert.ToBoolean(ConfigurationManager.AppSettings["rssAlerter"]))
+                        {
+                            RSSAlerter rssAlerter = new RSSAlerter();
+                            job.AddAlerter(rssAlerter);
+                        }
+                        log.Info("Add job [" + s.User.UserName + "_" + s.Url + "] to list");
+                        RandomJobLauncher launcher = new RandomJobLauncher(job, 5);
+                        jobs.Add(s.User.UserName + "_" + s.Url, launcher);
+                        log.Info("Launch job...");
+                        launcher.Start();
                     }
-                    if (Convert.ToBoolean(ConfigurationManager.AppSettings["mailAlerter"]))
-                    {
-                        MailAlerter mailAlerter = new MailAlerter(s.User.UserName, "Nouvelle annonce", 5);
-                        job.AddAlerter(mailAlerter);
-                    }
-                    if (Convert.ToBoolean(ConfigurationManager.AppSettings["rssAlerter"]))
-                    {
-                        RSSAlerter rssAlerter = new RSSAlerter();
-                        job.AddAlerter(rssAlerter);
-                    }
-                    log.Info("Add job [" + s.User.UserName + "_" + s.Url + "] to list");
-                    RandomJobLauncher launcher = new RandomJobLauncher(job, 5);
-                    jobs.Add(s.User.UserName + "_" + s.Url, launcher);
-                    log.Info("Launch job...");
-                    launcher.Start();
                 }
             }
         }
