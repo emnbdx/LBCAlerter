@@ -15,8 +15,9 @@ namespace LBCService
         /// </summary>
         static void Main()
         {
-            DebuggableService service = new DebuggableService(typeof(TimedService));
-            ServiceBase.Run(service);
+            log4net.Config.XmlConfigurator.Configure();
+
+            ServiceBase.Run(new DebuggableService(typeof(NotificationService)));
         }
     }
 }
