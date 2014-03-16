@@ -16,9 +16,9 @@ namespace LBCMapping
 
         private string m_criteria;
         private string m_keyword;
+        private bool m_first;
         private List<IAlerter> m_alerter = new List<IAlerter>();
         private ISaver m_saver;
-        private bool m_first = true;
 
         private string KeyWordNeeded()
         {
@@ -31,10 +31,11 @@ namespace LBCMapping
         public SearchJob()
         { }
 
-        public SearchJob(string criteria, string keyword)
+        public SearchJob(string criteria, string keyword, bool firstTime)
         {
             m_criteria = HtmlParser.CleanCriteria(criteria);
             m_keyword = keyword;
+            m_first = firstTime;
         }
 
         [XmlElement("Criteria")]

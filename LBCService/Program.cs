@@ -18,6 +18,7 @@ namespace LBCService
             log4net.Config.XmlConfigurator.Configure();
 
             ServiceBase.Run(new DebuggableService(typeof(NotificationService)));
+            //new NotificationConsole().Process();
         }
     }
 }

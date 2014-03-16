@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EFSaver.cs" />
+    <Compile Include="NotificationConsole.cs" />
     <Compile Include="NotificationService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">

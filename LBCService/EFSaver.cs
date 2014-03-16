@@ -12,25 +12,30 @@ namespace LBCService
 {
     public class EFSaver : ISaver
     {
-        private static ApplicationDbContext m_db;
-        private Search m_search;
+        private ApplicationDbContext db = new ApplicationDbContext();
+        private int m_searchId;
 
-        public EFSaver(ApplicationDbContext db, Search search)
+        public EFSaver(int id)
         {
-            m_db = db;
-            m_search = search;
+            m_searchId = id;
         }
 
         public bool Store(LBCMapping.Ad ad)
         {
-            LBCAlerterWeb.Models.Ad dbAd = m_db.Ads.FirstOrDefault(entity => entity.Search.ID == m_search.ID && entity.Url == ad.AdUrl);
-            
-            if(dbAd == null)
+            LBCAlerterWeb.Models.Ad dbAd = db.Ads.FirstOrDefault(entry => entry.Search.ID == m_searchId && entry.Url == ad.AdUrl);
+
+            if (dbAd == null || dbAd.Date != ad.Date)
             {
-                LBCAlerterWeb.Models.Ad tmpAd = LBCAlerterWeb.Models.Ad.ConvertLBCAd(ad);
-                tmpAd.Search = m_search;
-                m_db.Ads.Add(tmpAd);
-                m_db.SaveChanges();
+                if (dbAd == null)
+                {
+                    LBCAlerterWeb.Models.Ad tmpAd = LBCAlerterWeb.Models.Ad.ConvertLBCAd(ad);
+                    tmpAd.Search = db.Searches.FirstOrDefault(entry => entry.ID == m_searchId);
+                    db.Ads.Add(tmpAd);
+                }
+                else
+                    dbAd.Date = ad.Date;
+
+                db.SaveChanges();
                 return true;
             }
             else

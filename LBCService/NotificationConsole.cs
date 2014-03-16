@@ -1,5 +1,4 @@
 ﻿using EMToolBox.Job;
-using EMToolBox.Services;
 using LBCAlerterWeb.Models;
 using LBCMapping;
 using LBCMapping.Alerter;
@@ -13,21 +12,14 @@ using System.Threading.Tasks;
 
 namespace LBCService
 {
-    class NotificationService : TimedService
+    public class NotificationConsole
     {
         private static ILog log = LogManager.GetLogger(typeof(NotificationService));
         private static Dictionary<String, RandomJobLauncher> jobs = new Dictionary<string, RandomJobLauncher>();
-        
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
 
-        public override void Process()
+        public void Process()
         {
-            base.Process();
-
-            using(ApplicationDbContext db = new ApplicationDbContext())
+            using (ApplicationDbContext db = new ApplicationDbContext())
             {
                 foreach (Search s in db.Searches)
                 {
