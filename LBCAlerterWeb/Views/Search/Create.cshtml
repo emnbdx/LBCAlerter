@@ -42,7 +42,9 @@
                             '   data: { Url: searchUrl }, ' +
                             '   success: function (data) { ' +
                             '       if(!data["success"]) ' +
-                            '          alert(data["message"]); ' +             
+                            '          alert(data["message"]); ' +
+                            '       else ' +
+                            '           alert(\'Votre recherche a bien été crée vous risquez de recevoir 100 mails correspondants aux 4 premières pages de votre recherche.\'); ' + 
                             '       window.top.location.href = \'@Url.Action("Index", "Search")\'; ' +
                             '   } ' +
                             '}); ' +

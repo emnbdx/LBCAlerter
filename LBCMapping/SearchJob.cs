@@ -18,6 +18,7 @@ namespace LBCMapping
         private string m_keyword;
         private List<IAlerter> m_alerter = new List<IAlerter>();
         private ISaver m_saver;
+        private bool m_first = true;
 
         private string KeyWordNeeded()
         {
@@ -100,7 +101,7 @@ namespace LBCMapping
             try
             {
                 int currentPage = 1;
-
+                
                 while (true)
                 {
                     List<HtmlNode> links = HtmlParser.GetHtmlAd(m_criteria, currentPage);
@@ -108,7 +109,11 @@ namespace LBCMapping
                     if (links == null)
                         break; //Nothing return or empty page go out
 
-                    bool elementFound = false;
+                    int currentAd = 0, adsLimit = 0;
+                    if (m_first)
+                        adsLimit = 100;
+
+                    bool elementFound = false, limitReached = false;
                     foreach (HtmlNode link in links)
                     {
                         Ad tmp = HtmlParser.GetAdInformation(link);
@@ -120,9 +125,17 @@ namespace LBCMapping
                         }
                         else
                             Alert(tmp);
+
+                        currentAd++;
+
+                        if (adsLimit != 0 && currentAd >= adsLimit)
+                        {
+                            limitReached = true;
+                            break;
+                        }
                     }
 
-                    if (elementFound)
+                    if (elementFound || limitReached)
                         break;
 
                     currentPage++;
@@ -139,6 +152,9 @@ namespace LBCMapping
             {
                 if (timer.IsRunning)
                     timer.Stop();
+
+                if (m_first)
+                    m_first = false;
             }
         }
     }
