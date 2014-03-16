@@ -62,7 +62,7 @@ namespace LBCAlerterWeb.Controllers
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            return View(db.Ads.ToList().Where(entity => entity.Search.ID == id).Take(50));
+            return View(db.Ads.ToList().Where(ad => ad.Search.ID == id).OrderByDescending(ad => ad.Date).Take(50));
         }
 
         // POST: /Search/Create
