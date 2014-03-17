@@ -45,7 +45,7 @@ namespace LBCService
                             RSSAlerter rssAlerter = new RSSAlerter();
                             job.AddAlerter(rssAlerter);
                         }
-                        log.Info("Add job [" + s.User.UserName + "_" + s.Url + "] to list");
+                        log.Info("Add job [" + s.ID + "] to list");
                         RandomJobLauncher launcher = new RandomJobLauncher(job, 5);
                         jobs.Add(s.ID, launcher);
                         log.Info("Launch job...");
@@ -57,7 +57,7 @@ namespace LBCService
                 {
                     foreach (Int32 id in jobs.Keys)
                     {
-                        if (db.Searches.Where(entry => entry.ID == id) == null)
+                        if (db.Searches.FirstOrDefault(entry => entry.ID == id) == null)
                         {
                             jobs[id].Stop();
                             jobs.Remove(id);
