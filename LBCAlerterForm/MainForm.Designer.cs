@@ -172,13 +172,6 @@ namespace LBCAlerter
             resources.ApplyResources(this.label12, "label12");
             this.label12.Name = "label12";
             // 
-            // nudMailRetry
-            // 
-            resources.ApplyResources(this.nudMailRetry, "nudMailRetry");
-            this.nudMailRetry.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::LBCAlerter.Properties.Settings.Default, "MailRetry", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.nudMailRetry.Name = "nudMailRetry";
-            this.nudMailRetry.Value = global::LBCAlerter.Properties.Settings.Default.MailRetry;
-            // 
             // lbMailRetry
             // 
             resources.ApplyResources(this.lbMailRetry, "lbMailRetry");

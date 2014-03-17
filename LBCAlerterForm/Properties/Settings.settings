@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="LBCAlerter.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="MailRetry" Type="System.Decimal" Scope="User">
-      <Value Profile="(Default)">5</Value>
-    </Setting>
     <Setting Name="SaveMode" Type="System.String" Scope="User">
       <Value Profile="(Default)">file</Value>
     </Setting>

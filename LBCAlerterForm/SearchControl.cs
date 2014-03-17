@@ -29,8 +29,7 @@ namespace LBCAlerter
             //set alerter
             if (Settings.Default.AlertMode == "mail")
                 m_search.AddAlerter(new MailAlerter(Settings.Default.MailTo,
-                                        String.Format(resources.GetString("MailSubject"), m_search.Keyword),
-                                        (int)Settings.Default.MailRetry));
+                                        String.Format(resources.GetString("MailSubject"), m_search.Keyword)));
             else if (Settings.Default.AlertMode == "rss")
                 m_search.AddAlerter(new RSSAlerter());
             else
