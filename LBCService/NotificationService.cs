@@ -16,7 +16,7 @@ namespace LBCService
     class NotificationService : TimedService
     {
         private static ILog log = LogManager.GetLogger(typeof(NotificationService));
-        private static Dictionary<String, RandomJobLauncher> jobs = new Dictionary<string, RandomJobLauncher>();
+        private static Dictionary<Int32, RandomJobLauncher> jobs = new Dictionary<Int32, RandomJobLauncher>();
         
         public override void Initialize()
         {
@@ -32,7 +32,7 @@ namespace LBCService
                 foreach (Search s in db.Searches)
                 {
                     RandomJobLauncher jobLauncher;
-                    jobs.TryGetValue(s.User.UserName + "_" + s.Url, out jobLauncher);
+                    jobs.TryGetValue(s.ID, out jobLauncher);
 
                     if (jobLauncher == null)
                     {
@@ -45,7 +45,7 @@ namespace LBCService
                         }
                         if (Convert.ToBoolean(ConfigurationManager.AppSettings["mailAlerter"]))
                         {
-                            MailAlerter mailAlerter = new MailAlerter(s.User.UserName, "Nouvelle annonce", 5);
+                            MailAlerter mailAlerter = new MailAlerter(s.User.UserName, "Nouvelle annonce");
                             job.AddAlerter(mailAlerter);
                         }
                         if (Convert.ToBoolean(ConfigurationManager.AppSettings["rssAlerter"]))
@@ -55,9 +55,21 @@ namespace LBCService
                         }
                         log.Info("Add job [" + s.User.UserName + "_" + s.Url + "] to list");
                         RandomJobLauncher launcher = new RandomJobLauncher(job, 5);
-                        jobs.Add(s.User.UserName + "_" + s.Url, launcher);
+                        jobs.Add(s.ID, launcher);
                         log.Info("Launch job...");
                         launcher.Start();
+                    }
+                }
+
+                if (jobs.Count() > db.Searches.Count())
+                {
+                    foreach (Int32 id in jobs.Keys)
+                    {
+                        if (db.Searches.Where(entry => entry.ID == id) == null)
+                        {
+                            jobs[id].Stop();
+                            jobs.Remove(id);                        
+                        }
                     }
                 }
             }

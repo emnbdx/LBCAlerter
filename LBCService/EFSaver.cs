@@ -29,7 +29,10 @@ namespace LBCService
                 if (dbAd == null)
                 {
                     LBCAlerterWeb.Models.Ad tmpAd = LBCAlerterWeb.Models.Ad.ConvertLBCAd(ad);
-                    tmpAd.Search = db.Searches.FirstOrDefault(entry => entry.ID == m_searchId);
+                    Search s = db.Searches.FirstOrDefault(entry => entry.ID == m_searchId);
+                    if(s == null)
+                        throw new Exception("Recherche inexistante...");
+                    tmpAd.Search = s;
                     db.Ads.Add(tmpAd);
                 }
                 else

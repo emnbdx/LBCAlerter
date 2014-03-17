@@ -102,6 +102,9 @@ namespace LBCMapping
             try
             {
                 int currentPage = 1;
+                int currentAd = 0, adsLimit = 0;
+                if (m_first)
+                    adsLimit = 35;
                 
                 while (true)
                 {
@@ -109,10 +112,6 @@ namespace LBCMapping
 
                     if (links == null)
                         break; //Nothing return or empty page go out
-
-                    int currentAd = 0, adsLimit = 0;
-                    if (m_first)
-                        adsLimit = 100;
 
                     bool elementFound = false, limitReached = false;
                     foreach (HtmlNode link in links)

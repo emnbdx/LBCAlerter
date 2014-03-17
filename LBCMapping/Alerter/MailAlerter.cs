@@ -16,17 +16,15 @@ namespace LBCMapping.Alerter
 
         private string m_to;
         private string m_subject;
-        private int m_retry;
 
         #endregion private
 
         #region public
 
-        public MailAlerter(string to, string subject, int retry)
+        public MailAlerter(string to, string subject)
         {
             m_to = to;
             m_subject = subject;
-            m_retry = retry;
         }
 
         /// <summary>
@@ -48,23 +46,7 @@ namespace LBCMapping.Alerter
                                 </body>
                             </html>";
 
-            int attemps = 0;
-            while (attemps <= m_retry)
-            {
-                try
-                {
-                    if (attemps != 0)
-                        log.Info("Nouvelle tentative #" + attemps + " après erreur");
-
-                    mailer.SendSmtpMail(m_subject, body, m_to);
-                    break;
-                }
-                catch (Exception e)
-                {
-                    log.Error(e.Message + "\r\n" + e.InnerException);
-                }
-                attemps++;
-            }
+            mailer.SendSmtpMail(m_subject, body, m_to);
         }
 
         #endregion public
