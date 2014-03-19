@@ -24,6 +24,7 @@
                 <ul class="nav navbar-nav">
                     @if (Roles.IsUserInRole("admin"))
                     {
+                        <li>@Html.ActionLink("Tous les utilisateurs", "All", "Account")</li>
                         <li>@Html.ActionLink("Toutes les recherches", "All", "Search")</li>
                     }
                     <li>@Html.ActionLink("Mes recherches", "Index", "Search")</li>

@@ -27,6 +27,15 @@ namespace LBCAlerterWeb.Controllers
 
         public UserManager<ApplicationUser> UserManager { get; private set; }
 
+        [Authorize(Roles = "admin")]
+        public ActionResult All()
+        {
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                return View(db.Users.ToList());
+            }
+        }
+
         //
         // GET: /Account/Login
         [AllowAnonymous]
