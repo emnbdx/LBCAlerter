@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace LBCService
 {
-    class NotificationService : TimedService
+    class NotificationService : SimpleService
     {
         private static ILog log = LogManager.GetLogger(typeof(NotificationService));
         private static Dictionary<Int32, RandomJobLauncher> jobs = new Dictionary<Int32, RandomJobLauncher>();
