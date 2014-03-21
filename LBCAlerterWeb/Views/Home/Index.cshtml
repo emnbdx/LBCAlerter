@@ -1,26 +1,27 @@
 ﻿@{
-    ViewBag.Title = "Acceuil";
+    ViewBag.Title = "Accueil";
 }
 
-<h2>Acceuil</h2>
+<h2>Accueil</h2>
 
 Welcome to LBC Alerter !<br />
 <br />
 Ce site permet d'obtenir des alertes, pour une recherche donnée, sur le site leboncoin.fr<br />
-Malheuresement il ne fonctionne pas encore avec Internet Explorer et Safari je vous conseille d'installer <a href="https://www.google.com/intl/en/chrome/browser/" target="_blank">Google Chrome</a><br />
+<span id="badVersion">Malheuresement il ne fonctionne pas encore avec Internet Explorer et Safari je vous conseille d'installer <a href="https://www.google.com/intl/en/chrome/browser/" target="_blank">Google Chrome</a><br /></span>
 <br />
-<!--Il vous suffit de créer un compte et d'ajouter une recherche.<br />
-Vous êtes limité à une recherche par défaut pour en ajouter plus il faut payer... Plus rien n'est gratuit ma pauvre dame<br />
-<br />
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-    <input type="hidden" name="cmd" value="_s-xclick">
-    <input type="hidden" name="hosted_button_id" value="N6SJGHGSKKX4S">
-    <input type="image" src="https://www.paypalobjects.com/fr_FR/FR/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - la solution de paiement en ligne la plus simple et la plus sécurisée !">
-    <img alt="" border="0" src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" width="1" height="1">
-</form>
-<br />
-Mais comme je suis sympa le montant est libre.<br />
-<br />-->
 Enjoy !<br />
 <br />
-<i>Attention cette pratique n'est pas trop autorisé par leboncoin.fr il se peut donc que ce site soit supprimé à tout moment.</i>
+<i>Attention cette pratique n'est pas trop autorisée par leboncoin.fr il se peut donc que ce site soit supprimé à tout moment.</i>
+
+@section scripts {
+    <script type="text/javascript">
+        var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+        var isIE = false || !!document.documentMode;
+
+        if (isOpera || isIE) {
+            $('#badVersion').show();
+        } else {
+            $('#badVersion').hide();
+        }
+    </script>
+}
