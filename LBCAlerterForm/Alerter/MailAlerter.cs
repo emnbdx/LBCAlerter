@@ -1,8 +1,9 @@
 ﻿using System;
 using EMToolBox;
 using log4net;
+using LBCMapping;
 
-namespace LBCMapping.Alerter
+namespace LBCAlerterForm.Alerter
 {
     /// <summary>
     /// Send mail to alert

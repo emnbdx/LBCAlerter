@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using EMToolBox.Job;
 using HtmlAgilityPack;
-using LBCMapping.Alerter;
-using LBCMapping.Saver;
 using log4net;
 using System.Xml.Serialization;
 
@@ -63,9 +61,7 @@ namespace LBCMapping
         /// <param name="saver">Instance of saver to set</param>
         public void SetSaveMode(ISaver saveMode)
         {
-            if (saveMode == null)
-                m_saver = new FileSaver(Keyword);
-            else
+            if (saveMode != null)
                 m_saver = saveMode;
         }
 

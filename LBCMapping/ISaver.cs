@@ -1,4 +1,4 @@
-﻿namespace LBCMapping.Saver
+﻿namespace LBCMapping
 {
     /// <summary>
     /// Implement this interface to make your own save system

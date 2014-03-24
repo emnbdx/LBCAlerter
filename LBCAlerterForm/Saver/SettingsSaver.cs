@@ -1,8 +1,7 @@
 ﻿using LBCAlerter.Properties;
 using LBCMapping;
-using LBCMapping.Saver;
 
-namespace LBCAlerter
+namespace LBCAlerterForm.Saver
 {
     public class SettingsSaver : ISaver
     {

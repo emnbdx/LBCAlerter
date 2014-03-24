@@ -1,6 +1,5 @@
 ﻿using LBCAlerterWeb.Models;
 using LBCMapping;
-using LBCMapping.Saver;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LBCService
+namespace LBCService.Saver
 {
     public class EFSaver : ISaver
     {

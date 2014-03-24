@@ -1,6 +1,7 @@
-﻿using log4net;
+﻿using LBCMapping;
+using log4net;
 
-namespace LBCMapping.Alerter
+namespace LBCService.Alerter
 {
     /// <summary>
     /// Display alert in log file

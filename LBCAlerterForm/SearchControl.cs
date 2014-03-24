@@ -3,10 +3,10 @@ using System.Windows.Forms;
 using EMToolBox.Job;
 using LBCAlerter.Properties;
 using LBCMapping;
-using LBCMapping.Alerter;
-using LBCMapping.Saver;
 using LBCAlerter.Identifier;
 using JR.Utils.GUI.Forms;
+using LBCAlerterForm.Saver;
+using LBCAlerterForm.Alerter;
 
 namespace LBCAlerter
 {

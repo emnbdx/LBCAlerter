@@ -1,4 +1,4 @@
-﻿namespace LBCMapping.Alerter
+﻿namespace LBCMapping
 {
     /// <summary>
     /// Implement this interface to make your own alert system

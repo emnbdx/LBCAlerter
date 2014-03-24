@@ -1,6 +1,7 @@
-﻿using System;
+﻿using LBCMapping;
+using System;
 
-namespace LBCMapping.Alerter
+namespace LBCService.Alerter
 {
     /// <summary>
     /// Manage RSS file to alert
