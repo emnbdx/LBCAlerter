@@ -15,6 +15,7 @@ namespace LBCMapping
         private string m_criteria;
         private string m_keyword;
         private bool m_first;
+        private int m_firstCount = 35; //Default value 1 page of ads
         private List<IAlerter> m_alerter = new List<IAlerter>();
         private ISaver m_saver;
 
@@ -48,6 +49,12 @@ namespace LBCMapping
         {
             get { return KeyWordNeeded(); }
             set { m_keyword = value; }
+        }
+
+        public int FistTimeCount
+        {
+            get { return m_firstCount; }
+            set { m_firstCount = value; }
         }
 
         public override string ToString()
@@ -98,9 +105,7 @@ namespace LBCMapping
             try
             {
                 int currentPage = 1;
-                int currentAd = 0, adsLimit = 0;
-                if (m_first)
-                    adsLimit = 35;
+                int currentAd = 0;
                 
                 while (true)
                 {
@@ -124,7 +129,7 @@ namespace LBCMapping
 
                         currentAd++;
 
-                        if (adsLimit != 0 && currentAd >= adsLimit)
+                        if (m_first && currentAd >= FistTimeCount)
                         {
                             limitReached = true;
                             break;
