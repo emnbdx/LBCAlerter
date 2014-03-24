@@ -99,7 +99,6 @@
   <ItemGroup>
     <Compile Include="Alerter\LogAlerter.cs" />
     <Compile Include="Alerter\MailAlerter.cs" />
-    <Compile Include="Alerter\RSSAlerter.cs" />
     <Compile Include="Saver\EFSaver.cs" />
     <Compile Include="NotificationService.cs" />
     <Compile Include="Program.cs" />

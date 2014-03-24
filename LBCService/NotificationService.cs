@@ -30,6 +30,7 @@ namespace LBCService
 
             using(ApplicationDbContext db = new ApplicationDbContext())
             {
+                //Add or edit job
                 foreach (Search s in db.Searches)
                 {
                     RandomJobLauncher jobLauncher;
@@ -38,22 +39,12 @@ namespace LBCService
                     if (jobLauncher == null)
                     {
                         SearchJob job = new SearchJob(s.Url, s.KeyWord, s.Ads.Count == 0);
+                        job.FistTimeCount = 35;
                         job.SetSaveMode(new EFSaver(s.ID));
-                        if (Convert.ToBoolean(ConfigurationManager.AppSettings["logAlerter"]))
-                        {
-                            LogAlerter logAlerter = new LogAlerter();
-                            job.AddAlerter(logAlerter);
-                        }
-                        if (Convert.ToBoolean(ConfigurationManager.AppSettings["mailAlerter"]))
-                        {
-                            MailAlerter mailAlerter = new MailAlerter(s.User.UserName, "Nouvelle annonce");
-                            job.AddAlerter(mailAlerter);
-                        }
-                        if (Convert.ToBoolean(ConfigurationManager.AppSettings["rssAlerter"]))
-                        {
-                            RSSAlerter rssAlerter = new RSSAlerter();
-                            job.AddAlerter(rssAlerter);
-                        }
+                        IAlerter alerter = new LogAlerter();
+                        job.AddAlerter(alerter);
+                        alerter = new MailAlerter(s.User.UserName, "Nouvelle annonce pour [" + s.KeyWord + "]");
+                        job.AddAlerter(alerter);
                         log.Info("Add job [" + s.ID + "] to list");
                         RandomJobLauncher launcher = new RandomJobLauncher(job, 5);
                         jobs.Add(s.ID, launcher);
@@ -62,6 +53,7 @@ namespace LBCService
                     }
                 }
 
+                //Delete job
                 if (jobs.Count() > db.Searches.Count())
                 {
                     foreach (Int32 id in jobs.Keys)
