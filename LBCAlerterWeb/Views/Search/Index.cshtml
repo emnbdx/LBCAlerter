@@ -26,9 +26,6 @@ else
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Url)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.KeyWord)
         </th>
         <th>
@@ -39,9 +36,6 @@ else
 
 @foreach (var item in Model) {
     <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Url)
-        </td>
         <td>
             @Html.DisplayFor(modelItem => item.KeyWord)
         </td>

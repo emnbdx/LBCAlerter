@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 
@@ -8,6 +9,8 @@ namespace LBCAlerterWeb.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
+        public DateTime RegistrationDate { get; set; }
+
         public virtual ICollection<Search> Searches { get; set; }
     }
 
@@ -42,6 +45,7 @@ namespace LBCAlerterWeb.Models
 
             var user = new ApplicationUser();
             user.UserName = "eddy.montus@gmail.com";
+            user.RegistrationDate = DateTime.Now;
             var adminresult = UserManager.Create(user, "password");
 
             if (adminresult.Succeeded)
@@ -79,6 +83,7 @@ namespace LBCAlerterWeb.Models
                 //Create User=Admin with password=123456
                 var user = new ApplicationUser();
                 user.UserName = name;
+                user.RegistrationDate = DateTime.Now;
                 var adminresult = UserManager.Create(user, password);
 
                 //Add User Admin to Role Admin

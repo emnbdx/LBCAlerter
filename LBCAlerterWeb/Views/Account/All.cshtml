@@ -9,10 +9,10 @@
 <table class="table">
     <tr>
         <th>
-            Id
+            Login
         </th>
         <th>
-            Login
+            Date
         </th>
         <th></th>
     </tr>
@@ -20,10 +20,10 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Id)
+            @Html.DisplayFor(modelItem => item.UserName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.UserName)
+            @Html.DisplayFor(modelItem => item.RegistrationDate)
         </td>
     </tr>
 }

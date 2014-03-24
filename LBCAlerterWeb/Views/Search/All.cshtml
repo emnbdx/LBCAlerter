@@ -9,13 +9,13 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Url)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.KeyWord)
         </th>
         <th>
             Nom d'utilisateur
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Url)
         </th>
         <th></th>
     </tr>
@@ -23,13 +23,13 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Url)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.KeyWord)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.User.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Url)
         </td>
         <td>
             @Html.ActionLink("Editer", "Edit", new { id=item.ID }) |
