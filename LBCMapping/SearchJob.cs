@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using EMToolBox.Job;
 using HtmlAgilityPack;
-using log4net;
 using System.Xml.Serialization;
+using log4net;
 
 namespace LBCMapping
 {
@@ -17,6 +17,7 @@ namespace LBCMapping
         private bool m_first;
         private int m_firstCount = 35; //Default value 1 page of ads
         private List<IAlerter> m_alerter = new List<IAlerter>();
+        private List<ICounter> m_counter = new List<ICounter>();
         private ISaver m_saver;
 
         private string KeyWordNeeded()
@@ -74,6 +75,15 @@ namespace LBCMapping
             get { return m_alerter; }
             set { m_alerter = value; }
         }
+        
+        /// <summary>
+        /// Get or modify counter
+        /// </summary>
+        public List<ICounter> Counter
+        {
+            get { return m_counter; }
+            set { m_counter = value; }
+        }
 
         public override string ToString()
         {
@@ -89,6 +99,29 @@ namespace LBCMapping
             foreach (IAlerter alerter in m_alerter)
             {
                 alerter.Alert(ad);
+            }
+        }
+
+        /// <summary>
+        /// Call Count() method for each counter
+        /// </summary>
+        public void Count()
+        {
+            foreach (ICounter counter in m_counter)
+            {
+                counter.Count();
+            }
+        }
+
+        /// <summary>
+        /// Call Result() method for each counter
+        /// </summary>
+        /// <param name="count">Count ads found</param>
+        public void Result(int count)
+        {
+            foreach (ICounter counter in m_counter)
+            {
+                counter.Result(count);
             }
         }
 
@@ -126,6 +159,7 @@ namespace LBCMapping
                             Alert(tmp);
 
                         currentAd++;
+                        Count();
 
                         if (m_first && currentAd >= FistTimeCount)
                         {
@@ -142,6 +176,7 @@ namespace LBCMapping
 
                 timer.Stop();
                 log.Info("Terminée en " + timer.ElapsedMilliseconds + "ms");
+                Result(currentAd);
             }
             catch (Exception e)
             {
