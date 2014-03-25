@@ -5,10 +5,10 @@
 }
 
 <h2>Liste des recherches</h2>
-@if(Model.Count() >= 1 && !Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium"))
+@if(Model.Count() >= 5 && !Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium"))
 {
     <p style="color: red;">
-        Version beta, limité à une recherche<br />
+        Version beta, limité à cinq recherches<br />
     </p>
     <!--<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
         <input type="hidden" name="cmd" value="_s-xclick">
@@ -29,6 +29,15 @@ else
             @Html.DisplayNameFor(model => model.KeyWord)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.MailAlert)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MailRecap)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RefreshTime)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Ads)
         </th>
         <th></th>
@@ -38,6 +47,15 @@ else
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.KeyWord)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MailAlert)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MailRecap)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RefreshTime)
         </td>
         <td>
             @Html.ActionLink("Liste", "AdList", new { id = item.ID })

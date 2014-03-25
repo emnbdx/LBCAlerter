@@ -57,29 +57,27 @@ namespace LBCMapping
             set { m_firstCount = value; }
         }
 
-        public override string ToString()
-        {
-            return KeyWordNeeded();
-        }
-
         /// <summary>
         /// Set saver, this is use to store ad
         /// </summary>
-        /// <param name="saver">Instance of saver to set</param>
-        public void SetSaveMode(ISaver saveMode)
+        public ISaver SaveMode
         {
-            if (saveMode != null)
-                m_saver = saveMode;
+            get { return m_saver; }
+            set { m_saver = value; }
         }
 
         /// <summary>
-        /// Add alerter for new ad notification
+        /// Get or modify alerter
         /// </summary>
-        /// <param name="alerter">Instance of alerter to add</param>
-        public void AddAlerter(IAlerter alerter)
+        public List<IAlerter> Alerters
         {
-            if (alerter != null)
-                m_alerter.Add(alerter);
+            get { return m_alerter; }
+            set { m_alerter = value; }
+        }
+
+        public override string ToString()
+        {
+            return KeyWordNeeded();
         }
 
         /// <summary>

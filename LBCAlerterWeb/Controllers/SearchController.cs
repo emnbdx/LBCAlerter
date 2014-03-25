@@ -69,20 +69,23 @@ namespace LBCAlerterWeb.Controllers
         // Afin de déjouer les attaques par sur-validation, activez les propriétés spécifiques que vous voulez lier. Pour 
         // plus de détails, voir  http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Create([Bind(Include = "ID,Url,KeyWord")] Search search)
+        public ActionResult Create([Bind(Include = "ID,Url,KeyWord,MailAlert,MailRecap,RefreshTime")] Search search)
         {
             var currentUser = UserManager.FindById(User.Identity.GetUserId());
 
             //Does user have already search
             IEnumerable<Search> searches = db.Searches.ToList().Where(entity => entity.User.Id == currentUser.Id);
 
-            if (searches.Count() >= 1 && !Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium"))
-                return Json(new { success = false, message = "Vous devez avoir un compte premium pour ajouter plus d'une recherche" });
+            if (searches.Count() >= 5 && !Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium"))
+                return Json(new { success = false, message = "Vous devez avoir un compte premium pour ajouter plus de cinq recherches" });
 
             if (ModelState.IsValid)
             {
                 search.Url = LBCMapping.HtmlParser.CleanCriteria(search.Url);
                 search.KeyWord = LBCMapping.HtmlParser.ExtractKeyWordFromCriteria(search.Url);
+                search.MailAlert = true;
+                search.MailRecap = false;
+                search.RefreshTime = 15;
                 search.User = currentUser;
                 db.Searches.Add(search);
                 db.SaveChanges();
@@ -120,7 +123,7 @@ namespace LBCAlerterWeb.Controllers
         // plus de détails, voir  http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ID,Url,KeyWord")] Search search)
+        public async Task<ActionResult> Edit([Bind(Include = "ID,Url,KeyWord,MailAlert,MailRecap,RefreshTime")] Search search)
         {
             if (ModelState.IsValid)
             {

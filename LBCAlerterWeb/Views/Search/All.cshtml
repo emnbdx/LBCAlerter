@@ -15,6 +15,15 @@
             Nom d'utilisateur
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.MailAlert)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MailRecap)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RefreshTime)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Url)
         </th>
         <th></th>
@@ -27,6 +36,15 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.User.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MailAlert)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MailRecap)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RefreshTime)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Url)

@@ -28,18 +28,18 @@ namespace LBCAlerter
         {
             //set alerter
             if (Settings.Default.AlertMode == "mail")
-                m_search.AddAlerter(new MailAlerter(Settings.Default.MailTo,
+                m_search.Alerters.Add(new MailAlerter(Settings.Default.MailTo,
                                         String.Format(resources.GetString("MailSubject"), m_search.Keyword)));
             else if (Settings.Default.AlertMode == "rss")
-                m_search.AddAlerter(new RSSAlerter());
+                m_search.Alerters.Add(new RSSAlerter());
             else
-                m_search.AddAlerter(new LogAlerter());
+                m_search.Alerters.Add(new LogAlerter());
 
             //set save mode
             if (Settings.Default.SaveMode == "settings")
-                m_search.SetSaveMode(new SettingsSaver(m_search.Keyword.Replace(' ', '+')));
+                m_search.SaveMode = new SettingsSaver(m_search.Keyword.Replace(' ', '+'));
             else
-                m_search.SetSaveMode(new FileSaver(m_search.Keyword.Replace(' ', '+')));
+                m_search.SaveMode = new FileSaver(m_search.Keyword.Replace(' ', '+'));
         }
 
         public SearchControl(LicenseInfo license, SearchJob search)
@@ -65,7 +65,7 @@ namespace LBCAlerter
             }
 
             if (m_job != null)
-                m_job.UpdateIntervalTime((int)nudRefreshTime.Value);
+                m_job.IntervalTime = (int)nudRefreshTime.Value;
         }
 
         private void btnStartStop_Click(object sender, EventArgs e)
