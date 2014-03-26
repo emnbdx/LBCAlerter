@@ -5,6 +5,9 @@ using System.Text;
 using EMToolBox;
 using HtmlAgilityPack;
 using log4net;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace LBCMapping
 {
@@ -96,7 +99,7 @@ namespace LBCMapping
         /// </summary>
         /// <param name="link">Base node for parsing</param>
         /// <returns>Ad instance with all data collected</returns>
-        public static Ad GetAdInformation(HtmlNode link)
+        public static Ad ExtractAdInformation(HtmlNode link)
         {
             HtmlNode ad = link.SelectSingleNode("div[@class='lbc']");
 
@@ -161,12 +164,76 @@ namespace LBCMapping
             if (adDate > DateTime.Now)
                 adDate = adDate.AddYears(-1);
 
+            HtmlWeb web = new HtmlWeb();
+            web.OverrideEncoding = Encoding.GetEncoding(ENCODING);
+            HtmlDocument doc = web.Load(link.GetAttributeValue("href", ""));
+
+            HtmlNode adPage = doc.DocumentNode;
+
+            HtmlNode emailNode = adPage.SelectSingleNode("div[@class='lbc_links']//a");
+            HtmlNode phoneNode = adPage.SelectSingleNode("span[@class='lbcPhone']//span[@class='phoneNumber']//a");
+
             return new Ad(adDate,
                             link.GetAttributeValue("href", ""),
                             imgNode != null ? imgNode.GetAttributeValue("src", "") : "",
                             placementNode != null ? placementNode.InnerText.Replace("\r", "").Replace("\n", "").Replace(" ", "") : "",
                             priceNode != null ? priceNode.InnerText.Trim() : "",
-                            titleNode != null ? titleNode.InnerText.Trim() : "");
+                            titleNode != null ? titleNode.InnerText.Trim() : "",
+                            emailNode != null ? emailNode.GetAttributeValue("href", "") : "",
+                            phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", "")) : "");
+        }
+
+        /// <summary>
+        /// Do ajax call to get phone gif url by replacing javascript call
+        /// </summary>
+        /// <param name="phoneLink">Clikable link to display phone number</param>
+        /// <returns>Url of phone number gif</returns>
+        private static string GetPhoneUrl(String phoneLink)
+        {
+            //Get param
+            int startIndex = phoneLink.IndexOf('(');
+            string functionParam = phoneLink.Substring(startIndex, phoneLink.Length - startIndex - 1);
+            string[] param = functionParam.Split(",".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            /*
+             * Original JSON
+             * 
+                jQuery.ajax({
+	                type:"GET",
+	                async:true,
+	                crossDomain:true,
+	                url:"http://www2.leboncoin.fr/ajapi/get/phone",
+	                data:{
+		                list_id:640715994
+	                },
+	                format:"jsonp"
+                }).done(function(f){
+	                alert(f.phoneUrl);
+                })
+             * 
+             */
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(param[0] + "/ajapi/get/phone");
+            httpWebRequest.ContentType = "text/json";
+            httpWebRequest.Method = "GET";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string json = "{ " +  
+                              "     data: { " +
+		                      "         list_id: " + param[1] +
+                              "     } " +
+	                          " }";
+
+                streamWriter.Write(json);
+            }
+            
+            JObject result;
+            using (var streamReader = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()))
+            {
+                result = JObject.Parse(streamReader.ReadToEnd());
+            }
+            return "";
         }
 
         /// <summary>
