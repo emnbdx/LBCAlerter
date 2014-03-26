@@ -39,7 +39,12 @@
                             '$.ajax({ ' +
                             '   url: \'@Url.Action("Create", "Search")\', ' +
                             '   type: \'POST\', ' +
-                            '   data: { Url: searchUrl }, ' +
+                            '   data: { ' +
+                            '       Url: searchUrl, ' +
+                            '       RefreshTime: 15, ' +
+                            '       MailAlert: true, ' +
+                            '       MailRecap: false, ' +
+                            '   }, ' +
                             '   success: function (data) { ' +
                             '       if(!data["success"]) ' +
                             '          alert(data["message"]); ' +

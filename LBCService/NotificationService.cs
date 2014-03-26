@@ -3,6 +3,7 @@ using EMToolBox.Services;
 using LBCAlerterWeb.Models;
 using LBCMapping;
 using LBCService.Alerter;
+using LBCService.Counter;
 using LBCService.Saver;
 using log4net;
 using System;
@@ -27,7 +28,8 @@ namespace LBCService
         private void SendMailRecap(Search search, ApplicationDbContext db)
         {
             if (search.MailRecap
-                && search.LastRecap.DayOfYear < DateTime.Today.DayOfYear
+                && (!search.LastRecap.HasValue || 
+                    search.LastRecap.HasValue && search.LastRecap.Value.DayOfYear < DateTime.Today.DayOfYear)
                 && DateTime.Now.Hour == 19)
             {
                 EMToolBox.EMMail mail = new EMToolBox.EMMail();
@@ -65,6 +67,8 @@ namespace LBCService
                 alerter = new MailAlerter(search.User.UserName, "Nouvelle annonce pour [" + search.KeyWord + "]");
                 job.Alerters.Add(alerter);
             }
+            ICounter counter = new EFCounter(search.ID);
+            job.Counter.Add(counter);
             log.Info("Add job [" + search.ID + "] to list");
             RandomJobLauncher launcher = new RandomJobLauncher(job, search.RefreshTime);
             jobs.Add(search.ID, launcher);

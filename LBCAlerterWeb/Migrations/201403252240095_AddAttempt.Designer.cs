@@ -7,13 +7,13 @@ namespace LBCAlerterWeb.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.0.2-21211")]
-    public sealed partial class AddSearchInfos : IMigrationMetadata
+    public sealed partial class AddAttempt : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddSearchInfos));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddAttempt));
         
         string IMigrationMetadata.Id
         {
-            get { return "201403250102440_AddSearchInfos"; }
+            get { return "201403252240095_AddAttempt"; }
         }
         
         string IMigrationMetadata.Source

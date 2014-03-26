@@ -22,6 +22,7 @@ namespace LBCAlerterWeb.Models
         }
 
         public DbSet<Search> Searches { get; set; }
+        public DbSet<Attempt> Attempts { get; set; }
         public DbSet<Ad> Ads { get; set; }
     }
 

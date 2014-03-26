@@ -148,7 +148,7 @@ namespace LBCMapping
                     bool elementFound = false, limitReached = false;
                     foreach (HtmlNode link in links)
                     {
-                        Ad tmp = HtmlParser.GetAdInformation(link);
+                        Ad tmp = HtmlParser.ExtractAdInformation(link);
 
                         if (!m_saver.Store(tmp))
                         {

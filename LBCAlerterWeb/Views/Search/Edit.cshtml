@@ -15,6 +15,9 @@
         <hr />
         @Html.ValidationSummary(true)
         @Html.HiddenFor(model => model.ID)
+        @Html.HiddenFor(model => model.CreationDate)
+        @Html.HiddenFor(model => model.Url)
+        @Html.HiddenFor(model => model.LastRecap)
 
         <div class="form-group">
             @Html.LabelFor(model => model.KeyWord, new { @class = "control-label col-md-2" })
