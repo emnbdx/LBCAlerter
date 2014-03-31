@@ -1,5 +1,5 @@
 ﻿using System;
-using EMToolBox;
+using EMToolBox.Mail;
 using log4net;
 using LBCMapping;
 
