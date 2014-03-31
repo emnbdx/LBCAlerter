@@ -16,13 +16,9 @@ namespace LBCMapping
 
         private string m_title;
 
-        private string m_emailUrl;
-
-        private string m_phoneUrl;
-
         private Uri m_url;
 
-        public Ad(DateTime date, string adUrl, string pictureUrl, string place, string price, string title, string emailUrl, string phoneUrl)
+        public Ad(DateTime date, string adUrl, string pictureUrl, string place, string price, string title)
         {
             m_date = date;
             m_adUrl = adUrl;
@@ -30,8 +26,6 @@ namespace LBCMapping
             m_place = place;
             m_price = price;
             m_title = title;
-            m_emailUrl = emailUrl;
-            m_phoneUrl = phoneUrl;
         }
 
         public Ad(Uri url)
@@ -78,18 +72,6 @@ namespace LBCMapping
         {
             get { return m_title; }
             set { m_title = value; }
-        }
-
-        public string EmailUrl
-        {
-            get { return m_emailUrl; }
-            set { m_emailUrl = value; }
-        }
-
-        public string PhoneUrl
-        {
-            get { return m_phoneUrl; }
-            set { m_phoneUrl = value; }
         }
 
         public Uri Url
