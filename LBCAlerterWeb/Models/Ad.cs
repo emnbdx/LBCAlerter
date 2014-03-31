@@ -19,8 +19,6 @@ namespace LBCAlerterWeb.Models
         public string Place { get; set; }
         public string Price { get; set; }
         public string Title { get; set; }
-        public string EmailUrl { get; set; }
-        public string PhoneUrl { get; set; }
         
         public virtual Search Search { get; set; }
 
@@ -34,8 +32,6 @@ namespace LBCAlerterWeb.Models
                 Place = ad.Place,
                 Price = ad.Price,
                 Title = ad.Title,
-                EmailUrl = ad.EmailUrl,
-                PhoneUrl = ad.PhoneUrl
             };
         }
     }
