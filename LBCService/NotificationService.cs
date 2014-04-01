@@ -1,4 +1,5 @@
 ﻿using EMToolBox.Job;
+using EMToolBox.Mail;
 using EMToolBox.Services;
 using LBCAlerterWeb.Models;
 using LBCMapping;
@@ -32,7 +33,7 @@ namespace LBCService
                     search.LastRecap.HasValue && search.LastRecap.Value.DayOfYear < DateTime.Today.DayOfYear)
                 && DateTime.Now.Hour == 19)
             {
-                EMToolBox.EMMail mail = new EMToolBox.EMMail();
+                EMMail mail = new EMMail();
                 //Body building
                 string body = "<html><body>";
                 foreach (LBCAlerterWeb.Models.Ad ad in search.Ads.Where(entry => entry.Date > DateTime.Now.AddDays(-1) && entry.Date < DateTime.Now).OrderBy(entry => entry.Date))

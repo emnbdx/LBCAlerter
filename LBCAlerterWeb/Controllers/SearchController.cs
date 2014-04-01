@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Web.Helpers;
 using log4net;
 using System.Web.Security;
+using System.ServiceModel.Syndication;
 
 namespace LBCAlerterWeb.Controllers
 {
@@ -59,10 +60,39 @@ namespace LBCAlerterWeb.Controllers
 
         public ActionResult AdList(int? id)
         {
-            if (id == null)
+            if (!id.HasValue)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             return View(db.Ads.Where(ad => ad.Search.ID == id).OrderByDescending(ad => ad.Date).Take(50).ToList());
+        }
+
+        public ActionResult AdListFeed(int? id)
+        {
+            if (!id.HasValue)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            Search search = db.Searches.FirstOrDefault(entry => entry.ID == id);
+
+            SyndicationFeed feed = new SyndicationFeed("LBCAlerter search #" + id,
+                            "Recherche pour l'annonce [" + search.KeyWord + "]",
+                            new Uri("http://Search/AdListFeed/" + id),
+                            Convert.ToString(id),
+                            DateTime.Now);
+
+            List<Ad> ads = db.Ads.Where(ad => ad.Search.ID == id).OrderByDescending(ad => ad.Date).Take(50).ToList();
+            List<SyndicationItem> items = new List<SyndicationItem>();
+            foreach(Ad ad in ads)
+            {
+                SyndicationItem item = new SyndicationItem(ad.Title, 
+                    ad.Url, 
+                    new Uri(ad.Url), 
+                    Convert.ToString(ad.ID), 
+                    ad.Date);
+                items.Add(item);
+            }
+            
+            feed.Items = items;
+            return new RssActionResult() { Feed = feed };
         }
 
         // POST: /Search/Create

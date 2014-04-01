@@ -14,6 +14,10 @@ else
     <h4>Liste des @Model.Count() dernières annonces trouvées</h4>
 }
 
+@if (Model.Count() > 0) {
+    <label>Flux Rss: </label>@Html.ActionLink("Flux", "AdListFeed", new { id = Model.First().Search.ID })
+}
+
 <table class="table">
 
 @foreach (var item in Model) {
