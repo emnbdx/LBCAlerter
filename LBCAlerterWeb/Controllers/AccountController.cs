@@ -10,29 +10,40 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using LBCAlerterWeb.Models;
 using EMToolBox.Mail;
+using System.Data.Entity;
 
 namespace LBCAlerterWeb.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        private ApplicationDbContext db;
+
         private void SendEmailConfirmation(string to, string confirmationToken)
         {
             EMMail mail = new EMMail();
-            mail.SendSmtpMail("Confirmation de votre compte", "", to, null);
+            String body = @"<html>
+                                <body>
+                                    <h1>Vous venez de vous inscrire sur LBCAlerter, MERCI !</h1>
+                                    <div>
+                                        Afin de valider votre inscription, merci de cliquer sur le lien suivant
+                                        <br /><br />
+                                        <a href=""http://lbcalerter.eddymontus.fr/Account/RegisterConfirmation/" + confirmationToken + "\">" +
+                                            "http://lbcalerter.eddymontus.fr/Account/RegisterConfirmation/" + confirmationToken + 
+                                        @"</a>
+                                    </div>
+                                </body>
+                            </html>";
+            mail.SendSmtpMail("Confirmation de votre compte", body, to);
         }
 
         private bool ConfirmAccount(string confirmationToken)
         {
-            ApplicationDbContext context = new ApplicationDbContext();
-            ApplicationUser user = context.Users.SingleOrDefault(entry => entry.EmailVerificationToken == confirmationToken);
+            ApplicationUser user = db.Users.SingleOrDefault(entry => entry.EmailVerificationToken == confirmationToken);
             if (user != null)
             {
                 user.IsEmailVerified = true;
-                DbSet<ApplicationUser> dbSet = context.Set<ApplicationUser>();
-                dbSet.Attach(user);
-                context.Entry(user).State = EntityState.Modified;
-                context.SaveChanges();
+                db.SaveChanges();
 
                 return true;
             }
@@ -40,12 +51,9 @@ namespace LBCAlerterWeb.Controllers
         }
 
         public AccountController()
-            : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
-        { }
-
-        public AccountController(UserManager<ApplicationUser> userManager)
         {
-            UserManager = userManager;
+            db = new ApplicationDbContext();
+            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
             UserManager.UserValidator = new UserValidator<ApplicationUser>(UserManager) { AllowOnlyAlphanumericUserNames = false };
         }
 
@@ -79,14 +87,21 @@ namespace LBCAlerterWeb.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindAsync(model.Email, model.Password);
-                if (user != null && user.IsEmailVerified)
+                if (user != null)
                 {
-                    await SignInAsync(user, model.RememberMe);
-                    return RedirectToLocal(returnUrl);
+                    if (user.IsEmailVerified)
+                    {
+                        await SignInAsync(user, model.RememberMe);
+                        return RedirectToLocal(returnUrl);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Votre compte n'est pas validé, vérifiez vos emails.");
+                    }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Invalid username or password.");
+                    ModelState.AddModelError("", "Email ou mot de passe invalide.");
                 }
             }
 
@@ -115,17 +130,15 @@ namespace LBCAlerterWeb.Controllers
                 {
                     UserName = model.Email,
                     RegistrationDate = DateTime.Now,
-                    EmailVerificationToken = new Guid().ToString(),
+                    EmailVerificationToken = Guid.NewGuid().ToString(),
                     IsEmailVerified = false
                 };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    /*UserManager.AddToRole(user.Id, "user");
-                    await SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");*/
+                    UserManager.AddToRole(user.Id, "user");
                     SendEmailConfirmation(user.UserName, user.EmailVerificationToken);
-                    return RedirectToAction("RegisterStep2", "Account");
+                    return RedirectToAction("Validation");
                 }
                 else
                 {
@@ -138,13 +151,33 @@ namespace LBCAlerterWeb.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult RegisterConfirmation(string Id)
+        public ActionResult Validation()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> RegisterConfirmation(string Id)
         {
             if (ConfirmAccount(Id))
             {
+                ApplicationUser user = db.Users.SingleOrDefault(entry => entry.EmailVerificationToken == Id && entry.IsEmailVerified == true);
+                await SignInAsync(user, isPersistent: false);
+
                 return RedirectToAction("ConfirmationSuccess");
             }
             return RedirectToAction("ConfirmationFailure");
+        }
+
+        public async Task<ActionResult> ConfirmationSuccess(string Id)
+        { 
+            return View();
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> ConfirmationFailure()
+        {
+            return View();
         }
 
         //

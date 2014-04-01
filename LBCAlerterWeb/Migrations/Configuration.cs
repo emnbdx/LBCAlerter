@@ -1,5 +1,6 @@
 namespace LBCAlerterWeb.Migrations
 {
+    using LBCAlerterWeb.Models;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -15,18 +16,14 @@ namespace LBCAlerterWeb.Migrations
 
         protected override void Seed(LBCAlerterWeb.Models.ApplicationDbContext context)
         {
-            //  This method will be called after migrating to the latest version.
+            //Set existing user verified
+            foreach(ApplicationUser u in context.Users)
+            {
+                u.EmailVerificationToken = Guid.NewGuid().ToString();
+                u.IsEmailVerified = true;
+            }
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+            context.SaveChanges();
         }
     }
 }

@@ -189,6 +189,10 @@
     <Compile Include="Migrations\201403252240095_AddAttempt.Designer.cs">
       <DependentUpon>201403252240095_AddAttempt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201404012103469_AccountConfirmation.cs" />
+    <Compile Include="Migrations\201404012103469_AccountConfirmation.Designer.cs">
+      <DependentUpon>201404012103469_AccountConfirmation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Ad.cs" />
@@ -249,6 +253,9 @@
     <Content Include="Views\Search\AdList.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\All.cshtml" />
+    <Content Include="Views\Account\Validation.cshtml" />
+    <Content Include="Views\Account\ConfirmationFailure.cshtml" />
+    <Content Include="Views\Account\ConfirmationSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -282,6 +289,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201403252240095_AddAttempt.resx">
       <DependentUpon>201403252240095_AddAttempt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201404012103469_AccountConfirmation.resx">
+      <DependentUpon>201404012103469_AccountConfirmation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
