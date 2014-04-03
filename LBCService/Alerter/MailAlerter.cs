@@ -2,6 +2,10 @@
 using EMToolBox.Mail;
 using log4net;
 using LBCMapping;
+using System.Collections.Generic;
+using System.Reflection;
+using System.IO;
+using LBCAlerterWeb.App_Code;
 
 namespace LBCService.Alerter
 {
@@ -36,18 +40,14 @@ namespace LBCService.Alerter
         {
             log.Info("Envoie du mail [" + ad.Title + "]");
 
-            string body = @"<html>
-                                <body>
-                                    <h1>" + ad.Title + @"</h1>
-                                    <div>" +
-                                        ad.Date + ", " + ad.Place + ", " + ad.Price +
-                                    "<br><br>" +
-                                    "<a href=\"" + ad.AdUrl + "\">" + (String.IsNullOrEmpty(ad.PictureUrl) ? "Pas d'image" : "<img src=\"" + ad.PictureUrl + "\">") + "</a>" +
-                                    @"</div>
-                                </body>
-                            </html>";
-
-            mailer.SendSmtpMail(m_subject, body, m_to);
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("[Title]", ad.Title);
+            parameters.Add("[Date]", ad.Date);
+            parameters.Add("[Place]", ad.Place);
+            parameters.Add("[Price]", ad.Price);
+            parameters.Add("[AdUrl]", ad.AdUrl);
+            parameters.Add("[PictureUrl]", ad.PictureUrl);
+            mailer.SendSmtpMail(m_subject, m_to, MailPattern.GetPattern(MailType.Ad), parameters);
         }
 
         #endregion public

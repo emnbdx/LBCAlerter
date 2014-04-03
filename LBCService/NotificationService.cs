@@ -1,6 +1,7 @@
 ﻿using EMToolBox.Job;
 using EMToolBox.Mail;
 using EMToolBox.Services;
+using LBCAlerterWeb.App_Code;
 using LBCAlerterWeb.Models;
 using LBCMapping;
 using LBCService.Alerter;
@@ -34,19 +35,30 @@ namespace LBCService
                 && DateTime.Now.Hour == 19)
             {
                 EMMail mail = new EMMail();
-                //Body building
-                string body = "<html><body>";
-                foreach (LBCAlerterWeb.Models.Ad ad in search.Ads.Where(entry => entry.Date > DateTime.Now.AddDays(-1) && entry.Date < DateTime.Now).OrderBy(entry => entry.Date))
+                Dictionary<string, object> parameters = new Dictionary<string, object>();
+                parameters.Add("[Title]", "Recap quotidien pour [" + search.KeyWord + "]");
+                parameters.Add("[AdCount]", search.Ads.Where(entry => entry.Date > search.LastRecap).Count());
+                int attempsCount = search.Attempts.Where(entry => entry.ProcessDate > search.LastRecap).Count();
+                parameters.Add("[AttemptCount]", attempsCount);
+                parameters.Add("[AttemptCadence]", 24 * 60 / attempsCount);
+
+                string ads = "";
+                foreach (LBCAlerterWeb.Models.Ad ad in search.Ads.Where(entry => entry.Date > search.LastRecap).OrderBy(entry => entry.Date))
                 {
-                    body += @"<h1>" + ad.Title + @"</h1>
-                                <div>" +
-                                    ad.Date + ", " + ad.Place + ", " + ad.Price +
-                                    "<br><br>" +
-                                    "<a href=\"" + ad.Url + "\">" + (String.IsNullOrEmpty(ad.PictureUrl) ? "Pas d'image" : "<img src=\"" + ad.PictureUrl + "\">") + "</a>" +
-                                "</div>";
+                    Dictionary<string, object> adParameters = new Dictionary<string, object>();
+                    adParameters.Add("[Title]", ad.Title);
+                    adParameters.Add("[Date]", ad.Date);
+                    adParameters.Add("[Place]", ad.Place);
+                    adParameters.Add("[Price]", ad.Price);
+                    adParameters.Add("[AdUrl]", ad.Url);
+                    adParameters.Add("[PictureUrl]", ad.PictureUrl);
+                    Formater f = new Formater(MailPattern.GetPattern(MailType.RecapAd), adParameters);
+                    ads += f.GetFormated();
                 }
-                body += "</html></body>";
-                mail.SendSmtpMail("Recap quotidien pour [" + search.KeyWord + "]", body, search.User.UserName);
+
+                parameters.Add("[Ads]", ads);
+
+                mail.SendSmtpMail("Recap quotidien pour [" + search.KeyWord + "]", search.User.UserName, MailPattern.GetPattern(MailType.Recap), parameters);
                 search.LastRecap = DateTime.Now;
                 db.SaveChanges();
             }

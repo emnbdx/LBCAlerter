@@ -11,6 +11,7 @@ using Microsoft.Owin.Security;
 using LBCAlerterWeb.Models;
 using EMToolBox.Mail;
 using System.Data.Entity;
+using LBCAlerterWeb.App_Code;
 
 namespace LBCAlerterWeb.Controllers
 {
@@ -22,19 +23,10 @@ namespace LBCAlerterWeb.Controllers
         private void SendEmailConfirmation(string to, string confirmationToken)
         {
             EMMail mail = new EMMail();
-            String body = @"<html>
-                                <body>
-                                    <h1>Vous venez de vous inscrire sur LBCAlerter, MERCI !</h1>
-                                    <div>
-                                        Afin de valider votre inscription, merci de cliquer sur le lien suivant
-                                        <br /><br />
-                                        <a href=""http://lbcalerter.eddymontus.fr/Account/RegisterConfirmation/" + confirmationToken + "\">" +
-                                            "http://lbcalerter.eddymontus.fr/Account/RegisterConfirmation/" + confirmationToken + 
-                                        @"</a>
-                                    </div>
-                                </body>
-                            </html>";
-            mail.SendSmtpMail("Confirmation de votre compte", body, to);
+            Dictionary<string, object> parameters = new Dictionary<string,object>();
+            parameters.Add("[Title]", "Vous venez de vous inscrire sur LBCAlerter, MERCI !");
+            parameters.Add("[Token]", confirmationToken);
+            mail.SendSmtpMail("Confirmation de votre compte", to, MailPattern.GetPattern(MailType.Confirmation), parameters);
         }
 
         private bool ConfirmAccount(string confirmationToken)
