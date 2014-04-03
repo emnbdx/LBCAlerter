@@ -14,7 +14,7 @@ namespace LBCAlerterWeb.App_Code
             String patternBody = "";
 
             var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "EMToolBox.Mail.";
+            var resourceName = "LBCAlerterWeb.App_Code.pattern.";
 
             switch(type)
             {
