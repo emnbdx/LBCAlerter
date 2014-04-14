@@ -59,7 +59,7 @@ namespace LBCService
 
                 parameters.Add("[Ads]", ads);
 
-                mail.SendSmtpMail("Recap quotidien pour [" + search.KeyWord + "]", search.User.UserName, MailPattern.GetPattern(MailType.Recap), parameters);
+                mail.SendSmtpMail("[LBCAlerter] - Recap quotidien pour [" + search.KeyWord + "]", search.User.UserName, MailPattern.GetPattern(MailType.Recap), parameters);
                 
                 using(ApplicationDbContext db = new ApplicationDbContext())
                 {
@@ -85,7 +85,7 @@ namespace LBCService
             job.Alerters.Add(alerter);
             if (search.MailAlert)
             {
-                alerter = new MailAlerter(search.User.UserName, "Nouvelle annonce pour [" + search.KeyWord + "]");
+                alerter = new MailAlerter(search.User.UserName, "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]");
                 job.Alerters.Add(alerter);
             }
             ICounter counter = new EFCounter(search.ID);
