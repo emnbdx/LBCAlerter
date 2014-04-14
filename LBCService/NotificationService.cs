@@ -26,24 +26,25 @@ namespace LBCService
         /// Send daily mail at 19h if not already send
         /// </summary>
         /// <param name="search">Current search</param>
-        /// <param name="db">Context</param>
-        private void SendMailRecap(Search search, ApplicationDbContext db)
+        private void SendMailRecap(Search search)
         {
             if (search.MailRecap
                 && (!search.LastRecap.HasValue || 
                     search.LastRecap.HasValue && search.LastRecap.Value.DayOfYear < DateTime.Today.DayOfYear)
-                && DateTime.Now.Hour == 19)
+                && DateTime.Now.Hour == Convert.ToInt32(ConfigurationManager.AppSettings["Heure mail recap"]))
             {
+                DateTime lastDay = DateTime.Now.AddDays(-1);
+                
                 EMMail mail = new EMMail();
                 Dictionary<string, object> parameters = new Dictionary<string, object>();
                 parameters.Add("[Title]", "Recap quotidien pour [" + search.KeyWord + "]");
-                parameters.Add("[AdCount]", search.Ads.Where(entry => entry.Date > search.LastRecap).Count());
-                int attempsCount = search.Attempts.Where(entry => entry.ProcessDate > search.LastRecap).Count();
+                parameters.Add("[AdCount]", search.Ads.Where(entry => entry.Date > lastDay).Count());
+                int attempsCount = search.Attempts.Where(entry => entry.ProcessDate > lastDay).Count();
                 parameters.Add("[AttemptCount]", attempsCount);
                 parameters.Add("[AttemptCadence]", 24 * 60 / attempsCount);
 
                 string ads = "";
-                foreach (LBCAlerterWeb.Models.Ad ad in search.Ads.Where(entry => entry.Date > search.LastRecap).OrderBy(entry => entry.Date))
+                foreach (LBCAlerterWeb.Models.Ad ad in search.Ads.Where(entry => entry.Date > lastDay).OrderBy(entry => entry.Date))
                 {
                     Dictionary<string, object> adParameters = new Dictionary<string, object>();
                     adParameters.Add("[Title]", ad.Title);
@@ -59,8 +60,15 @@ namespace LBCService
                 parameters.Add("[Ads]", ads);
 
                 mail.SendSmtpMail("Recap quotidien pour [" + search.KeyWord + "]", search.User.UserName, MailPattern.GetPattern(MailType.Recap), parameters);
-                search.LastRecap = DateTime.Now;
-                db.SaveChanges();
+                
+                using(ApplicationDbContext db = new ApplicationDbContext())
+                {
+                    Search s = db.Searches.FirstOrDefault(entry => entry.ID == search.ID);
+                    if (s == null)
+                        throw new Exception("Recherche inexistante...");
+                    s.LastRecap = DateTime.Now;
+                    db.SaveChanges();
+                }
             }
         }
 
@@ -159,7 +167,7 @@ namespace LBCService
                 //Add or edit job
                 foreach (Search s in db.Searches)
                 {
-                    SendMailRecap(s, db);
+                    SendMailRecap(s);
                     
                     RandomJobLauncher jobLauncher;
                     jobs.TryGetValue(s.ID, out jobLauncher);
