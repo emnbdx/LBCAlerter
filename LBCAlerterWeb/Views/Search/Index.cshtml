@@ -40,9 +40,6 @@ else
         <th>
             @Html.DisplayNameFor(model => model.Ads)
         </th>
-        <th>
-            Rss
-        </th>
         <th></th>
     </tr>
 
@@ -62,9 +59,6 @@ else
         </td>
         <td>
             @Html.ActionLink("Liste", "AdList", new { id = item.ID })
-        </td>
-        <td>
-            @Html.ActionLink("Flux", "AdListFeed", new { id = item.ID })
         </td>
         <td>
             @Html.ActionLink("Editer", "Edit", new { id=item.ID }) |

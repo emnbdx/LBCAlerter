@@ -12,7 +12,13 @@
             Login
         </th>
         <th>
+            Type
+        </th>
+        <th>
             Date
+        </th>
+        <th>
+            Activé ?
         </th>
         <th></th>
     </tr>
@@ -23,7 +29,13 @@
             @Html.DisplayFor(modelItem => item.UserName)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.Roles.FirstOrDefault().Role.Name)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.RegistrationDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsEmailVerified)
         </td>
     </tr>
 }

@@ -52,12 +52,9 @@ namespace LBCAlerterWeb.Controllers
         public UserManager<ApplicationUser> UserManager { get; private set; }
 
         [Authorize(Roles = "admin")]
-        public ActionResult All()
+        public async Task<ActionResult> All()
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                return View(db.Users.ToList());
-            }
+            return View(await db.Users.ToListAsync());
         }
 
         //
@@ -88,7 +85,7 @@ namespace LBCAlerterWeb.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Votre compte n'est pas validé, vérifiez vos emails.");
+                        ModelState.AddModelError("", "Votre compte n'est pas validé, veuillez vérifier vos emails.");
                     }
                 }
                 else
