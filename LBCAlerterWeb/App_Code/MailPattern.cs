@@ -26,6 +26,8 @@ namespace LBCAlerterWeb.App_Code
                     resourceName += "lbc-recap.html"; break;
                 case MailType.RecapAd:
                     resourceName += "lbc-recap-ad.html"; break;
+                case MailType.Reset:
+                    resourceName += "lbc-reset.html"; break;
                 default: throw new Exception("unknow pattern");
 
             }
@@ -45,6 +47,7 @@ namespace LBCAlerterWeb.App_Code
         Ad,
         Confirmation,
         Recap,
-        RecapAd
+        RecapAd,
+        Reset
     }
 }

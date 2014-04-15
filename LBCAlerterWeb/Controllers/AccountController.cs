@@ -20,13 +20,14 @@ namespace LBCAlerterWeb.Controllers
     {
         private ApplicationDbContext db;
 
+        #region Advanced Registration
         private void SendEmailConfirmation(string to, string confirmationToken)
         {
             EMMail mail = new EMMail();
-            Dictionary<string, object> parameters = new Dictionary<string,object>();
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("[Title]", "Vous venez de vous inscrire sur LBCAlerter, MERCI !");
             parameters.Add("[Token]", confirmationToken);
-            mail.SendSmtpMail("Confirmation de votre compte", to, MailPattern.GetPattern(MailType.Confirmation), parameters);
+            mail.SendSmtpMail("[LBCAlerter] - Confirmation de votre compte", to, MailPattern.GetPattern(MailType.Confirmation), parameters);
         }
 
         private bool ConfirmAccount(string confirmationToken)
@@ -42,6 +43,177 @@ namespace LBCAlerterWeb.Controllers
             return false;
         }
 
+        //
+        // GET: /Account/Register
+        [AllowAnonymous]
+        public ActionResult Register()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Account/Register
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser()
+                {
+                    UserName = model.Email,
+                    RegistrationDate = DateTime.Now,
+                    EmailVerificationToken = Guid.NewGuid().ToString(),
+                    IsEmailVerified = false
+                };
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    UserManager.AddToRole(user.Id, "user");
+                    SendEmailConfirmation(user.UserName, user.EmailVerificationToken);
+                    return RedirectToAction("RegisterStepTwo");
+                }
+                else
+                {
+                    AddErrors(result);
+                }
+            }
+
+            // Si nous sommes arrivés là, un échec s’est produit. Réafficher le formulaire
+            return View(model);
+        }
+
+        [AllowAnonymous]
+        public ActionResult RegisterStepTwo()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> RegisterConfirmation(string Id)
+        {
+            if (ConfirmAccount(Id))
+            {
+                ApplicationUser user = db.Users.SingleOrDefault(entry => entry.EmailVerificationToken == Id && entry.IsEmailVerified == true);
+                await SignInAsync(user, isPersistent: false);
+
+                return RedirectToAction("Success");
+            }
+            return RedirectToAction("Failure");
+        }
+        #endregion
+
+        #region Password Reset
+        private void SendEmailReset(string to, string confirmationToken)
+        {
+            EMMail mail = new EMMail();
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("[Title]", "Réinitialision de mot de passe");
+            parameters.Add("[Token]", confirmationToken);
+            mail.SendSmtpMail("[LBCAlerter] - réinitialision de mot de passe", to, MailPattern.GetPattern(MailType.Reset), parameters);
+        }
+
+        private string GeneratePasswordResetToken(string userName)
+        {
+            string token = string.Empty;
+            
+            ApplicationUser user = db.Users.FirstOrDefault(entry => entry.UserName == userName);
+            if (user == null)
+                return string.Empty;
+            user.EmailResetToken = Guid.NewGuid().ToString();
+            user.EmailResetDate = DateTime.Now;
+            db.SaveChanges();
+            
+            return token;
+        }
+
+        private bool ResetPassword(string passwordResetToken, string newPassword)
+        {
+            ApplicationUser user = db.Users.FirstOrDefault(entry => entry.EmailResetToken == passwordResetToken);
+            if (user == null)
+                return false;
+            //We have to remove the password before we can add it.
+            IdentityResult result = UserManager.RemovePassword(user.Id);
+            if (!result.Succeeded)
+                return false;
+            //We have to add it because we do not have the old password to change it.
+            result = UserManager.AddPassword(user.Id, newPassword);
+            if (!result.Succeeded)
+                return false;
+
+            //Lets remove the token so it cannot be used again.
+            user.EmailVerificationToken = null;
+            db.SaveChanges();
+            return true;
+        }
+
+        [AllowAnonymous]
+        public ActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult ResetPassword(ResetPasswordModel model)
+        {
+            if (!string.IsNullOrEmpty(model.Email))
+            {
+                string confirmationToken = GeneratePasswordResetToken(model.Email);
+                SendEmailReset(model.Email, confirmationToken);
+                return RedirectToAction("ResetPasswordStepTwo");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Email invalide.");
+            }
+
+            // Si nous sommes arrivés là, un échec s’est produit. Réafficher le formulaire
+            return View(model);
+        }
+
+        [AllowAnonymous]
+        public ActionResult ResetPasswordStepTwo()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult> ResetPasswordConfirmation(ResetPasswordConfirmModel model)
+        {
+            if (ResetPassword(model.Token, model.NewPassword))
+            {
+                ApplicationUser user = db.Users.SingleOrDefault(entry => entry.EmailResetToken == model.Token);
+                await SignInAsync(user, isPersistent: false);
+                
+                return RedirectToAction("Success");
+            }
+            return RedirectToAction("Failure");
+        }
+
+        [AllowAnonymous]
+        public ActionResult ResetPasswordConfirmation(string Id)
+        {
+            ResetPasswordConfirmModel model = new ResetPasswordConfirmModel() { Token = Id };
+            return View(model);
+        }
+        #endregion
+
+        #region Shared Screen
+        public ActionResult Success(string Id)
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult Failure()
+        {
+            return View();
+        }
+        #endregion
+
         public AccountController()
         {
             db = new ApplicationDbContext();
@@ -54,7 +226,7 @@ namespace LBCAlerterWeb.Controllers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> All()
         {
-            return View(await db.Users.ToListAsync());
+            return View(await db.Users.OrderByDescending(entry => entry.RegistrationDate).ToListAsync());
         }
 
         //
@@ -96,77 +268,6 @@ namespace LBCAlerterWeb.Controllers
 
             // Si nous sommes arrivés là, un échec s’est produit. Réafficher le formulaire
             return View(model);
-        }
-
-        //
-        // GET: /Account/Register
-        [AllowAnonymous]
-        public ActionResult Register()
-        {
-            return View();
-        }
-
-        //
-        // POST: /Account/Register
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser()
-                {
-                    UserName = model.Email,
-                    RegistrationDate = DateTime.Now,
-                    EmailVerificationToken = Guid.NewGuid().ToString(),
-                    IsEmailVerified = false
-                };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    UserManager.AddToRole(user.Id, "user");
-                    SendEmailConfirmation(user.UserName, user.EmailVerificationToken);
-                    return RedirectToAction("Validation");
-                }
-                else
-                {
-                    AddErrors(result);
-                }
-            }
-
-            // Si nous sommes arrivés là, un échec s’est produit. Réafficher le formulaire
-            return View(model);
-        }
-
-        [AllowAnonymous]
-        public ActionResult Validation()
-        {
-            return View();
-        }
-
-        [AllowAnonymous]
-        public async Task<ActionResult> RegisterConfirmation(string Id)
-        {
-            if (ConfirmAccount(Id))
-            {
-                ApplicationUser user = db.Users.SingleOrDefault(entry => entry.EmailVerificationToken == Id && entry.IsEmailVerified == true);
-                await SignInAsync(user, isPersistent: false);
-
-                return RedirectToAction("ConfirmationSuccess");
-            }
-            return RedirectToAction("ConfirmationFailure");
-        }
-
-        public async Task<ActionResult> ConfirmationSuccess(string Id)
-        { 
-            return View();
-        }
-
-        [AllowAnonymous]
-        public async Task<ActionResult> ConfirmationFailure()
-        {
-            return View();
         }
 
         //

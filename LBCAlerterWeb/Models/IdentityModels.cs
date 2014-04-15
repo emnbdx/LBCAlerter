@@ -15,6 +15,10 @@ namespace LBCAlerterWeb.Models
 
         public bool IsEmailVerified { get; set; }
 
+        public string EmailResetToken { get; set; }
+
+        public DateTime? EmailResetDate { get; set; }
+
         public virtual ICollection<Search> Searches { get; set; }
     }
 

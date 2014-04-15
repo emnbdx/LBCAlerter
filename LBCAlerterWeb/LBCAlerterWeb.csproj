@@ -196,6 +196,10 @@
     <Compile Include="Migrations\201404012103469_AccountConfirmation.Designer.cs">
       <DependentUpon>201404012103469_AccountConfirmation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201404142356166_ResetPassword.cs" />
+    <Compile Include="Migrations\201404142356166_ResetPassword.Designer.cs">
+      <DependentUpon>201404142356166_ResetPassword.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Ad.cs" />
@@ -210,6 +214,7 @@
     <EmbeddedResource Include="App_Code\pattern\lbc-ad.html" />
     <EmbeddedResource Include="App_Code\pattern\lbc-recap-ad.html" />
     <EmbeddedResource Include="App_Code\pattern\lbc-recap.html" />
+    <EmbeddedResource Include="App_Code\pattern\lbc-reset.html" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
@@ -218,6 +223,9 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <EmbeddedResource Include="Migrations\201404142356166_ResetPassword.resx">
+      <DependentUpon>201404142356166_ResetPassword.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\PublishProfiles\perso.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -260,9 +268,12 @@
     <Content Include="Views\Search\AdList.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\All.cshtml" />
-    <Content Include="Views\Account\Validation.cshtml" />
-    <Content Include="Views\Account\ConfirmationFailure.cshtml" />
-    <Content Include="Views\Account\ConfirmationSuccess.cshtml" />
+    <Content Include="Views\Account\RegisterStepTwo.cshtml" />
+    <Content Include="Views\Account\Failure.cshtml" />
+    <Content Include="Views\Account\Success.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\ResetPasswordStepTwo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
