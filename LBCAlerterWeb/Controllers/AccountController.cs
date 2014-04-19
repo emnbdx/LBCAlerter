@@ -116,23 +116,20 @@ namespace LBCAlerterWeb.Controllers
 
         private string GeneratePasswordResetToken(string userName)
         {
-            string token = string.Empty;
+            string token = Guid.NewGuid().ToString();
             
             ApplicationUser user = db.Users.FirstOrDefault(entry => entry.UserName == userName);
             if (user == null)
                 return string.Empty;
-            user.EmailResetToken = Guid.NewGuid().ToString();
+            user.EmailResetToken = token;
             user.EmailResetDate = DateTime.Now;
             db.SaveChanges();
             
             return token;
         }
 
-        private bool ResetPassword(string passwordResetToken, string newPassword)
+        private bool ResetPassword(ApplicationUser user, string newPassword)
         {
-            ApplicationUser user = db.Users.FirstOrDefault(entry => entry.EmailResetToken == passwordResetToken);
-            if (user == null)
-                return false;
             //We have to remove the password before we can add it.
             IdentityResult result = UserManager.RemovePassword(user.Id);
             if (!result.Succeeded)
@@ -143,7 +140,7 @@ namespace LBCAlerterWeb.Controllers
                 return false;
 
             //Lets remove the token so it cannot be used again.
-            user.EmailVerificationToken = null;
+            user.EmailResetToken = null;
             db.SaveChanges();
             return true;
         }
@@ -183,11 +180,10 @@ namespace LBCAlerterWeb.Controllers
         [HttpPost]
         public async Task<ActionResult> ResetPasswordConfirmation(ResetPasswordConfirmModel model)
         {
-            if (ResetPassword(model.Token, model.NewPassword))
+            ApplicationUser user = db.Users.FirstOrDefault(entry => entry.EmailResetToken == model.Token);
+            if (user != null && ResetPassword(user, model.NewPassword))
             {
-                ApplicationUser user = db.Users.SingleOrDefault(entry => entry.EmailResetToken == model.Token);
                 await SignInAsync(user, isPersistent: false);
-                
                 return RedirectToAction("Success");
             }
             return RedirectToAction("Failure");
