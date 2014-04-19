@@ -4,9 +4,26 @@
 
 <h2>@ViewBag.Title</h2>
 
-Votre compte est validé<br />
-<br />
-Rendez-vous dans l'onglet "Mes Recherches" pour gérer vos recherches
+@if (ViewContext.RouteData.Values["id"].ToString() == "Register")
+{
+    <p>
+        Votre compte est validé<br />
+        <br />
+        Rendez-vous dans l'onglet "Mes Recherches" pour gérer vos recherches
+    </p>
+}
+else if (ViewContext.RouteData.Values["id"].ToString() == "Reset")
+{
+    <p>
+        Votre mot de passe a bien été réinitialisé
+    </p>
+}
+else
+{
+    <p>
+        OK cowboy
+    </p>
+}
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

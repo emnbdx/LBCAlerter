@@ -98,9 +98,9 @@ namespace LBCAlerterWeb.Controllers
                 ApplicationUser user = db.Users.SingleOrDefault(entry => entry.EmailVerificationToken == Id && entry.IsEmailVerified == true);
                 await SignInAsync(user, isPersistent: false);
 
-                return RedirectToAction("Success");
+                return RedirectToAction("Success", "Register");
             }
-            return RedirectToAction("Failure");
+            return RedirectToAction("Failure", "Register");
         }
         #endregion
 
@@ -184,9 +184,9 @@ namespace LBCAlerterWeb.Controllers
             if (user != null && ResetPassword(user, model.NewPassword))
             {
                 await SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Success");
+                return RedirectToAction("Success", "Reset");
             }
-            return RedirectToAction("Failure");
+            return RedirectToAction("Failure", "Reset");
         }
 
         [AllowAnonymous]
