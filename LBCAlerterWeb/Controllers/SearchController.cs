@@ -71,7 +71,7 @@ namespace LBCAlerterWeb.Controllers
             if (!id.HasValue)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            Search search = db.Searches.FirstOrDefault(entry => entry.ID == id);
+            /*Search search = db.Searches.FirstOrDefault(entry => entry.ID == id);
 
             SyndicationFeed feed = new SyndicationFeed("LBCAlerter search #" + id,
                             "Recherche pour l'annonce [" + search.KeyWord + "]",
@@ -92,7 +92,19 @@ namespace LBCAlerterWeb.Controllers
             }
             
             feed.Items = items;
-            return new RssActionResult() { Feed = feed };
+            return new RssActionResult() { Feed = feed };*/
+
+            var search = db.Searches.FirstOrDefault(entry => entry.ID == id);
+            var postItems = db.Ads.Where(ad => ad.Search.ID == id).OrderByDescending(ad => ad.Date).Take(50).ToList()
+                .Select(p => new SyndicationItem(p.Title, "", new Uri(p.Url)));
+
+            var feed = new SyndicationFeed(search.KeyWord, "", new Uri(LBCMapping.HtmlParser.URL_BASE + search.Url), postItems)
+            {
+                Copyright = new TextSyndicationContent("© " + DateTime.Today.Year + " - LBCAlerter"),
+                Language = "fr"
+            };
+
+            return new RssActionResult(new Rss20FeedFormatter(feed));
         }
 
         // POST: /Search/Create

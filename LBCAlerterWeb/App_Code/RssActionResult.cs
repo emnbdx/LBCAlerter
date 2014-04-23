@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Syndication;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml;
@@ -10,17 +11,34 @@ namespace LBCAlerterWeb
 {
     public class RssActionResult : ActionResult
     {
-        public SyndicationFeed Feed { get; set; }
+        public Encoding ContentEncoding { get; set; }
+        public string ContentType { get; set; }
 
-        public override void ExecuteResult(ControllerContext context)
+        private readonly SyndicationFeedFormatter feed;
+        public SyndicationFeedFormatter Feed{
+            get { return feed; }
+        }
+
+        public RssActionResult(SyndicationFeedFormatter feed)
         {
-            context.HttpContext.Response.ContentType = "application/rss+xml";
+            this.feed = feed;
+        }
 
-            Rss20FeedFormatter rssFormatter = new Rss20FeedFormatter(Feed);
-            using (XmlWriter writer = XmlWriter.Create(context.HttpContext.Response.Output))
-            {
-                rssFormatter.WriteTo(writer);
-            }
+        public override void ExecuteResult(ControllerContext context) {
+            if (context == null)
+                throw new ArgumentNullException("context");
+
+            HttpResponseBase response = context.HttpContext.Response;
+            response.ContentType = !string.IsNullOrEmpty(ContentType) ? ContentType : "application/rss+xml";
+
+            if (ContentEncoding != null)
+                response.ContentEncoding = ContentEncoding;
+
+            if (feed != null)
+                using (var xmlWriter = new XmlTextWriter(response.Output)) {
+                    xmlWriter.Formatting = Formatting.Indented;
+                    feed.WriteTo(xmlWriter);
+                }
         }
     }
 }
