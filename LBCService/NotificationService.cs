@@ -23,7 +23,7 @@ namespace LBCService
         private static Dictionary<Int32, RandomJobLauncher> jobs = new Dictionary<Int32, RandomJobLauncher>();
 
         /// <summary>
-        /// Send daily mail at 19h if not already send
+        /// Send daily mail if not already send
         /// </summary>
         /// <param name="search">Current search</param>
         private void SendMailRecap(Search search)
