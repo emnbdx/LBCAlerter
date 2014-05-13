@@ -1,7 +1,6 @@
 ﻿using EMToolBox.Job;
 using EMToolBox.Mail;
 using EMToolBox.Services;
-using LBCAlerterWeb.App_Code;
 using LBCAlerterWeb.Models;
 using LBCMapping;
 using LBCService.Alerter;
@@ -53,13 +52,14 @@ namespace LBCService
                     adParameters.Add("[Price]", ad.Price);
                     adParameters.Add("[AdUrl]", ad.Url);
                     adParameters.Add("[PictureUrl]", ad.PictureUrl);
-                    Formater f = new Formater(MailPattern.GetPattern(MailType.RecapAd), adParameters);
+                    Formater f = new Formater(mail.GetPattern("LBC_RECAP_AD").CONTENT, adParameters);
                     ads += f.GetFormated();
                 }
 
                 parameters.Add("[Ads]", ads);
 
-                mail.SendSmtpMail("[LBCAlerter] - Recap quotidien pour [" + search.KeyWord + "]", search.User.UserName, MailPattern.GetPattern(MailType.Recap), parameters);
+                mail.Add("[LBCAlerter] - Recap quotidien pour [" + search.KeyWord + "]", search.User.UserName, "LBC_RECAP", parameters);
+                //mail.SendSmtpMail("[LBCAlerter] - Recap quotidien pour [" + search.KeyWord + "]", search.User.UserName, MailPattern.GetPattern(MailType.Recap), parameters);
                 
                 using(ApplicationDbContext db = new ApplicationDbContext())
                 {

@@ -5,7 +5,6 @@ using LBCMapping;
 using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
-using LBCAlerterWeb.App_Code;
 
 namespace LBCService.Alerter
 {
@@ -47,7 +46,8 @@ namespace LBCService.Alerter
             parameters.Add("[Price]", ad.Price);
             parameters.Add("[AdUrl]", ad.AdUrl);
             parameters.Add("[PictureUrl]", ad.PictureUrl);
-            mailer.SendSmtpMail(m_subject, m_to, MailPattern.GetPattern(MailType.Ad), parameters);
+            mailer.Add(m_subject, m_to, "LBC_AD", parameters);
+            //mailer.SendSmtpMail(m_subject, m_to, MailPattern.GetPattern(MailType.Ad), parameters);
         }
 
         #endregion public
