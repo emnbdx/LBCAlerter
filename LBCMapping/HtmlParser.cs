@@ -99,7 +99,7 @@ namespace LBCMapping
         /// </summary>
         /// <param name="link">Base node for parsing</param>
         /// <returns>Ad instance with all data collected</returns>
-        public static Ad ExtractAdInformation(HtmlNode link)
+        public static Ad ExtractAdInformation(HtmlNode link, bool wholeSearch)
         {
             HtmlNode ad = link.SelectSingleNode("div[@class='lbc']");
 
@@ -164,21 +164,32 @@ namespace LBCMapping
             if (adDate > DateTime.Now)
                 adDate = adDate.AddYears(-1);
 
-            /*HtmlWeb web = new HtmlWeb();
-            web.OverrideEncoding = Encoding.GetEncoding(ENCODING);
-            HtmlDocument doc = web.Load(link.GetAttributeValue("href", ""));
-
-            HtmlNode adPage = doc.DocumentNode;
-
-            HtmlNode emailNode = adPage.SelectSingleNode("div[@class='lbc_links']//a");
-            HtmlNode phoneNode = adPage.SelectSingleNode("span[@class='lbcPhone']//span[@class='phoneNumber']//a");*/
-
-            return new Ad(adDate,
+            Ad tmp = new Ad(adDate,
                             link.GetAttributeValue("href", ""),
                             imgNode != null ? imgNode.GetAttributeValue("src", "") : "",
                             placementNode != null ? placementNode.InnerText.Replace("\r", "").Replace("\n", "").Replace(" ", "") : "",
                             priceNode != null ? priceNode.InnerText.Trim() : "",
                             titleNode != null ? titleNode.InnerText.Trim() : "");
+
+            if (wholeSearch)
+            {
+                /*HtmlWeb web = new HtmlWeb();
+                web.OverrideEncoding = Encoding.GetEncoding(ENCODING);
+                HtmlDocument doc = web.Load(link.GetAttributeValue("href", ""));
+
+                HtmlNode adPage = doc.DocumentNode;
+
+                HtmlNode emailNode = adPage.SelectSingleNode("div[@class='lbc_links']//a");
+                HtmlNode phoneNode = adPage.SelectSingleNode("span[@class='lbcPhone']//span[@class='phoneNumber']//a");*/
+                
+                string[] pictures = null;
+
+                tmp.PictureUrl = "";
+                tmp.Phone = "";
+                tmp.Description = "";
+            }
+            
+            return tmp;
         }
 
         /// <summary>

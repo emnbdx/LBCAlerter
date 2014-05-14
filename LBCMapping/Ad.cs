@@ -16,6 +16,10 @@ namespace LBCMapping
 
         private string m_title;
 
+        private string m_phone;
+
+        private string m_description;
+
         private Uri m_url;
 
         public Ad(DateTime date, string adUrl, string pictureUrl, string place, string price, string title)
@@ -72,6 +76,18 @@ namespace LBCMapping
         {
             get { return m_title; }
             set { m_title = value; }
+        }
+
+        public string Phone
+        {
+            get { return m_phone; }
+            set { m_phone = value; }
+        }
+
+        public string Description
+        {
+            get { return m_description; }
+            set { m_description = value; }
         }
 
         public Uri Url
