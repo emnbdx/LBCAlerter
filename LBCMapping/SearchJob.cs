@@ -175,7 +175,7 @@ namespace LBCMapping
                 }
 
                 timer.Stop();
-                log.Info("Terminée en " + timer.ElapsedMilliseconds + "ms");
+                log.Debug("Terminée en " + timer.ElapsedMilliseconds + "ms");
                 Result(currentAd);
             }
             catch (Exception e)

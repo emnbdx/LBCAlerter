@@ -341,7 +341,7 @@ namespace LBCMapping
         {
             string requestUrl = String.Format(URL_BASE + CleanCriteria(criteria), page);
 
-            log.Info("Récupération des annonces à l'url [" + requestUrl + "]");
+            log.Debug("Récupération des annonces à l'url [" + requestUrl + "]");
 
             HtmlWeb web = new HtmlWeb();
             web.OverrideEncoding = Encoding.GetEncoding(ENCODING);

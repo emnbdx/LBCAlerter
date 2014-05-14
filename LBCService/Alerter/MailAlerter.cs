@@ -37,7 +37,7 @@ namespace LBCService.Alerter
         /// <param name="ad"></param>
         public void Alert(Ad ad)
         {
-            log.Info("Envoie du mail [" + ad.Title + "]");
+            log.Info("Ajout d'un mail à la file d'envoie [" + ad.Title + "]");
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("[Title]", ad.Title);
