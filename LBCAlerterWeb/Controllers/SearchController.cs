@@ -71,29 +71,6 @@ namespace LBCAlerterWeb.Controllers
             if (!id.HasValue)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            /*Search search = db.Searches.FirstOrDefault(entry => entry.ID == id);
-
-            SyndicationFeed feed = new SyndicationFeed("LBCAlerter search #" + id,
-                            "Recherche pour l'annonce [" + search.KeyWord + "]",
-                            new Uri("http://Search/AdListFeed/" + id),
-                            Convert.ToString(id),
-                            DateTime.Now);
-
-            List<Ad> ads = db.Ads.Where(ad => ad.Search.ID == id).OrderByDescending(ad => ad.Date).Take(50).ToList();
-            List<SyndicationItem> items = new List<SyndicationItem>();
-            foreach(Ad ad in ads)
-            {
-                SyndicationItem item = new SyndicationItem(ad.Title, 
-                    ad.Url, 
-                    new Uri(ad.Url), 
-                    Convert.ToString(ad.ID), 
-                    ad.Date);
-                items.Add(item);
-            }
-            
-            feed.Items = items;
-            return new RssActionResult() { Feed = feed };*/
-
             var search = db.Searches.FirstOrDefault(entry => entry.ID == id);
             var postItems = db.Ads.Where(ad => ad.Search.ID == id).OrderByDescending(ad => ad.Date).Take(50).ToList()
                 .Select(p => new SyndicationItem(p.Title, "", new Uri(p.Url)));
