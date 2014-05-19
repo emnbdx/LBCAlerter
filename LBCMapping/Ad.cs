@@ -18,6 +18,14 @@ namespace LBCMapping
 
         private string m_phone;
 
+        private bool m_allowCommercial;
+
+        private string m_name;
+
+        private string m_contactUrl;
+
+        private string m_param;
+
         private string m_description;
 
         private Uri m_url;
@@ -82,6 +90,30 @@ namespace LBCMapping
         {
             get { return m_phone; }
             set { m_phone = value; }
+        }
+
+        public bool AllowCommercial
+        {
+            get { return m_allowCommercial; }
+            set { m_allowCommercial = value; }
+        }
+
+        public string Name
+        {
+            get { return m_name; }
+            set { m_name = value; }
+        }
+
+        public string ContactUrl
+        {
+            get { return m_contactUrl; }
+            set { m_contactUrl = value; }
+        }
+
+        public string Param
+        {
+            get { return m_param; }
+            set { m_param = value; }
         }
 
         public string Description

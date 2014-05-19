@@ -71,7 +71,7 @@ namespace LBCAlerterWeb.Controllers
             if (!id.HasValue)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var search = db.Searches.FirstOrDefault(entry => entry.ID == id);
+            var search = db.Searches.First(entry => entry.ID == id);
             var postItems = db.Ads.Where(ad => ad.Search.ID == id).OrderByDescending(ad => ad.Date).Take(50).ToList()
                 .Select(p => new SyndicationItem(p.Title, "", new Uri(p.Url)));
 

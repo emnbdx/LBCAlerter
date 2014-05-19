@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<LBCAlerterWeb.Models.Search>
 
 @{
-    ViewBag.Title = "Liste des recherches";
+    ViewBag.Title = "Liste des alertes";
 }
 
-<h2>Liste des recherches</h2>
+<h2>Liste des alertes</h2>
 @if(Model.Count() >= 5 && !Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium"))
 {
     <p style="color: red;">
-        Version beta, limité à cinq recherches<br />
+        Version beta, limité à cinq alertes<br />
     </p>
     <!--<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
         <input type="hidden" name="cmd" value="_s-xclick">

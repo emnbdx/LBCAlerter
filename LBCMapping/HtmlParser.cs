@@ -186,6 +186,10 @@ namespace LBCMapping
 
                 tmp.PictureUrl = "";
                 tmp.Phone = "";
+                tmp.AllowCommercial = false;
+                tmp.Name = "";
+                tmp.ContactUrl = "";
+                tmp.Param = "";
                 tmp.Description = "";
             }
             

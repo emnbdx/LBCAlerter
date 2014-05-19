@@ -118,10 +118,10 @@ namespace LBCAlerterWeb.Controllers
         private string GeneratePasswordResetToken(string userName)
         {
             string token = Guid.NewGuid().ToString();
-            
+
             ApplicationUser user = db.Users.FirstOrDefault(entry => entry.UserName == userName);
             if (user == null)
-                return string.Empty;
+                return null;
             user.EmailResetToken = token;
             user.EmailResetDate = DateTime.Now;
             db.SaveChanges();
@@ -158,9 +158,21 @@ namespace LBCAlerterWeb.Controllers
         {
             if (!string.IsNullOrEmpty(model.Email))
             {
-                string confirmationToken = GeneratePasswordResetToken(model.Email);
-                SendEmailReset(model.Email, confirmationToken);
-                return RedirectToAction("ResetPasswordStepTwo");
+                //L'utilisateur existe ?
+                ApplicationUser user = db.Users.FirstOrDefault(entry => entry.UserName == model.Email);
+                if (user == null)
+                    ModelState.AddModelError("", "Votre email n'existe pas.");
+                else
+                {
+                    string confirmationToken = GeneratePasswordResetToken(model.Email);
+                    if(String.IsNullOrEmpty(confirmationToken))
+                        ModelState.AddModelError("", "Votre email n'existe pas.");
+                    else
+                    {
+                        SendEmailReset(model.Email, confirmationToken);
+                        return RedirectToAction("ResetPasswordStepTwo");
+                    }
+                }
             }
             else
             {

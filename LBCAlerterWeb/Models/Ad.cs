@@ -20,6 +20,10 @@ namespace LBCAlerterWeb.Models
         public string Price { get; set; }
         public string Title { get; set; }
         public string Phone { get; set; }
+        public bool AllowCommercial { get; set; }
+        public string Name { get; set; }
+        public string ContactUrl { get; set; }
+        public string Param { get; set; }
         public string Description { get; set; }
         
         public virtual Search Search { get; set; }
@@ -35,6 +39,10 @@ namespace LBCAlerterWeb.Models
                 Price = ad.Price,
                 Title = ad.Title,
                 Phone = ad.Phone,
+                AllowCommercial = ad.AllowCommercial,
+                Name = ad.Name,
+                ContactUrl = ad.ContactUrl,
+                Param = ad.Param,
                 Description = ad.Description
             };
         }

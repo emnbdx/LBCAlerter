@@ -199,6 +199,10 @@
     <Compile Include="Migrations\201404142356166_ResetPassword.Designer.cs">
       <DependentUpon>201404142356166_ResetPassword.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201405191254261_FullAdValue.cs" />
+    <Compile Include="Migrations\201405191254261_FullAdValue.Designer.cs">
+      <DependentUpon>201405191254261_FullAdValue.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Ad.cs" />
@@ -219,6 +223,9 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <EmbeddedResource Include="Migrations\201404142356166_ResetPassword.resx">
       <DependentUpon>201404142356166_ResetPassword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201405191254261_FullAdValue.resx">
+      <DependentUpon>201405191254261_FullAdValue.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\PublishProfiles\perso.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

@@ -25,9 +25,9 @@
                     @if (Roles.IsUserInRole("admin"))
                     {
                         <li>@Html.ActionLink("Tous les utilisateurs", "All", "Account")</li>
-                        <li>@Html.ActionLink("Toutes les recherches", "All", "Search")</li>
+                        <li>@Html.ActionLink("Toutes les alertes", "All", "Search")</li>
                     }
-                    <li>@Html.ActionLink("Mes recherches", "Index", "Search")</li>
+                    <li>@Html.ActionLink("Mes alertes", "Index", "Search")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
