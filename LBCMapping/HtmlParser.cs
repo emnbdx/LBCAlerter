@@ -272,6 +272,8 @@ namespace LBCMapping
                 doc.DocumentNode.SelectSingleNode("//div[@id='Footer']").Remove();
             if (doc.DocumentNode.SelectSingleNode("//div[@id='Banner_sky']") != null)
                 doc.DocumentNode.SelectSingleNode("//div[@id='Banner_sky']").Remove();
+            if (doc.DocumentNode.SelectSingleNode("//div[@id='oas-top1']") != null)
+                doc.DocumentNode.SelectSingleNode("//div[@id='oas-top1']").Remove();
 
             //Replace relative link by absolute
             foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//script"))
