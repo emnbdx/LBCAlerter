@@ -16,8 +16,61 @@ namespace LBCMapping
         private static ILog log = LogManager.GetLogger(typeof(HtmlParser));
 
         public const string URL_BASE = "http://www.leboncoin.fr/";
-        public const string ENCODING = "iso-8859-15";
-        public const string KEYWORD_URL_PARAM = "&q=";
+        private const string ENCODING = "iso-8859-15";
+        private const string KEYWORD_URL_PARAM = "&q=";
+
+        /// <summary>
+        /// Do ajax call to get phone gif url by replacing javascript call
+        /// </summary>
+        /// <param name="phoneLink">Clikable link to display phone number</param>
+        /// <returns>Url of phone number gif</returns>
+        private static string GetPhoneUrl(String phoneLink)
+        {
+            //Get param
+            int startIndex = phoneLink.IndexOf('(');
+            string functionParam = phoneLink.Substring(startIndex, phoneLink.Length - startIndex - 1);
+            string[] param = functionParam.Split(",".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            /*
+             * Original JSON
+             * 
+                jQuery.ajax({
+	                type:"GET",
+	                async:true,
+	                crossDomain:true,
+	                url:"http://www2.leboncoin.fr/ajapi/get/phone",
+	                data:{
+		                list_id:640715994
+	                },
+	                format:"jsonp"
+                }).done(function(f){
+	                alert(f.phoneUrl);
+                })
+             * 
+             */
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(param[0] + "/ajapi/get/phone");
+            httpWebRequest.ContentType = "text/json";
+            httpWebRequest.Method = "GET";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string json = "{ " +
+                              "     data: { " +
+                              "         list_id: " + param[1] +
+                              "     } " +
+                              " }";
+
+                streamWriter.Write(json);
+            }
+
+            JObject result;
+            using (var streamReader = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()))
+            {
+                result = JObject.Parse(streamReader.ReadToEnd());
+            }
+            return result.ToString();
+        }
 
         /// <summary>
         /// Due to encoding issue not solvable, replace some parameter in criteria
@@ -99,7 +152,7 @@ namespace LBCMapping
         /// </summary>
         /// <param name="link">Base node for parsing</param>
         /// <returns>Ad instance with all data collected</returns>
-        public static Ad ExtractAdInformation(HtmlNode link, bool wholeSearch)
+        public static Ad ExtractAdInformation(HtmlNode link)
         {
             HtmlNode ad = link.SelectSingleNode("div[@class='lbc']");
 
@@ -164,90 +217,67 @@ namespace LBCMapping
             if (adDate > DateTime.Now)
                 adDate = adDate.AddYears(-1);
 
-            Ad tmp = new Ad(adDate,
-                            link.GetAttributeValue("href", ""),
-                            imgNode != null ? imgNode.GetAttributeValue("src", "") : "",
-                            placementNode != null ? placementNode.InnerText.Replace("\r", "").Replace("\n", "").Replace(" ", "") : "",
-                            priceNode != null ? priceNode.InnerText.Trim() : "",
-                            titleNode != null ? titleNode.InnerText.Trim() : "");
-
-            if (wholeSearch)
+            Ad tmp = new Ad()
             {
-                /*HtmlWeb web = new HtmlWeb();
-                web.OverrideEncoding = Encoding.GetEncoding(ENCODING);
-                HtmlDocument doc = web.Load(link.GetAttributeValue("href", ""));
-
-                HtmlNode adPage = doc.DocumentNode;
-
-                HtmlNode emailNode = adPage.SelectSingleNode("div[@class='lbc_links']//a");
-                HtmlNode phoneNode = adPage.SelectSingleNode("span[@class='lbcPhone']//span[@class='phoneNumber']//a");*/
-                
-                string[] pictures = null;
-
-                tmp.PictureUrl = "";
-                tmp.Phone = "";
-                tmp.AllowCommercial = false;
-                tmp.Name = "";
-                tmp.ContactUrl = "";
-                tmp.Param = "";
-                tmp.Description = "";
-            }
+                Date = adDate,
+                AdUrl = link.GetAttributeValue("href", ""),
+                PictureUrl = imgNode != null ? imgNode.GetAttributeValue("src", "") : "",
+                Place = placementNode != null ? placementNode.InnerText.Replace("\r", "").Replace("\n", "").Replace(" ", "") : "",
+                Price = priceNode != null ? priceNode.InnerText.Trim() : "",
+                Title = titleNode != null ? titleNode.InnerText.Trim() : ""
+            };
             
             return tmp;
         }
 
-        /// <summary>
-        /// Do ajax call to get phone gif url by replacing javascript call
-        /// </summary>
-        /// <param name="phoneLink">Clikable link to display phone number</param>
-        /// <returns>Url of phone number gif</returns>
-        private static string GetPhoneUrl(String phoneLink)
+        public static Ad ExtractWholeAdInformation(Ad ad)
         {
-            //Get param
-            int startIndex = phoneLink.IndexOf('(');
-            string functionParam = phoneLink.Substring(startIndex, phoneLink.Length - startIndex - 1);
-            string[] param = functionParam.Split(",".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+            HtmlWeb web = new HtmlWeb();
+            web.OverrideEncoding = Encoding.GetEncoding(ENCODING);
+            HtmlDocument doc = web.Load(ad.AdUrl);
+            HtmlNode adContent = doc.DocumentNode.SelectSingleNode("//html//div[class='content-border']");
 
-            /*
-             * Original JSON
-             * 
-                jQuery.ajax({
-	                type:"GET",
-	                async:true,
-	                crossDomain:true,
-	                url:"http://www2.leboncoin.fr/ajapi/get/phone",
-	                data:{
-		                list_id:640715994
-	                },
-	                format:"jsonp"
-                }).done(function(f){
-	                alert(f.phoneUrl);
-                })
-             * 
-             */
-
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(param[0] + "/ajapi/get/phone");
-            httpWebRequest.ContentType = "text/json";
-            httpWebRequest.Method = "GET";
-
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            List<string> pictures = new List<string>(); 
+            if(adContent.SelectNodes("div[@id='thumbs_carousel']//span[@class='thumbs']") != null)
+                foreach(HtmlNode picture in adContent.SelectNodes("div[@id='thumbs_carousel']//span[@class='thumbs']"))
+                {
+                    pictures.Add(picture.GetAttributeValue("style", "")
+                        .Replace("background-image: url('", "")
+                        .Replace("thumbs", "images")
+                        .Replace("');", ""));
+                }
+            HtmlNode phoneNode = adContent.SelectSingleNode("span[@class='lbcPhone']//span[@id='phoneNumber']//a");
+            HtmlNode commercialNode = adContent.SelectSingleNode("div[@class='lbc_links']//em[text()='(Je refuse tout démarchage commercial)']");
+            HtmlNode nameNode = adContent.SelectSingleNode("div[@class='upload_by']//a");
+            HtmlNode emailNode = adContent.SelectSingleNode("div[@class='lbc_links']//a");
+            List<string> parameters = new List<string>();
+            if (adContent.SelectNodes("div[@class='lbcParamsContainer']//div[@class='lbcParams']//tr") != null)
+                foreach (HtmlNode parameter in adContent.SelectNodes("div[@class='lbcParamsContainer']//div[@class='lbcParams']//tr"))
             {
-                string json = "{ " +  
-                              "     data: { " +
-		                      "         list_id: " + param[1] +
-                              "     } " +
-	                          " }";
+                string title = parameter.SelectSingleNode("th").InnerText;
 
-                streamWriter.Write(json);
+                string value = "";
+                if (parameter.SelectSingleNode("td//span") != null)
+                    value = parameter.SelectSingleNode("td//span").InnerText;
+                else if (parameter.SelectSingleNode("td//a") != null)
+                    value = parameter.SelectSingleNode("td//a").InnerText;
+                else
+                    value = parameter.SelectSingleNode("td").InnerText;
+
+                parameters.Add(title + "=" + value);
             }
-            
-            JObject result;
-            using (var streamReader = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()))
-            {
-                result = JObject.Parse(streamReader.ReadToEnd());
-            }
-            return "";
-        }
+            HtmlNode descriptionNode = adContent.SelectSingleNode("div[@class='AdviewContent']//div[@class='content']");
+
+            ad.PictureUrl = String.Join(",", pictures);
+            ad.Phone = phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("src", "")) : "";
+            ad.AllowCommercial = commercialNode == null;
+            ad.Name = nameNode != null ? nameNode.InnerText : "";
+            ad.ContactUrl = emailNode != null ? emailNode.GetAttributeValue("src", "") : "";
+            ad.Param = String.Join(",", parameters);
+            ad.Description = descriptionNode != null ? descriptionNode.InnerHtml : "";
+
+            return ad;
+        }        
 
         /// <summary>
         /// Return clean home page only map and region name
