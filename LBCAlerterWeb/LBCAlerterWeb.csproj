@@ -244,14 +244,14 @@
     <EmbeddedResource Include="Migrations\201405191254261_FullAdValue.resx">
       <DependentUpon>201405191254261_FullAdValue.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201406240036419_UpdateAspIdentity.resx">
+      <DependentUpon>201406240036419_UpdateAspIdentity.cs</DependentUpon>
+    </EmbeddedResource>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
-    <EmbeddedResource Include="Migrations\201406240036419_UpdateAspIdentity.resx">
-      <DependentUpon>201406240036419_UpdateAspIdentity.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="Properties\PublishProfiles\perso.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
