@@ -8,6 +8,7 @@ using log4net;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace LBCMapping
 {
@@ -51,30 +52,16 @@ namespace LBCMapping
              * 
              */
 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(param[0].Replace("\"", "") + "/ajapi/get/phone");
-            httpWebRequest.ContentType = "text/json";
-            httpWebRequest.Method = "POST";
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(param[0].Replace("\"", "").Trim() + "/ajapi/get/phone?list_id=" + param[1].Trim());
 
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            string json;
+            using(StreamReader sr = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()))
             {
-                string json = "{ " +
-                              "     data: { " +
-                              "         list_id: " + param[1] +
-                              "     } " +
-                              " }";
-
-                streamWriter.Write(json);
+                json = sr.ReadToEnd();
             }
+            dynamic phone = JsonConvert.DeserializeObject(json);
 
-            JObject result;
-            string tmp;
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                tmp = streamReader.ReadToEnd();
-            }
-            //return result.ToString();
-            return tmp;
+            return phone.phoneUrl;
         }
 
         /// <summary>
@@ -162,11 +149,11 @@ namespace LBCMapping
             HtmlNode ad = link.SelectSingleNode("div[@class='lbc']");
 
             //Get all value
-            HtmlNodeCollection dateNode = ad.SelectNodes("div[@class='date']//div");
-            HtmlNode titleNode = ad.SelectSingleNode("div[@class='detail']//div[@class='title']");
-            HtmlNode placementNode = ad.SelectSingleNode("div[@class='detail']//div[@class='placement']");
-            HtmlNode priceNode = ad.SelectSingleNode("div[@class='detail']//div[@class='price']");
-            HtmlNode imgNode = ad.SelectSingleNode("div[@class='image']//div[@class='image-and-nb']//img");
+            HtmlNodeCollection dateNode = ad.SelectNodes("div[@class='date']/div");
+            HtmlNode titleNode = ad.SelectSingleNode("div[@class='detail']/div[@class='title']");
+            HtmlNode placementNode = ad.SelectSingleNode("div[@class='detail']/div[@class='placement']");
+            HtmlNode priceNode = ad.SelectSingleNode("div[@class='detail']/div[@class='price']");
+            HtmlNode imgNode = ad.SelectSingleNode("div[@class='image']/div[@class='image-and-nb']/img");
 
             //Make good date
             int month, day, hour, minute;
@@ -251,15 +238,15 @@ namespace LBCMapping
                         .Replace("thumbs", "images")
                         .Replace("');", ""));
                 }
-            HtmlNode phoneNode = adContent.SelectSingleNode("//span[@class='lbcPhone']//span[@id='phoneNumber']//a");
-            HtmlNode commercialNode = adContent.SelectSingleNode("//div[@class='lbc_links']//em[text()='(Je refuse tout démarchage commercial)']");
-            HtmlNode nameNode = adContent.SelectSingleNode("//div[@class='upload_by']//a");
-            HtmlNode emailNode = adContent.SelectSingleNode("//div[@class='lbc_links']//a");
+            HtmlNode phoneNode = adContent.SelectSingleNode("//span[@class='lbcPhone']/span[@id='phoneNumber']/a");
+            HtmlNode commercialNode = adContent.SelectSingleNode("//div[@class='lbc_links']/em[.='(Je refuse tout d&eacute;marchage commercial)']");
+            HtmlNode nameNode = adContent.SelectSingleNode("//div[@class='upload_by']/a");
+            HtmlNode emailNode = adContent.SelectSingleNode("//div[@class='lbc_links']/a[.='Envoyer un email']");
             List<string> parameters = new List<string>();
-            if (adContent.SelectNodes("//div[@class='lbcParamsContainer']//div[@class='lbcParams']//tr") != null)
-                foreach (HtmlNode parameter in adContent.SelectNodes("//div[@class='lbcParamsContainer']//div[@class='lbcParams']//tr"))
+            if (adContent.SelectNodes("//div[contains(@class, 'lbcParamsContainer')]/div[contains(@class, 'lbcParams')]//tr") != null)
+                foreach (HtmlNode parameter in adContent.SelectNodes("//div[contains(@class, 'lbcParamsContainer')]/div[contains(@class, 'lbcParams')]//tr"))
             {
-                string title = parameter.SelectSingleNode("th").InnerText;
+                string title = parameter.SelectSingleNode("th").InnerText.Replace(":", "").Trim();
 
                 string value = "";
                 if (parameter.SelectSingleNode("td//span") != null)
@@ -271,13 +258,13 @@ namespace LBCMapping
 
                 parameters.Add(title + "=" + value);
             }
-            HtmlNode descriptionNode = adContent.SelectSingleNode("//div[@class='AdviewContent']//div[@class='content']");
+            HtmlNode descriptionNode = adContent.SelectSingleNode("//div[@class='AdviewContent']/div[@class='content']");
 
             ad.PictureUrl = String.Join(",", pictures);
             ad.Phone = phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", "")) : "";
             ad.AllowCommercial = commercialNode == null;
             ad.Name = nameNode != null ? nameNode.InnerText : "";
-            ad.ContactUrl = emailNode != null ? emailNode.GetAttributeValue("src", "") : "";
+            ad.ContactUrl = emailNode != null ? emailNode.GetAttributeValue("href", "") : "";
             ad.Param = String.Join(",", parameters);
             ad.Description = descriptionNode != null ? descriptionNode.InnerHtml : "";
 
