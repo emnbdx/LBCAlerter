@@ -7,6 +7,8 @@ using LBCService.Alerter;
 using LBCService.Counter;
 using LBCService.Saver;
 using log4net;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -76,9 +78,14 @@ namespace LBCService
         /// Create and launch new search job
         /// </summary>
         /// <param name="search">Current search</param>
-        private void CreateNewJob(Search search)
+        /// <param name="db">Application db context</param>
+        private void CreateNewJob(ApplicationDbContext db, Search search)
         {
-            SearchJob job = new SearchJob(search.Url, search.KeyWord, search.Ads.Count == 0);
+            UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            bool completeSearch = userManager.IsInRole(search.User.Id, "admin") ||
+                userManager.IsInRole(search.User.Id, "premium");
+
+            SearchJob job = new SearchJob(search.Url, search.KeyWord, completeSearch, search.Ads.Count == 0);
             job.FistTimeCount = 5;
             job.SaveMode = new EFSaver(search.ID);
             IAlerter alerter = new LogAlerter();
@@ -173,7 +180,7 @@ namespace LBCService
                     jobs.TryGetValue(s.ID, out jobLauncher);
 
                     if (jobLauncher == null)
-                        CreateNewJob(s);
+                        CreateNewJob(db, s);
                     else
                         UpdateJob(s, jobLauncher);
                 }

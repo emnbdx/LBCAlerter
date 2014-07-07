@@ -222,7 +222,7 @@ namespace LBCMapping
             return tmp;
         }
 
-        public static Ad ExtractWholeAdInformation(Ad ad)
+        public static Ad ExtractAllAdInformation(Ad ad)
         {
             HtmlWeb web = new HtmlWeb();
             web.OverrideEncoding = Encoding.GetEncoding(ENCODING);

@@ -14,6 +14,7 @@ namespace LBCMapping
 
         private string m_criteria;
         private string m_keyword;
+        private bool m_completeSearch;
         private bool m_first;
         private int m_firstCount = 35; //Default value 1 page of ads
         private List<IAlerter> m_alerter = new List<IAlerter>();
@@ -31,10 +32,11 @@ namespace LBCMapping
         public SearchJob()
         { }
 
-        public SearchJob(string criteria, string keyword, bool firstTime)
+        public SearchJob(string criteria, string keyword, bool completeSearch, bool firstTime)
         {
             m_criteria = HtmlParser.CleanCriteria(criteria);
             m_keyword = keyword;
+            m_completeSearch = completeSearch;
             m_first = firstTime;
         }
 
@@ -150,7 +152,8 @@ namespace LBCMapping
                     {
                         Ad tmp = HtmlParser.ExtractAdInformation(link);
 
-                        HtmlParser.ExtractWholeAdInformation(tmp);
+                        if(m_completeSearch)
+                            HtmlParser.ExtractAllAdInformation(tmp);
 
                         if (!m_saver.Store(tmp))
                         {
