@@ -20,15 +20,17 @@ namespace LBCService.Alerter
 
         private string m_to;
         private string m_subject;
+        private bool m_fullMode;
 
         #endregion private
 
         #region public
 
-        public MailAlerter(string to, string subject)
+        public MailAlerter(string to, string subject, bool fullMode)
         {
             m_to = to;
             m_subject = subject;
+            m_fullMode = fullMode;
         }
 
         /// <summary>
@@ -46,8 +48,20 @@ namespace LBCService.Alerter
             parameters.Add("[Price]", ad.Price);
             parameters.Add("[AdUrl]", ad.AdUrl);
             parameters.Add("[PictureUrl]", ad.PictureUrl);
-            mailer.Add(m_subject, m_to, "LBC_AD", parameters);
-            //mailer.SendSmtpMail(m_subject, m_to, MailPattern.GetPattern(MailType.Ad), parameters);
+
+            if (m_fullMode)
+            {
+                parameters.Add("[Phone]", ad.Phone);
+                parameters.Add("[AllowCommercial]", ad.AllowCommercial);
+                parameters.Add("[Name]", ad.Name);
+                parameters.Add("[ContactUrl]", ad.ContactUrl);
+                parameters.Add("[Param]", ad.Param);
+                parameters.Add("[Description]", ad.Description);
+
+                mailer.Add(m_subject, m_to, "LBC_AD_FULL", parameters);
+            }
+            else
+                mailer.Add(m_subject, m_to, "LBC_AD", parameters);
         }
 
         #endregion public
