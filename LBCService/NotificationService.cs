@@ -60,27 +60,11 @@ namespace LBCService
                 string ads = "";
                 foreach (LBCAlerterWeb.Models.Ad ad in search.Ads.Where(entry => entry.Date > lastDay).OrderBy(entry => entry.Date))
                 {
-                    Dictionary<string, object> adParameters = new Dictionary<string, object>();
-                    adParameters.Add("[Title]", ad.Title);
-                    adParameters.Add("[Date]", ad.Date);
-                    adParameters.Add("[Place]", ad.Place);
-                    adParameters.Add("[Price]", ad.Price);
-                    adParameters.Add("[AdUrl]", ad.Url);
-                    adParameters.Add("[PictureUrl]", ad.PictureUrl);
                     Formater f = null;
                     if (IsPremium(db, search.User))
-                    {
-                        adParameters.Add("[Phone]", ad.Phone);
-                        adParameters.Add("[AllowCommercial]", ad.AllowCommercial);
-                        adParameters.Add("[Name]", ad.Name);
-                        adParameters.Add("[ContactUrl]", ad.ContactUrl);
-                        adParameters.Add("[Param]", ad.Param);
-                        adParameters.Add("[Description]", ad.Description);
-
-                        f = new Formater(mail.GetPattern("LBC_RECAP_AD_FULL").CONTENT, adParameters);
-                    }
+                        f = new Formater(ad, mail.GetPattern("LBC_RECAP_AD_FULL").CONTENT);
                     else
-                        f = new Formater(mail.GetPattern("LBC_RECAP_AD").CONTENT, adParameters);
+                        f = new Formater(ad, mail.GetPattern("LBC_RECAP_AD").CONTENT);
 
                     ads += f.GetFormated();
                 }

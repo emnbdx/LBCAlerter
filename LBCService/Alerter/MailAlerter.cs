@@ -41,27 +41,10 @@ namespace LBCService.Alerter
         {
             log.Info("Ajout d'un mail à la file d'envoie [" + ad.Title + "]");
 
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("[Title]", ad.Title);
-            parameters.Add("[Date]", ad.Date);
-            parameters.Add("[Place]", ad.Place);
-            parameters.Add("[Price]", ad.Price);
-            parameters.Add("[AdUrl]", ad.AdUrl);
-            parameters.Add("[PictureUrl]", ad.PictureUrl);
-
             if (m_fullMode)
-            {
-                parameters.Add("[Phone]", ad.Phone);
-                parameters.Add("[AllowCommercial]", ad.AllowCommercial);
-                parameters.Add("[Name]", ad.Name);
-                parameters.Add("[ContactUrl]", ad.ContactUrl);
-                parameters.Add("[Param]", ad.Param);
-                parameters.Add("[Description]", ad.Description);
-
-                mailer.Add(m_subject, m_to, "LBC_AD_FULL", parameters);
-            }
+                mailer.Add(m_subject, m_to, "LBC_AD_FULL", ad);
             else
-                mailer.Add(m_subject, m_to, "LBC_AD", parameters);
+                mailer.Add(m_subject, m_to, "LBC_AD", ad);
         }
 
         #endregion public
