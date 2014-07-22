@@ -47,6 +47,10 @@ namespace LBCService.Alerter
                 mailer.Add(m_subject, m_to, "LBC_AD", ad);
         }
 
+        public string To { get { return m_to; } }
+        public string Subject { get { return m_subject; } }
+        public bool FullMode { get { return m_fullMode; } }
+
         #endregion public
     }
 }

@@ -131,16 +131,28 @@ namespace LBCService
                 }
             }
 
-            if (alerter != null && !search.MailAlert)
+            if (alerter != null)
             {
-                //Delete
-                job.Alerters.Remove(alerter);
+                if (!search.MailAlert) //delete
+                    job.Alerters.Remove(alerter);
+                else
+                {
+                    MailAlerter tmp = (MailAlerter)alerter;
+                    if (tmp.Subject != "Nouvelle annonce pour [" + search.KeyWord + "]") //update
+                    {
+                        job.Alerters.Remove(alerter);
+                        alerter = new MailAlerter(search.User.UserName, "Nouvelle annonce pour [" + search.KeyWord + "]", IsPremium(db, search.User));
+                        job.Alerters.Add(alerter);
+                    }
+                }
             }
-            if (alerter == null && search.MailAlert)
+            else
             {
-                //Add
-                alerter = new MailAlerter(search.User.UserName, "Nouvelle annonce pour [" + search.KeyWord + "]", IsPremium(db, search.User));
-                job.Alerters.Add(alerter);
+                if (search.MailAlert) //add
+                {
+                    alerter = new MailAlerter(search.User.UserName, "Nouvelle annonce pour [" + search.KeyWord + "]", IsPremium(db, search.User));
+                    job.Alerters.Add(alerter);
+                }
             }
         }
 
@@ -194,6 +206,8 @@ namespace LBCService
 
                 StopDeletedJobs(db);
             }
+
+            GC.Collect();
         }
     }
 }

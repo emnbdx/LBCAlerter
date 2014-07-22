@@ -24,8 +24,8 @@ namespace LBCAlerterWeb.Controllers
         {
             EMMail mail = new EMMail();
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("[Title]", "Vous venez de vous inscrire sur LBCAlerter, MERCI !");
-            parameters.Add("[Token]", confirmationToken);
+            parameters.Add("{Title}", "Vous venez de vous inscrire sur LBCAlerter, MERCI !");
+            parameters.Add("{Token}", confirmationToken);
             mail.Add("[LBCAlerter] - Confirmation de votre compte", to, "LBC_CONFIRMATION", parameters);
             //mail.SendSmtpMail("[LBCAlerter] - Confirmation de votre compte", to, MailPattern.GetPattern(MailType.Confirmation), parameters);
         }
@@ -109,8 +109,8 @@ namespace LBCAlerterWeb.Controllers
         {
             EMMail mail = new EMMail();
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("[Title]", "Réinitialision de mot de passe");
-            parameters.Add("[Token]", confirmationToken);
+            parameters.Add("{Title}", "Réinitialision de mot de passe");
+            parameters.Add("{Token}", confirmationToken);
             mail.Add("[LBCAlerter] - réinitialision de mot de passe", to, "LBC_RESET", parameters);
             //mail.SendSmtpMail("[LBCAlerter] - réinitialision de mot de passe", to, MailPattern.GetPattern(MailType.Reset), parameters);
         }
