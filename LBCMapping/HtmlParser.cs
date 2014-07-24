@@ -61,7 +61,14 @@ namespace LBCMapping
             }
             dynamic phone = JsonConvert.DeserializeObject(json);
 
-            return phone.phoneUrl;
+            try
+            {
+                return phone.phoneUrl;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>

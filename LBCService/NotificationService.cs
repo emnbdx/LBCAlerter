@@ -30,7 +30,7 @@ namespace LBCService
         /// <param name="user">Current search</param>
         /// <returns>True is user is admin or premium</returns>
         private bool IsPremium(ApplicationDbContext db, ApplicationUser user)
-        {
+        {            
             UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
             return userManager.IsInRole(user.Id, "admin") || userManager.IsInRole(user.Id, "premium");
         }
@@ -91,7 +91,7 @@ namespace LBCService
         /// <param name="search">Current search</param>
         private void CreateNewJob(ApplicationDbContext db, Search search)
         {
-            SearchJob job = new SearchJob(search.Url, search.KeyWord, IsPremium(db, search.User), search.Ads.Count == 0);
+            SearchJob job = new SearchJob(search.Url, search.KeyWord, search.Ads.Count == 0);
             job.FistTimeCount = 5;
             job.SaveMode = new EFSaver(search.ID);
             IAlerter alerter = new LogAlerter();
@@ -122,35 +122,37 @@ namespace LBCService
                 jobLauncher.IntervalTime = search.RefreshTime;
 
             SearchJob job = jobLauncher.Job as SearchJob;
-            IAlerter alerter = null;
+            MailAlerter alerter = null;
             foreach (IAlerter alert in job.Alerters)
             {
                 if (alert is MailAlerter)
                 {
-                    alerter = alert; break;
+                    alerter = alert as MailAlerter; break;
                 }
             }
 
             if (alerter != null)
             {
                 if (!search.MailAlert) //delete
+                {
                     job.Alerters.Remove(alerter);
+                    jobLauncher.Stop();
+                    jobs.Remove(search.ID);
+                }
                 else
                 {
-                    MailAlerter tmp = (MailAlerter)alerter;
-                    if (tmp.Subject != "Nouvelle annonce pour [" + search.KeyWord + "]") //update
-                    {
-                        job.Alerters.Remove(alerter);
-                        alerter = new MailAlerter(search.User.UserName, "Nouvelle annonce pour [" + search.KeyWord + "]", IsPremium(db, search.User));
-                        job.Alerters.Add(alerter);
-                    }
+                    if (alerter.Subject != "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]") //update
+                        alerter.Subject = "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]";
+
+                    if (alerter.FullMode != IsPremium(db, search.User))
+                        alerter.FullMode = IsPremium(db, search.User);
                 }
             }
             else
             {
                 if (search.MailAlert) //add
                 {
-                    alerter = new MailAlerter(search.User.UserName, "Nouvelle annonce pour [" + search.KeyWord + "]", IsPremium(db, search.User));
+                    alerter = new MailAlerter(search.User.UserName, "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]", IsPremium(db, search.User));
                     job.Alerters.Add(alerter);
                 }
             }

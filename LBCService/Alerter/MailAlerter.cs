@@ -48,8 +48,8 @@ namespace LBCService.Alerter
         }
 
         public string To { get { return m_to; } }
-        public string Subject { get { return m_subject; } }
-        public bool FullMode { get { return m_fullMode; } }
+        public string Subject { get { return m_subject; } set { m_subject = value; } }
+        public bool FullMode { get { return m_fullMode; } set { m_fullMode = value; } }
 
         #endregion public
     }
