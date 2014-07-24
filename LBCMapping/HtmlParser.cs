@@ -65,8 +65,9 @@ namespace LBCMapping
             {
                 return phone.phoneUrl;
             }
-            catch
+            catch (Exception e)
             {
+                log.Error("Erreur lors de la récupération du téléphone à partir de [" + phoneLink + "]", e);
                 return null;
             }
         }
