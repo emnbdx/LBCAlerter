@@ -60,10 +60,9 @@ namespace LBCMapping
                 json = sr.ReadToEnd();
             }
 
-            JObject obj = (JObject)JsonConvert.DeserializeObject(json);
-
             try
             {
+                JObject obj = (JObject)JsonConvert.DeserializeObject(json);
                 return Convert.ToString(obj["phoneUrl"]);
             }
             catch (Exception e)
