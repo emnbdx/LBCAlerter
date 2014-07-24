@@ -51,25 +51,25 @@ namespace LBCService
 
                 EMMail mail = new EMMail();
                 Dictionary<string, object> parameters = new Dictionary<string, object>();
-                parameters.Add("[Title]", "Recap quotidien pour [" + search.KeyWord + "]");
-                parameters.Add("[AdCount]", search.Ads.Where(entry => entry.Date > lastDay).Count());
+                parameters.Add("{Title}", "Recap quotidien pour [" + search.KeyWord + "]");
+                parameters.Add("{AdCount}", search.Ads.Where(entry => entry.Date > lastDay).Count());
                 int attempsCount = search.Attempts.Where(entry => entry.ProcessDate > lastDay).Count();
-                parameters.Add("[AttemptCount]", attempsCount);
-                parameters.Add("[AttemptCadence]", 24 * 60 / attempsCount);
+                parameters.Add("{AttemptCount}", attempsCount);
+                parameters.Add("{AttemptCadence}", 24 * 60 / attempsCount);
 
                 string ads = "";
                 foreach (LBCAlerterWeb.Models.Ad ad in search.Ads.Where(entry => entry.Date > lastDay).OrderBy(entry => entry.Date))
                 {
-                    Formater f = null;
+                    MailFormater formater;
                     if (IsPremium(db, search.User))
-                        f = new Formater(ad, mail.GetPattern("LBC_RECAP_AD_FULL").CONTENT);
+                        formater = new MailFormater(mail.GetPattern("LBC_RECAP_AD_FULL").CONTENT, ad);
                     else
-                        f = new Formater(ad, mail.GetPattern("LBC_RECAP_AD").CONTENT);
+                        formater = new MailFormater(mail.GetPattern("LBC_RECAP_AD").CONTENT, ad);
 
-                    ads += f.GetFormated();
+                    ads = formater.Formated;
                 }
 
-                parameters.Add("[Ads]", ads);
+                parameters.Add("{Ads}", ads);
 
                 if(IsPremium(db, search.User))
                     mail.Add("[LBCAlerter] - Recap quotidien pour [" + search.KeyWord + "]", search.User.UserName, "LBC_RECAP", parameters);
