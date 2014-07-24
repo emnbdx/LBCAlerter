@@ -59,11 +59,12 @@ namespace LBCMapping
             {
                 json = sr.ReadToEnd();
             }
-            dynamic phone = JsonConvert.DeserializeObject(json);
+
+            JObject obj = (JObject)JsonConvert.DeserializeObject(json);
 
             try
             {
-                return phone.phoneUrl;
+                return Convert.ToString(obj["phoneUrl"]);
             }
             catch (Exception e)
             {
