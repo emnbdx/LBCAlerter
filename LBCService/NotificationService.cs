@@ -55,9 +55,9 @@ namespace LBCService
                 parameters.Add("{AdCount}", search.Ads.Where(entry => entry.Date > lastDay).Count());
                 int attempsCount = search.Attempts.Where(entry => entry.ProcessDate > lastDay).Count();
                 parameters.Add("{AttemptCount}", attempsCount);
-                parameters.Add("{AttemptCadence}", 24 * 60 / attempsCount);
+                parameters.Add("{AttemptCadence}", 24 * 60 / (attempsCount <= 0 ? 1 : attempsCount));
 
-                string ads = "";
+                StringBuilder ads = new StringBuilder();
                 foreach (LBCAlerterWeb.Models.Ad ad in search.Ads.Where(entry => entry.Date > lastDay).OrderBy(entry => entry.Date))
                 {
                     MailFormater formater;
@@ -66,10 +66,10 @@ namespace LBCService
                     else
                         formater = new MailFormater(mail.GetPattern("LBC_RECAP_AD").CONTENT, ad);
 
-                    ads = formater.Formated;
+                    ads.Append(formater.Formated);
                 }
 
-                parameters.Add("{Ads}", ads);
+                parameters.Add("{Ads}", ads.ToString());
 
                 if(IsPremium(db, search.User))
                     mail.Add("[LBCAlerter] - Recap quotidien pour [" + search.KeyWord + "]", search.User.UserName, "LBC_RECAP", parameters);
@@ -80,7 +80,6 @@ namespace LBCService
                 if (s == null)
                     throw new Exception("Recherche inexistante...");
                 s.LastRecap = DateTime.Now;
-                db.SaveChanges();
             }
         }
 
