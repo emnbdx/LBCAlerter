@@ -39,7 +39,7 @@ namespace LBCMapping
                     log.Error("Unable to connect to server of Tor.", e);
                     return false;
                 }
-                client.Send(Encoding.ASCII.GetBytes("AUTHENTICATE \"mailforgood\"\n"));
+                client.Send(Encoding.ASCII.GetBytes("AUTHENTICATE \"lbcalerter\"\n"));
                 byte[] data = new byte[1024];
                 int receivedDataLength = client.Receive(data);
                 string stringData = Encoding.ASCII.GetString(data, 0, receivedDataLength);
