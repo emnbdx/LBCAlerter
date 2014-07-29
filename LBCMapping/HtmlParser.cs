@@ -90,7 +90,7 @@ namespace LBCMapping
                     json = sr.ReadToEnd();
                 }
 
-                if (!String.IsNullOrEmpty(json))
+                if (!String.IsNullOrEmpty(json) && json != "\"\"")
                 {
                     JObject obj = (JObject)JsonConvert.DeserializeObject(json);
                     return Convert.ToString(obj["phoneUrl"]);
