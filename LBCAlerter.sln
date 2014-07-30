@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBCMapping", "LBCMapping\LBCMapping.csproj", "{7825E753-0093-4429-89ED-B4DA3CFCDEE3}"
 EndProject
@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{AC4ED8
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBCCleanService", "CleanService\LBCCleanService.csproj", "{E05293FE-1061-45C3-9DD2-47893416978D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +70,16 @@ Global
 		{C9D49FEB-BD21-48A2-BD0F-48C13771EA2A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C9D49FEB-BD21-48A2-BD0F-48C13771EA2A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C9D49FEB-BD21-48A2-BD0F-48C13771EA2A}.Release|x86.ActiveCfg = Release|Any CPU
+		{E05293FE-1061-45C3-9DD2-47893416978D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E05293FE-1061-45C3-9DD2-47893416978D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E05293FE-1061-45C3-9DD2-47893416978D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E05293FE-1061-45C3-9DD2-47893416978D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E05293FE-1061-45C3-9DD2-47893416978D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E05293FE-1061-45C3-9DD2-47893416978D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E05293FE-1061-45C3-9DD2-47893416978D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E05293FE-1061-45C3-9DD2-47893416978D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E05293FE-1061-45C3-9DD2-47893416978D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E05293FE-1061-45C3-9DD2-47893416978D}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
