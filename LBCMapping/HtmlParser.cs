@@ -22,54 +22,11 @@ namespace LBCMapping
         private const string KEYWORD_URL_PARAM = "&q=";
 
         /// <summary>
-        /// Se connecte au manager TOR et effectue via socket une demande de nouvelle IP
-        /// </summary>
-        /// <returns></returns>
-        private static bool RequestNewIdentityFromTor()
-        {
-            IPEndPoint ip = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9051);
-            using (Socket client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
-            {
-                try
-                {
-                    client.Connect(ip);
-                }
-                catch (SocketException e)
-                {
-                    log.Error("Unable to connect to server of Tor.", e);
-                    return false;
-                }
-                client.Send(Encoding.ASCII.GetBytes("AUTHENTICATE \"lbcalerter\"\n"));
-                byte[] data = new byte[1024];
-                int receivedDataLength = client.Receive(data);
-                string stringData = Encoding.ASCII.GetString(data, 0, receivedDataLength);
-                if (stringData.Contains("250"))
-                {
-                    client.Send(Encoding.ASCII.GetBytes("SIGNAL NEWNYM\r\n"));
-                    data = new byte[1024];
-                    receivedDataLength = client.Receive(data);
-                    stringData = Encoding.ASCII.GetString(data, 0, receivedDataLength);
-                    if (!stringData.Contains("250"))
-                    {
-                        log.Error("Unable to signal new user to server of Tor.");
-                        return false;
-                    }
-                }
-                else
-                {
-                    log.Error("Unable to authenticate to server of Tor.");
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
         /// Do ajax call to get phone gif url by replacing javascript call
         /// </summary>
         /// <param name="phoneLink">Clikable link to display phone number</param>
         /// <returns>Url of phone number gif</returns>
-        private static string GetPhoneUrl(String phoneLink, bool recursive)
+        private static string GetPhoneUrl(String phoneLink)
         {
             //Get param
             if (String.IsNullOrEmpty(phoneLink))
@@ -81,8 +38,6 @@ namespace LBCMapping
             try
             {
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(param[0].Replace("\"", "").Trim() + "/ajapi/get/phone?list_id=" + param[1].Trim());
-                httpWebRequest.Proxy = new WebProxy("127.0.0.1:8118");
-                httpWebRequest.Credentials = CredentialCache.DefaultCredentials;
 
                 string json;
                 using (StreamReader sr = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()))
@@ -94,14 +49,6 @@ namespace LBCMapping
                 {
                     JObject obj = (JObject)JsonConvert.DeserializeObject(json);
                     return Convert.ToString(obj["phoneUrl"]);
-                }
-                else
-                {
-                    if (!recursive) // on first call try to get new ip if fail
-                    {
-                        RequestNewIdentityFromTor();
-                        GetPhoneUrl(phoneLink, true);
-                    }
                 }
             }
             catch (Exception e)
@@ -309,7 +256,7 @@ namespace LBCMapping
             HtmlNode descriptionNode = adContent.SelectSingleNode("//div[@class='AdviewContent']/div[@class='content']");
 
             ad.PictureUrl = String.Join(",", pictures);
-            ad.Phone = phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", ""), false) : "";
+            ad.Phone = phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", "")) : "";
             ad.AllowCommercial = commercialNode == null;
             ad.Name = nameNode != null ? nameNode.InnerText : "";
             ad.ContactUrl = emailNode != null ? emailNode.GetAttributeValue("href", "") : "";
