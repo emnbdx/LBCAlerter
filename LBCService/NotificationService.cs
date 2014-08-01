@@ -31,10 +31,17 @@ namespace LBCService
         /// <returns>True is user is admin or premium</returns>
         private bool IsPremium(ApplicationUser user)
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
+            try
             {
-                UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
-                return userManager.IsInRole(user.Id, "admin") || userManager.IsInRole(user.Id, "premium");
+                using (ApplicationDbContext db = new ApplicationDbContext())
+                {
+                    UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+                    return userManager.IsInRole(user.Id, "admin") || userManager.IsInRole(user.Id, "premium");
+                }
+            }
+            catch
+            { 
+                return false; 
             }
         }
 
