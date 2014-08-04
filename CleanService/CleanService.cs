@@ -69,6 +69,7 @@ namespace LBCCleanService
                     {
                         cnct.Open();
                         cmd.ExecuteNonQuery();
+                        log.Info("Nettoyage terminé");
                     }
                     catch (Exception e)
                     {
