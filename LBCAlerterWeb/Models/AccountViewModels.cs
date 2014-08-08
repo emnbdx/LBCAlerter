@@ -41,7 +41,7 @@ namespace LBCAlerterWeb.Models
         [Display(Name = "Mot de passe")]
         public string Password { get; set; }
 
-        [Display(Name = "Mémoriser le mot de passe ?")]
+        [Display(Name = " ")]
         public bool RememberMe { get; set; }
     }
 
