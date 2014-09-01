@@ -256,7 +256,8 @@ namespace LBCMapping
             HtmlNode descriptionNode = adContent.SelectSingleNode("//div[@class='AdviewContent']/div[@class='content']");
 
             ad.PictureUrl = String.Join(",", pictures);
-            ad.Phone = phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", "")) : "";
+            //TODO : find good solution to get phone number
+            //ad.Phone = phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", "")) : "";
             ad.AllowCommercial = commercialNode == null;
             ad.Name = nameNode != null ? nameNode.InnerText : "";
             ad.ContactUrl = emailNode != null ? emailNode.GetAttributeValue("href", "") : "";
