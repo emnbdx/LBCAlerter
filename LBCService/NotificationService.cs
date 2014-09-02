@@ -102,7 +102,7 @@ namespace LBCService
         /// <param name="search">Current search</param>
         private void CreateNewJob(Search search)
         {
-            SearchJob job = new SearchJob(search.Url, search.KeyWord, search.Ads.Count == 0);
+            SearchJob job = new SearchJob(search.Url, search.KeyWord, IsPremium(search.User), search.Ads.Count == 0);
             job.FistTimeCount = 5;
             job.SaveMode = new EFSaver(search.ID);
             IAlerter alerter = new LogAlerter();
@@ -154,6 +154,9 @@ namespace LBCService
                     if (alerter.Subject != "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]") //update
                         alerter.Subject = "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]";
 
+                    if (job.Complete != IsPremium(search.User))
+                        job.Complete = IsPremium(search.User);
+                    
                     if (alerter.FullMode != IsPremium(search.User))
                         alerter.FullMode = IsPremium(search.User);
                 }

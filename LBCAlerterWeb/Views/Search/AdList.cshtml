@@ -29,7 +29,9 @@ else
             @Html.DisplayFor(modelItem => item.Date)
         </td>
         <td>
-            <img src="@Html.DisplayFor(modelItem => item.PictureUrl)" />
+            @if (item != null && item.PictureUrl.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length > 0) {
+                <img src="@Html.DisplayFor(modelItem => item.PictureUrl).ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First()" />
+            }
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Place)

@@ -14,6 +14,7 @@ namespace LBCMapping
 
         private string m_criteria;
         private string m_keyword;
+        private bool m_complete;
         private bool m_first;
         private int m_firstCount = 35; //Default value 1 page of ads
         private List<IAlerter> m_alerter = new List<IAlerter>();
@@ -31,10 +32,11 @@ namespace LBCMapping
         public SearchJob()
         { }
 
-        public SearchJob(string criteria, string keyword, bool firstTime)
+        public SearchJob(string criteria, string keyword, bool complete, bool firstTime)
         {
             m_criteria = HtmlParser.CleanCriteria(criteria);
             m_keyword = keyword;
+            m_complete = complete;
             m_first = firstTime;
         }
 
@@ -50,6 +52,13 @@ namespace LBCMapping
         {
             get { return KeyWordNeeded(); }
             set { m_keyword = value; }
+        }
+
+        [XmlElement("Complete")]
+        public bool Complete
+        {
+            get { return m_complete; }
+            set { m_complete = value; }
         }
 
         public int FistTimeCount
@@ -149,13 +158,17 @@ namespace LBCMapping
                     foreach (HtmlNode link in links)
                     {
                         Ad tmp = HtmlParser.ExtractAdInformation(link);
-                        try
+
+                        if (m_complete)
                         {
-                            HtmlParser.ExtractAllAdInformation(tmp);
-                        }
-                        catch (Exception e)
-                        {
-                            log.Error("Erreur lors de la récupération des informations complètes", e);
+                            try
+                            {
+                                HtmlParser.ExtractAllAdInformation(tmp);
+                            }
+                            catch (Exception e)
+                            {
+                                log.Error("Erreur lors de la récupération des informations complètes", e);
+                            }
                         }
 
                         if (!m_saver.Store(tmp))

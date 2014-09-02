@@ -182,7 +182,7 @@ namespace LBCMapping
                     month = 6;
                 else if (dayMonth[1] == "juil")
                     month = 7;
-                else if (dayMonth[1] == "aout")
+                else if (dayMonth[1] == "aout" || dayMonth[1] == "août")
                     month = 8;
                 else if (dayMonth[1] == "sep")
                     month = 9;
