@@ -102,6 +102,9 @@ namespace LBCService
         /// <param name="search">Current search</param>
         private void CreateNewJob(Search search)
         {
+            if (!search.MailAlert)
+                return;
+
             SearchJob job = new SearchJob(search.Url, search.KeyWord, IsPremium(search.User), search.Ads.Count == 0);
             job.FistTimeCount = 5;
             job.SaveMode = new EFSaver(search.ID);
@@ -206,7 +209,7 @@ namespace LBCService
             using (ApplicationDbContext db = new ApplicationDbContext())
             {
                 //Add or edit job
-                foreach (Search s in db.Searches)
+                foreach (Search s in db.Searches.Where(s => s.MailAlert || s.MailRecap))
                 {
                     SendMailRecap(s);
 

@@ -206,7 +206,7 @@ namespace LBCMapping
             }
             catch (Exception e)
             {
-                log.Error("Erreur lors de la récupération des annonces\r\n" + e);
+                log.Error("Erreur lors de la récupération des annonces pour [" + m_criteria + "]\r\n" + e);
             }
             finally
             {

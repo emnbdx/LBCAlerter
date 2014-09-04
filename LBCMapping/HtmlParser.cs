@@ -168,29 +168,29 @@ namespace LBCMapping
             {
                 string[] dayMonth = date.Split(' ');
                 day = Convert.ToInt32(dayMonth[0]);
-                if (dayMonth[1].StartsWith("jan"))
+                if (dayMonth[1].StartsWith("ja"))
                     month = 1;
-                else if (dayMonth[1].StartsWith("fev"))
+                else if (dayMonth[1].StartsWith("f"))
                     month = 2;
                 else if (dayMonth[1].StartsWith("mar"))
                     month = 3;
-                else if (dayMonth[1].StartsWith("avr"))
+                else if (dayMonth[1].StartsWith("av"))
                     month = 4;
                 else if (dayMonth[1].StartsWith("mai"))
                     month = 5;
-                else if (dayMonth[1].StartsWith("jui"))
+                else if (dayMonth[1].StartsWith("juin"))
                     month = 6;
                 else if (dayMonth[1].StartsWith("juil"))
                     month = 7;
                 else if (dayMonth[1].StartsWith("ao"))
                     month = 8;
-                else if (dayMonth[1].StartsWith("sep"))
+                else if (dayMonth[1].StartsWith("s"))
                     month = 9;
-                else if (dayMonth[1].StartsWith("oct"))
+                else if (dayMonth[1].StartsWith("o"))
                     month = 10;
-                else if (dayMonth[1].StartsWith("nov"))
+                else if (dayMonth[1].StartsWith("n"))
                     month = 11;
-                else if (dayMonth[1].StartsWith("déc"))
+                else if (dayMonth[1].StartsWith("d"))
                     month = 12;
                 else
                     month = DateTime.Now.Month;
