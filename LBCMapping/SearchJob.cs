@@ -146,7 +146,8 @@ namespace LBCMapping
             {
                 int currentPage = 1;
                 int currentAd = 0;
-                
+                int elementFoundCount = 0;
+
                 while (true)
                 {
                     List<HtmlNode> links = HtmlParser.GetHtmlAd(m_criteria, currentPage);
@@ -154,7 +155,7 @@ namespace LBCMapping
                     if (links == null)
                         break; //Nothing return or empty page go out
 
-                    bool elementFound = false, limitReached = false;
+                    bool limitReached = false;
                     foreach (HtmlNode link in links)
                     {
                         Ad tmp = HtmlParser.ExtractAdInformation(link);
@@ -173,8 +174,12 @@ namespace LBCMapping
 
                         if (!m_saver.Store(tmp))
                         {
-                            elementFound = true;
-                            break; //Element already exist go out
+                            elementFoundCount++;
+
+                            if (elementFoundCount >= 5)
+                                break; //Element already exist go out
+                            else
+                                continue;
                         }
                         else
                             Alert(tmp);
@@ -189,7 +194,7 @@ namespace LBCMapping
                         }
                     }
 
-                    if (elementFound || limitReached)
+                    if (elementFoundCount >= 5 || limitReached)
                         break;
 
                     currentPage++;

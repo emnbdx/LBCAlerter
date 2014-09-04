@@ -23,19 +23,14 @@ namespace LBCService.Saver
         {
             LBCAlerterWeb.Models.Ad dbAd = db.Ads.FirstOrDefault(entry => entry.Search.ID == m_searchId && entry.Url == ad.AdUrl);
 
-            if (dbAd == null || dbAd.Date != ad.Date)
+            if (dbAd == null)
             {
-                if (dbAd == null)
-                {
-                    LBCAlerterWeb.Models.Ad tmpAd = LBCAlerterWeb.Models.Ad.ConvertLBCAd(ad);
-                    Search s = db.Searches.FirstOrDefault(entry => entry.ID == m_searchId);
-                    if(s == null)
-                        throw new Exception("Recherche inexistante...");
-                    tmpAd.Search = s;
-                    db.Ads.Add(tmpAd);
-                }
-                else
-                    dbAd.Date = ad.Date;
+                LBCAlerterWeb.Models.Ad tmpAd = LBCAlerterWeb.Models.Ad.ConvertLBCAd(ad);
+                Search s = db.Searches.FirstOrDefault(entry => entry.ID == m_searchId);
+                if (s == null)
+                    throw new Exception("Recherche inexistante...");
+                tmpAd.Search = s;
+                db.Ads.Add(tmpAd);
 
                 db.SaveChanges();
                 return true;

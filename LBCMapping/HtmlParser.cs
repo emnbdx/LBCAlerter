@@ -168,29 +168,29 @@ namespace LBCMapping
             {
                 string[] dayMonth = date.Split(' ');
                 day = Convert.ToInt32(dayMonth[0]);
-                if (dayMonth[1] == "jan")
+                if (dayMonth[1].StartsWith("jan"))
                     month = 1;
-                else if (dayMonth[1] == "fev")
+                else if (dayMonth[1].StartsWith("fev"))
                     month = 2;
-                else if (dayMonth[1] == "mars")
+                else if (dayMonth[1].StartsWith("mar"))
                     month = 3;
-                else if (dayMonth[1] == "avr")
+                else if (dayMonth[1].StartsWith("avr"))
                     month = 4;
-                else if (dayMonth[1] == "mai")
+                else if (dayMonth[1].StartsWith("mai"))
                     month = 5;
-                else if (dayMonth[1] == "jui")
+                else if (dayMonth[1].StartsWith("jui"))
                     month = 6;
-                else if (dayMonth[1] == "juil")
+                else if (dayMonth[1].StartsWith("juil"))
                     month = 7;
-                else if (dayMonth[1] == "aout" || dayMonth[1] == "août")
+                else if (dayMonth[1].StartsWith("ao"))
                     month = 8;
-                else if (dayMonth[1] == "sep")
+                else if (dayMonth[1].StartsWith("sep"))
                     month = 9;
-                else if (dayMonth[1] == "oct")
+                else if (dayMonth[1].StartsWith("oct"))
                     month = 10;
-                else if (dayMonth[1] == "nov")
+                else if (dayMonth[1].StartsWith("nov"))
                     month = 11;
-                else if (dayMonth[1] == "déc")
+                else if (dayMonth[1].StartsWith("déc"))
                     month = 12;
                 else
                     month = DateTime.Now.Month;
@@ -208,7 +208,7 @@ namespace LBCMapping
             {
                 Date = adDate,
                 AdUrl = link.GetAttributeValue("href", ""),
-                PictureUrl = imgNode != null ? imgNode.GetAttributeValue("src", "") : "",
+                PictureUrl = imgNode != null ? imgNode.GetAttributeValue("src", "").Replace("thumbs", "images") : "",
                 Place = placementNode != null ? placementNode.InnerText.Replace("\r", "").Replace("\n", "").Replace(" ", "") : "",
                 Price = priceNode != null ? priceNode.InnerText.Trim() : "",
                 Title = titleNode != null ? titleNode.InnerText.Trim() : ""
@@ -224,15 +224,23 @@ namespace LBCMapping
             HtmlDocument doc = web.Load(ad.AdUrl);
             HtmlNode adContent = doc.DocumentNode.SelectSingleNode("//div[@class='content-border']");
 
-            List<string> pictures = new List<string>(); 
-            if(adContent.SelectNodes("//div[@id='thumbs_carousel']//span[@class='thumbs']") != null)
-                foreach(HtmlNode picture in adContent.SelectNodes("//div[@id='thumbs_carousel']//span[@class='thumbs']"))
+            List<string> pictures = new List<string>();
+            if (adContent.SelectNodes("//div[@id='thumbs_carousel']//span[@class='thumbs']") != null)
+                foreach (HtmlNode picture in adContent.SelectNodes("//div[@id='thumbs_carousel']//span[@class='thumbs']"))
                 {
                     pictures.Add(picture.GetAttributeValue("style", "")
                         .Replace("background-image: url('", "")
                         .Replace("thumbs", "images")
                         .Replace("');", ""));
                 }
+            else if (adContent.SelectSingleNode("//div[@class='images_cadre']/a") != null)
+            {
+                HtmlNode picture = adContent.SelectSingleNode("//div[@class='images_cadre']/a");
+                
+                pictures.Add(picture.GetAttributeValue("style", "")
+                        .Replace("background-image: url('", "")
+                        .Replace("');", ""));
+            }
             HtmlNode phoneNode = adContent.SelectSingleNode("//span[@class='lbcPhone']/span[@id='phoneNumber']/a");
             HtmlNode commercialNode = adContent.SelectSingleNode("//div[@class='lbc_links']/em[.='(Je refuse tout d&eacute;marchage commercial)']");
             HtmlNode nameNode = adContent.SelectSingleNode("//div[@class='upload_by']/a");
