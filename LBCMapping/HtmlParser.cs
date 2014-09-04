@@ -300,6 +300,8 @@ namespace LBCMapping
                 doc.DocumentNode.SelectSingleNode("//div[@id='Banner_sky']").Remove();
             if (doc.DocumentNode.SelectSingleNode("//div[@id='oas-top1']") != null)
                 doc.DocumentNode.SelectSingleNode("//div[@id='oas-top1']").Remove();
+            if (doc.DocumentNode.SelectSingleNode("//div[@id='cookieFrame']") != null)
+                doc.DocumentNode.SelectSingleNode("//div[@id='cookieFrame']").Remove();
 
             //Replace relative link by absolute
             foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//script"))
@@ -357,6 +359,8 @@ namespace LBCMapping
                 doc.DocumentNode.SelectSingleNode("//div[@class='content-border list']").Remove();
             if (doc.DocumentNode.SelectSingleNode("//div[@id='categories_container']") != null)
                 doc.DocumentNode.SelectSingleNode("//div[@id='categories_container']").Remove();
+            if (doc.DocumentNode.SelectSingleNode("//div[@id='cookieFrame']") != null)
+                doc.DocumentNode.SelectSingleNode("//div[@id='cookieFrame']").Remove();
 
             //Replace relative link by absolute
             foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//script"))
