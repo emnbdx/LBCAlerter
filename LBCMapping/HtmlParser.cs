@@ -241,8 +241,8 @@ namespace LBCMapping
                         .Replace("background-image: url('", "")
                         .Replace("');", ""));
             }
-            HtmlNode phoneNode = adContent.SelectSingleNode("//span[@class='lbcPhone']/span[@id='phoneNumber']/a");
-            HtmlNode commercialNode = adContent.SelectSingleNode("//div[@class='lbc_links']/em[.='(Je refuse tout d&eacute;marchage commercial)']");
+            //HtmlNode phoneNode = adContent.SelectSingleNode("//span[@class='lbcPhone']/span[@id='phoneNumber']/a");
+            //HtmlNode commercialNode = adContent.SelectSingleNode("//div[@class='lbc_links']/span[.='(Je refuse tout d&eacute;marchage commercial)']");
             HtmlNode nameNode = adContent.SelectSingleNode("//div[@class='upload_by']/a");
             HtmlNode emailNode = adContent.SelectSingleNode("//div[@class='lbc_links']/a[.='Envoyer un email']");
             List<string> parameters = new List<string>();
@@ -264,9 +264,9 @@ namespace LBCMapping
             HtmlNode descriptionNode = adContent.SelectSingleNode("//div[@class='AdviewContent']/div[@class='content']");
 
             ad.PictureUrl = String.Join(",", pictures);
-            //TODO : find good solution to get phone number
+            //TODO : find good solution to get phone number and commercial information
             //ad.Phone = phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", "")) : "";
-            ad.AllowCommercial = commercialNode == null;
+            //ad.AllowCommercial = commercialNode == null;
             ad.Name = nameNode != null ? nameNode.InnerText : "";
             ad.ContactUrl = emailNode != null ? emailNode.GetAttributeValue("href", "") : "";
             ad.Param = String.Join(",", parameters);
