@@ -259,7 +259,7 @@ namespace LBCMapping
                 else
                     value = parameter.SelectSingleNode("td").InnerText;
 
-                parameters.Add(title + " : " + value);
+                parameters.Add(title + ": " + value);
             }
             HtmlNode descriptionNode = adContent.SelectSingleNode("//div[@class='AdviewContent']/div[@class='content']");
 
