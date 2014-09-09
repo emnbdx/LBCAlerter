@@ -244,7 +244,7 @@ namespace LBCMapping
             //HtmlNode phoneNode = adContent.SelectSingleNode("//span[@class='lbcPhone']/span[@id='phoneNumber']/a");
             //HtmlNode commercialNode = adContent.SelectSingleNode("//div[@class='lbc_links']/span[.='(Je refuse tout d&eacute;marchage commercial)']");
             HtmlNode nameNode = adContent.SelectSingleNode("//div[@class='upload_by']/a");
-            HtmlNode emailNode = adContent.SelectSingleNode("//div[@class='lbc_links']/a[.='Envoyer un email']");
+            HtmlNode emailNode = adContent.SelectSingleNode("//div[@class='lbc_links']/a[@class='sendMail']");
             List<string> parameters = new List<string>();
             if (adContent.SelectNodes("//div[contains(@class, 'lbcParamsContainer')]/div[contains(@class, 'lbcParams')]//tr") != null)
                 foreach (HtmlNode parameter in adContent.SelectNodes("//div[contains(@class, 'lbcParamsContainer')]/div[contains(@class, 'lbcParams')]//tr"))
@@ -259,7 +259,7 @@ namespace LBCMapping
                 else
                     value = parameter.SelectSingleNode("td").InnerText;
 
-                parameters.Add(title + "=" + value);
+                parameters.Add(title + " : " + value);
             }
             HtmlNode descriptionNode = adContent.SelectSingleNode("//div[@class='AdviewContent']/div[@class='content']");
 
