@@ -239,7 +239,6 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
     <EmbeddedResource Include="Migrations\201404142356166_ResetPassword.resx">
       <DependentUpon>201404142356166_ResetPassword.cs</DependentUpon>
     </EmbeddedResource>
