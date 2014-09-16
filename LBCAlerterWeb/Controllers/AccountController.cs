@@ -369,7 +369,7 @@ namespace LBCAlerterWeb.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Search");
         }
 
         protected override void Dispose(bool disposing)
@@ -435,7 +435,7 @@ namespace LBCAlerterWeb.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Search");
             }
         }
 

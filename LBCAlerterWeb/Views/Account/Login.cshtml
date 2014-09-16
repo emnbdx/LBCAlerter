@@ -1,8 +1,6 @@
 ﻿@model LBCAlerterWeb.Models.LoginViewModel
-
 @{
     ViewBag.Title = "Welcome !";
-    Layout = "~/Views/Shared/_LoginLayout.cshtml";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -11,16 +9,16 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
-    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email", @required = "required" })
+    @Html.TextBoxFor(m => m.Email, new { @placeholder = @Html.DisplayNameFor(m => m.Email), @required = "required" })
     @Html.ValidationMessageFor(m => m.Email)
 
-    @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Mot de passe", @required = "required" })
+    @Html.PasswordFor(m => m.Password, new { @placeholder = @Html.DisplayNameFor(m => m.Password), @required = "required" })
     @Html.ValidationMessageFor(m => m.Password)
 
     <div class="label-cb">
         @Html.CheckBoxFor(m => m.RememberMe, new { @class = "ios-toggle" })
         @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox-label" })
-        @Html.Label("Mémoriser le mot de passe ?")
+        @Html.Label("Se souvenir de moi ?")
     </div>
     
     <input type="submit" value="Connexion" class="btn btn-primary btn-block btn-large" />

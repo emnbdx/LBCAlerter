@@ -1,7 +1,6 @@
 ﻿@model LBCAlerterWeb.Models.RegisterViewModel
 @{
     ViewBag.Title = "S’inscrire";
-    Layout = "~/Views/Shared/_LoginLayout.cshtml";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -13,17 +12,17 @@
     <hr />
     @Html.ValidationSummary(true)
     
-    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email", @required = "required" })
+    @Html.TextBoxFor(m => m.Email, new { @placeholder = @Html.DisplayNameFor(m => m.Email), @required = "required" })
     @Html.ValidationMessageFor(m => m.Email)
-    @Html.PasswordFor(m => m.Password, new { @class = "col-md-2 control-label", @placeholder = "Mot de passe", @required = "required" })
+    @Html.PasswordFor(m => m.Password, new { @placeholder = @Html.DisplayNameFor(m => m.Password), @required = "required" })
     @Html.ValidationMessageFor(m => m.Password)
-    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label", @placeholder = "Confirmation du mot de passe", @required = "required" })
+    @Html.PasswordFor(m => m.ConfirmPassword, new { @placeholder = @Html.DisplayNameFor(m => m.ConfirmPassword), @required = "required" })
     @Html.ValidationMessageFor(m => m.ConfirmPassword)
     
     <input type="submit" class="btn btn-primary btn-block btn-large" value="S'enregistrer" />
 
     <div class="links">
-        @Html.ActionLink("Retour à l'accueil", "Index", "Home")
+        @Html.ActionLink("Retour à l'accueil", "Index", "Search")
     </div>
 }
 
