@@ -17,10 +17,12 @@
     @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Mot de passe", @required = "required" })
     @Html.ValidationMessageFor(m => m.Password)
 
-    @Html.CheckBoxFor(m => m.RememberMe, new { @class = "ios-toggle" })
-    @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox-label" })
-    @Html.Label("Mémoriser le mot de passe ?");
-
+    <div class="label-cb">
+        @Html.CheckBoxFor(m => m.RememberMe, new { @class = "ios-toggle" })
+        @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox-label" })
+        @Html.Label("Mémoriser le mot de passe ?")
+    </div>
+    
     <input type="submit" value="Connexion" class="btn btn-primary btn-block btn-large" />
 
     <div class="links">

@@ -1,1 +1,0 @@
-2014-09-04 14:06:08,969         LBCAlerterWeb.Controllers.SearchController  [INFO      ] Add search #2006 Url [/locations/offres/ile_de_france/?o={0}&mre=600&furn=1&location=75003] Keyword [ocations/offres/ile_de_france/?o={0}] by [eddy.montus@gmail.com] 
