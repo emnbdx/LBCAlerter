@@ -52,7 +52,10 @@ else
             @Html.DisplayFor(modelItem => item.KeyWord)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.MailAlert)
+            <div class="label-cb">
+                @Html.CheckBoxFor(modelItem => item.MailAlert, new { @class = "ios-toggle" })
+                @Html.LabelFor(modelItem => item.MailAlert, new { @class = "checkbox-label" })
+            </div>
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.MailRecap)
