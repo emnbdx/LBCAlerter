@@ -16,8 +16,8 @@
     @Html.ValidationMessageFor(m => m.Password)
 
     <div class="label-cb">
-        @Html.CheckBoxFor(m => m.RememberMe, new { @class = "ios-toggle" })
-        @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox-label" })
+        @Html.CheckBoxFor(m => m.RememberMe, new { @class = "ios-toggle grey-cb" })
+        @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox-label", @dataon = "oui", @dataoff = "non" })
         @Html.Label("Se souvenir de moi ?")
     </div>
     

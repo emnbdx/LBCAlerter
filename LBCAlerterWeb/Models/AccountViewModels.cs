@@ -2,13 +2,6 @@
 
 namespace LBCAlerterWeb.Models
 {
-    public class ExternalLoginConfirmationViewModel
-    {
-        [Required]
-        [Display(Name = "Nom d’utilisateur")]
-        public string UserName { get; set; }
-    }
-
     public class ManageUserViewModel
     {
         [Required]
@@ -22,6 +15,7 @@ namespace LBCAlerterWeb.Models
         [Display(Name = "Nouveau mot de passe")]
         public string NewPassword { get; set; }
 
+        [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Confirmer le nouveau mot de passe")]
         [Compare("NewPassword", ErrorMessage = "Le nouveau mot de passe et le mot de passe de confirmation ne correspondent pas.")]
@@ -59,6 +53,7 @@ namespace LBCAlerterWeb.Models
         [Display(Name = "Mot de passe")]
         public string Password { get; set; }
 
+        [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Confirmer le mot de passe")]
         [Compare("Password", ErrorMessage = "Le mot de passe et le mot de passe de confirmation ne correspondent pas.")]
@@ -68,6 +63,8 @@ namespace LBCAlerterWeb.Models
     public class ResetPasswordModel
     {
         [Required]
+        [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage = "Email invalide")]
         [Display(Name = "Email")]
         public string Email { get; set; }
     }
@@ -83,6 +80,7 @@ namespace LBCAlerterWeb.Models
         [Display(Name = "Mot de passe")]
         public string NewPassword { get; set; }
 
+        [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Confirmer le mot de passe")]
         [Compare("NewPassword", ErrorMessage = "Le mot de passe et le mot de passe de confirmation ne correspondent pas.")]
