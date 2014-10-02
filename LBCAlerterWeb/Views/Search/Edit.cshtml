@@ -3,71 +3,47 @@
     ViewBag.Title = "Editer";
 }
 
-<h2>Editer</h2>
-
-
 @using (Html.BeginForm())
 {
+    <h4>Modification de l'alerte</h4>
+    <hr />
+
     @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
     
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.ID)
-        @Html.HiddenFor(model => model.CreationDate)
-        @Html.HiddenFor(model => model.Url)
-        @Html.HiddenFor(model => model.LastRecap)
+    @Html.HiddenFor(model => model.ID)
+    @Html.HiddenFor(model => model.CreationDate)
+    @Html.HiddenFor(model => model.Url)
+    @Html.HiddenFor(model => model.LastRecap)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.KeyWord, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.KeyWord)
-                @Html.ValidationMessageFor(model => model.KeyWord)
-            </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.MailAlert, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.CheckBoxFor(model => model.MailAlert)
-                @Html.ValidationMessageFor(model => model.MailAlert)
-            </div>
-        </div>
+    @Html.EditorFor(model => model.KeyWord, new { @placeholder = @Html.DisplayNameFor(model => model.KeyWord), @required = "required" })
+    @Html.ValidationMessageFor(model => model.KeyWord)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.MailRecap, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.CheckBoxFor(model => model.MailRecap)
-                @Html.ValidationMessageFor(model => model.MailRecap)
-            </div>
-        </div>
+    <div class="label-cb">
+        @Html.CheckBoxFor(m => m.MailAlert, new { @class = "ios-toggle grey-cb" })
+        @Html.LabelFor(m => m.MailAlert, new { @class = "checkbox-label", @dataon = "oui", @dataoff = "non" })
+        @Html.Label("", "Alertes email ?")
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.RefreshTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RefreshTime)
-                @Html.ValidationMessageFor(model => model.RefreshTime)
-            </div>
-        </div>
+    <div class="label-cb">
+        @Html.CheckBoxFor(m => m.MailRecap, new { @class = "ios-toggle grey-cb" })
+        @Html.LabelFor(m => m.MailRecap, new { @class = "checkbox-label", @dataon = "oui", @dataoff = "non" })
+        @Html.Label("", "Récap. email ?")
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Url, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DisplayFor(model => model.Url)
-            </div>
-        </div>
+    @Html.EditorFor(model => model.RefreshTime, new { @placeholder = @Html.DisplayNameFor(model => model.RefreshTime), @required = "required" })
+    @Html.ValidationMessageFor(model => model.RefreshTime)
+    
+    @Html.LabelFor(model => model.Url, new { @class = "control-label col-md-2" })
+    @Html.DisplayFor(model => model.Url)
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Sauvegarder" class="btn btn-default" />
-            </div>
-        </div>
+    <input type="submit" value="Sauvegarder" class="btn btn-primary btn-block btn-large" />
+
+    <div class="links">
+        @Html.ActionLink("Retour à la liste", "Index")
     </div>
 }
-
-<div>
-    @Html.ActionLink("Retour à la liste", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

@@ -3,35 +3,16 @@
     ViewBag.Title = "Supprimer";
 }
 
-<h2>Supprimer</h2>
-
-<h3>Voulez-vous vraiment supprimer cette alerte?</h3>
 <div>
+    <h4>Voulez-vous vraiment supprimer cette alerte?</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Url)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Url)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.KeyWord)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.KeyWord)
-        </dd>
-
-    </dl>
 
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Supprimer" class="btn btn-default" /> |
+        <input type="submit" value="Supprimer" class="btn btn-primary btn-block btn-large" />
+
+        <div class="links">
             @Html.ActionLink("Retour à la liste", "Index")
         </div>
     }

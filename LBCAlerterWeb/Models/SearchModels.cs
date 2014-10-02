@@ -20,9 +20,9 @@ namespace LBCAlerterWeb.Models
         public string Url { get; set; }
         [DisplayName("Description")]
         public string KeyWord { get; set; }
-        [DisplayName("Alertes email ?")]
+        [Display(Name = " ")]
         public bool MailAlert { get; set; }
-        [DisplayName("Récap. email ?")]
+        [Display(Name = " ")]
         public bool MailRecap { get; set; }
         [DisplayName("Dernier récap")]
         public DateTime? LastRecap { get; set; }

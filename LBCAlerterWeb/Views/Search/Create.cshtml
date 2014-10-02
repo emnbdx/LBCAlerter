@@ -4,15 +4,16 @@
     Layout = "~/Views/Shared/_PrettyLayout.cshtml";
 }
 
-<h2>Ajouter</h2>
-
 @using (Html.BeginForm())
 {
+    <h2>Ajout d'une alerte</h2>
+    <hr/>
+    
     <div id="iframeContainer">
-        <iframe id="firstPage" srcdoc="@LBCMapping.HtmlParser.GetHomePage()" style="width: 100%; height: 520px;"></iframe>
+        <iframe id="firstPage" srcdoc="@LBCMapping.HtmlParser.GetHomePage()"></iframe>
     </div>
 
-    <div>
+    <div class="links">
         @Html.ActionLink("Retour à la liste", "Index")
     </div>
 }

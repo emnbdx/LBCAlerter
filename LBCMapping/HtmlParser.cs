@@ -22,6 +22,37 @@ namespace LBCMapping
         private const string KEYWORD_URL_PARAM = "&q=";
 
         /// <summary>
+        /// Replace relative link by absolute
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="xPathQuery"></param>
+        private static void RelativeToAbsolute(HtmlDocument doc, string xPathQuery)
+        {
+            foreach (HtmlNode node in doc.DocumentNode.SelectNodes(xPathQuery))
+            {
+                if (node.Attributes.Contains("src") && node.Attributes["src"].Value.StartsWith("/"))
+                    node.SetAttributeValue("src", URL_BASE + node.Attributes["src"].Value);
+                if (node.Attributes.Contains("href") && node.Attributes["href"].Value.StartsWith("/"))
+                    node.SetAttributeValue("href", URL_BASE + node.Attributes["href"].Value);
+            }
+        }
+
+        private static void RemoveBackground(HtmlDocument doc, string xPathQuery)
+        {
+            if (doc.DocumentNode.SelectSingleNode(xPathQuery) != null)
+            {
+                if (doc.DocumentNode.SelectSingleNode(xPathQuery).Attributes["style"] != null)
+                {
+                    doc.DocumentNode.SelectSingleNode(xPathQuery).Attributes["style"].Value += "background-color: transparent;";
+                }
+                else
+                {
+                    doc.DocumentNode.SelectSingleNode(xPathQuery).Attributes.Add("style", "background-color: transparent;");
+                }
+            }
+        }
+
+        /// <summary>
         /// Do ajax call to get phone gif url by replacing javascript call
         /// </summary>
         /// <param name="phoneLink">Clikable link to display phone number</param>
@@ -303,18 +334,12 @@ namespace LBCMapping
             if (doc.DocumentNode.SelectSingleNode("//div[@id='cookieFrame']") != null)
                 doc.DocumentNode.SelectSingleNode("//div[@id='cookieFrame']").Remove();
 
-            //Replace relative link by absolute
-            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//script"))
-            {
-                if (node.Attributes.Contains("src") && node.Attributes["src"].Value.StartsWith("/"))
-                    node.SetAttributeValue("src", URL_BASE + node.Attributes["src"].Value);
-            }
-
-            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//link"))
-            {
-                if (node.Attributes.Contains("href") && node.Attributes["href"].Value.StartsWith("/"))
-                    node.SetAttributeValue("href", URL_BASE + node.Attributes["href"].Value);
-            }
+            RelativeToAbsolute(doc, "//script");
+            RelativeToAbsolute(doc, "//link");
+            
+            RemoveBackground(doc, "//body[@id='all']");
+            RemoveBackground(doc, "//div[@id='page_width']");
+            RemoveBackground(doc, "//div[@class='search_box']");
 
             return doc.DocumentNode.WriteTo();
         }
@@ -362,18 +387,12 @@ namespace LBCMapping
             if (doc.DocumentNode.SelectSingleNode("//div[@id='cookieFrame']") != null)
                 doc.DocumentNode.SelectSingleNode("//div[@id='cookieFrame']").Remove();
 
-            //Replace relative link by absolute
-            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//script"))
-            {
-                if (node.Attributes.Contains("src") && node.Attributes["src"].Value.StartsWith("/"))
-                    node.SetAttributeValue("src", URL_BASE + node.Attributes["src"].Value);
-            }
+            RelativeToAbsolute(doc, "//script");
+            RelativeToAbsolute(doc, "//link");
 
-            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//link"))
-            {
-                if (node.Attributes.Contains("href") && node.Attributes["href"].Value.StartsWith("/"))
-                    node.SetAttributeValue("href", URL_BASE + node.Attributes["href"].Value);
-            }
+            RemoveBackground(doc, "//body[@id='all']");
+            RemoveBackground(doc, "//div[@id='page_width']");
+            RemoveBackground(doc, "//div[@class='search_box']");
 
             return doc.DocumentNode.WriteTo();
         }
