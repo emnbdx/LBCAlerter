@@ -109,7 +109,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -229,14 +229,40 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\addons\jquery.mmenu.counters.css" />
+    <Content Include="Content\addons\jquery.mmenu.dragopen.css" />
+    <Content Include="Content\addons\jquery.mmenu.header.css" />
+    <Content Include="Content\addons\jquery.mmenu.labels.css" />
+    <Content Include="Content\addons\jquery.mmenu.searchfield.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\images\purple.jpg" />
-    <Content Include="Content\images\bleue.jpg" />
+    <Content Include="Content\extensions\jquery.mmenu.effects.css" />
+    <Content Include="Content\extensions\jquery.mmenu.fullscreen.css" />
+    <Content Include="Content\extensions\jquery.mmenu.ie8.css" />
+    <Content Include="Content\extensions\jquery.mmenu.positioning.css" />
+    <Content Include="Content\extensions\jquery.mmenu.themes.css" />
+    <Content Include="Content\extensions\jquery.mmenu.widescreen.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\images\backgrounds\2.jpg" />
+    <Content Include="Content\images\backgrounds\3.jpg" />
+    <Content Include="Content\images\backgrounds\4.jpg" />
+    <Content Include="Content\images\backgrounds\5.jpg" />
+    <Content Include="Content\images\backgrounds\6.jpg" />
+    <Content Include="Content\images\dot_pattern.png" />
+    <Content Include="Content\images\loader.gif" />
+    <Content Include="Content\images\minimal-logo.png" />
+    <Content Include="Content\images\noise.png" />
+    <Content Include="Content\images\backgrounds\1.jpg" />
+    <Content Include="Content\jquery.mmenu.all.css" />
+    <Content Include="Content\jquery.mmenu.css" />
+    <Content Include="Content\minimal.css" />
+    <Content Include="Content\nice-button.css" />
     <Content Include="Content\pretty.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <EmbeddedResource Include="Migrations\201404142356166_ResetPassword.resx">
@@ -253,19 +279,41 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\FontAwesome.otf" />
     <None Include="Properties\PublishProfiles\perso.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
+    <Content Include="Scripts\addons\jquery.mmenu.counters.js" />
+    <Content Include="Scripts\addons\jquery.mmenu.counters.min.js" />
+    <Content Include="Scripts\addons\jquery.mmenu.dragopen.js" />
+    <Content Include="Scripts\addons\jquery.mmenu.dragopen.min.js" />
+    <Content Include="Scripts\addons\jquery.mmenu.header.js" />
+    <Content Include="Scripts\addons\jquery.mmenu.header.min.js" />
+    <Content Include="Scripts\addons\jquery.mmenu.labels.js" />
+    <Content Include="Scripts\addons\jquery.mmenu.labels.min.js" />
+    <Content Include="Scripts\addons\jquery.mmenu.searchfield.js" />
+    <Content Include="Scripts\addons\jquery.mmenu.searchfield.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />
     <Content Include="Scripts\jquery-2.1.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.mmenu.js" />
+    <Content Include="Scripts\jquery.mmenu.min.all.js" />
+    <Content Include="Scripts\jquery.mmenu.min.js" />
+    <Content Include="Scripts\jquery.nicescroll.js" />
+    <Content Include="Scripts\jquery.nicescroll.min.js" />
+    <Content Include="Scripts\jquery.sparkline.js" />
+    <Content Include="Scripts\jquery.sparkline.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\minimal.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\respond.js" />

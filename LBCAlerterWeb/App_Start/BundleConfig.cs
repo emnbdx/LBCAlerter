@@ -23,9 +23,19 @@ namespace LBCAlerterWeb
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
-            bundles.Add(new StyleBundle("~/Content/pretty").Include(
+            bundles.Add(new ScriptBundle("~/bundles/minimal").Include(
+                      "~/Scripts/jquery.mmenu.*",
+                      "~/Scripts/jquery.sparkline.*",
+                      "~/Scripts/jquery.nicescroll.*",
+                      "~/Scripts/minimal.js"));
+
+            bundles.Add(new StyleBundle("~/Content/minimal").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/pretty.css"));
+                      "~/Content/font-awesome.css",
+                      "~/Content/jquery.mmenu.*",
+                      "~/Content/minimal.css",
+                      "~/Content/pretty.css",
+                      "~/Content/nice-button.css"));
         }
     }
 }

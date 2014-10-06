@@ -52,15 +52,25 @@ else
                 @Html.DisplayFor(modelItem => item.KeyWord)
             </td>
             <td>
-                <div class="label-cb">
-                    @Html.CheckBoxFor(modelItem => item.MailAlert, new { @class = "ios-toggle" })
-                    @Html.LabelFor(modelItem => item.MailAlert, new { @class = "checkbox-label", @dataon = "oui", @dataoff = "non" })
+                <div class="col-xs-4 control-label">
+                    <div class="onoffswitch greensea">
+                        @Html.CheckBoxFor(modelItem => item.MailAlert, new { @id = "alert", @class = "onoffswitch-checkbox", @disabled = "true" })
+                        <label class="onoffswitch-label" for="alert">
+                            <span class="onoffswitch-inner"></span>
+                            <span class="onoffswitch-switch"></span>
+                        </label>
+                    </div>
                 </div>
             </td>
             <td>
-                <div class="label-cb">
-                    @Html.CheckBoxFor(modelItem => item.MailRecap, new { @class = "ios-toggle" })
-                    @Html.LabelFor(modelItem => item.MailRecap, new { @class = "checkbox-label", @dataon = "oui", @dataoff = "non" })
+                <div class="col-xs-4 control-label">
+                    <div class="onoffswitch greensea">
+                        @Html.CheckBoxFor(modelItem => item.MailRecap, new { @id ="recap", @class = "onoffswitch-checkbox", @disabled = "true" })
+                        <label class="onoffswitch-label" for="recap">
+                            <span class="onoffswitch-inner"></span>
+                            <span class="onoffswitch-switch"></span>
+                        </label>
+                    </div>
                 </div>
             </td>
             <td>
