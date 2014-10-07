@@ -2,17 +2,33 @@
 @{
     ViewBag.Title = "Annonces";
     Layout = "~/Views/Shared/_PrettyLayout.cshtml";
+
+    var s = "50";
+    if (Model.Count() < 50)
+    {
+        s = Model.Count().ToString();
+    }
 }
+
+<!-- page header -->
+<div class="pageheader">
+    <h2>
+        <i class="fa fa-tachometer"></i> Liste des @s dernières annonces trouvées
+        <span>// Place subtitle here...</span>
+    </h2>
+    <div class="breadcrumbs">
+        <ol class="breadcrumb">
+            <li>You are here</li>
+            <li><a href="@Url.Action("Index", "Search")">LBC Alerter</a></li>
+            <li class="active">Tableau de bord</li>
+        </ol>
+    </div>
+</div>
+<!-- /page header -->
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-    if (Model.Count() >= 50) { 
-        <h2>Liste des 50 dernières annonces trouvées</h2>
-    } else { 
-        <h2>Liste des @Model.Count() dernières annonces trouvées</h2>
-    }
 
     if (Model.Count() > 0) {
         @Html.ActionLink("Flux Rss", "AdListFeed", new { id = Model.First().Search.ID })

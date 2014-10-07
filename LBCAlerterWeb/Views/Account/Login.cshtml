@@ -15,18 +15,24 @@
     @Html.PasswordFor(m => m.Password, new { @placeholder = @Html.DisplayNameFor(m => m.Password), @required = "required" })
     @Html.ValidationMessageFor(m => m.Password)
 
-    <div class="label-cb">
-        @Html.CheckBoxFor(m => m.RememberMe, new { @class = "ios-toggle grey-cb" })
-        @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox-label", @dataon = "oui", @dataoff = "non" })
-        @Html.Label("Se souvenir de moi ?")
-    </div>
-    
-    <input type="submit" value="Connexion" class="btn btn-primary btn-block btn-large" />
 
-    <div class="links">
-        @Html.ActionLink("Mot de passe oublié ?", "ResetPassword")<br />
-        @Html.ActionLink("Enregistrez-vous", "Register") si vous n'avez pas de compte.
+    @Html.Label("Se souvenir de moi ?", new { @class = "col-xs-8 control-label" })
+    <div class="col-xs-4 control-label">
+        <div class="onoffswitch dutch">
+            @Html.CheckBoxFor(m => m.RememberMe, new { @class = "onoffswitch-checkbox" })
+            <label class="onoffswitch-label" for="RememberMe">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+            </label>
+        </div>
     </div>
+
+   <input type="submit" value="Connexion" class="btn btn-primary btn-block btn-large" />
+
+   <div class="links">
+       @Html.ActionLink("Mot de passe oublié ?", "ResetPassword")<br />
+       @Html.ActionLink("Enregistrez-vous", "Register") si vous n'avez pas de compte.
+   </div>
 }
 
 @section Scripts {

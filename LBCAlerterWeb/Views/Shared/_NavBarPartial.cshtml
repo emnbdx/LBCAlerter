@@ -1,0 +1,87 @@
+﻿@using Microsoft.AspNet.Identity
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div id="navbar" role="navigation" class="navbar navbar-default navbar-fixed-top navbar-transparent-black">
+        <div class="navbar-header col-md-2">
+            <a class="navbar-brand">LBC Alerter</a>
+            <div class="sidebar-collapse">
+                <a href="#">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="navbar-collapse">
+            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <ul class="nav navbar-nav quick-actions">
+                    <li class="dropdown divided user" id="current-user">
+                        <div class="profile-photo">
+                            <img src="~/Content/images/profil.gif" alt="">
+                        </div>
+                        <a class="dropdown-toggle options" data-toggle="dropdown" href="#">
+                            @User.Identity.GetUserName() <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu arrow settings animated fadeInDown">
+                            <li>
+                                <a href="@Url.Action("Manage", "Account")"><i class="fa fa-user"></i> Profile</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-power-off"></i> Logout</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            }
+            <!-- /Quick Actions -->
+            <!-- Sidebar -->
+            <ul class="nav navbar-nav side-nav" id="sidebar" tabindex="5000" style="overflow: hidden; outline: none;">
+                <li class="collapsed-content">
+                    <ul>
+                        <li class="search"><!-- Collapsed search pasting here at 768px --></li>
+                    </ul>
+                </li>
+                <li class="navigation" id="navigation">
+                    <a href="#" class="sidebar-toggle" data-toggle="#navigation">Navigation <i class="fa fa-angle-up"></i></a>
+                    <ul class="menu">
+                        <li id="dashboard">
+                            <a href="@Url.Action("Index", "Search")">
+                                <i class="fa fa-tachometer"></i> Tableau de bord
+                                <!--<span class="badge badge-red">1</span>-->
+                            </a>
+                        </li>
+                        <li id="new">
+                            <a href="@Url.Action("Create", "Search")">
+                                <i class="fa fa-edit"></i> Nouvelle alerte
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                @if (Roles.IsUserInRole("admin"))
+                {
+                    <li class="navigation" id="admin">
+                        <a href="#" class="sidebar-toggle" data-toggle="#admin">Administration <i class="fa fa-angle-up"></i></a>
+                        <ul class="menu">
+                            <li id="user">
+                                <a href="@Url.Action("All", "Account")">
+                                    <i class="fa fa-users"></i> Listes des utilisateurs
+                                </a>
+                            </li>
+                            <li id="search">
+                                <a href="@Url.Action("All", "Search")">
+                                    <i class="fa fa-list"></i> Listes des alertes
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                }
+            </ul>
+            <!-- Sidebar end -->
+        </div>
+    </div>
+}

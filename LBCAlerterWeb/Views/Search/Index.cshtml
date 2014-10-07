@@ -4,25 +4,20 @@
     Layout = "~/Views/Shared/_PrettyLayout.cshtml";
 }
 
-<h2>Liste des alertes</h2>
-@if(Model.Count() >= 5 && !Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium"))
-{
-    <p style="color: red;">
-        Version beta, limité à cinq alertes<br />
-    </p>
-    <!--<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-        <input type="hidden" name="cmd" value="_s-xclick">
-        <input type="hidden" name="hosted_button_id" value="N6SJGHGSKKX4S">
-        <input type="image" src="https://www.paypalobjects.com/fr_FR/FR/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - la solution de paiement en ligne la plus simple et la plus sécurisée !">
-        <img alt="" border="0" src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" width="1" height="1">
-    </form>-->
-}
-else
-{
-    <p>
-        @Html.ActionLink("Ajouter", "Create")
-    </p>
-}
+<!-- page header -->
+<div class="pageheader">
+    <h2>
+        <i class="fa fa-tachometer"></i> Liste des alertes
+    </h2>
+    <div class="breadcrumbs">
+        <ol class="breadcrumb">
+            <li>You are here</li>
+            <li class="active">LBC Alerter</li>
+        </ol>
+    </div>
+</div>
+<!-- /page header -->
+
 <table class="table">
     <tr>
         <th>
@@ -53,9 +48,9 @@ else
             </td>
             <td>
                 <div class="col-xs-4 control-label">
-                    <div class="onoffswitch greensea">
+                    <div class="onoffswitch dutch">
                         @Html.CheckBoxFor(modelItem => item.MailAlert, new { @id = "alert", @class = "onoffswitch-checkbox", @disabled = "true" })
-                        <label class="onoffswitch-label" for="alert">
+                        <label class="onoffswitch-label" for="MailAlert">
                             <span class="onoffswitch-inner"></span>
                             <span class="onoffswitch-switch"></span>
                         </label>
@@ -64,9 +59,9 @@ else
             </td>
             <td>
                 <div class="col-xs-4 control-label">
-                    <div class="onoffswitch greensea">
-                        @Html.CheckBoxFor(modelItem => item.MailRecap, new { @id ="recap", @class = "onoffswitch-checkbox", @disabled = "true" })
-                        <label class="onoffswitch-label" for="recap">
+                    <div class="onoffswitch dutch">
+                        @Html.CheckBoxFor(modelItem => item.MailRecap, new { @id = "recap", @class = "onoffswitch-checkbox", @disabled = "true" })
+                        <label class="onoffswitch-label" for="MailRecap">
                             <span class="onoffswitch-inner"></span>
                             <span class="onoffswitch-switch"></span>
                         </label>
@@ -89,3 +84,13 @@ else
         </tr>
     }
 </table>
+
+@section Scripts {
+    <script type="text/javascript">
+        $('.menu li').each(function() {
+            $(this).removeClass('active');
+        });
+
+        $('#dashboard').addClass('active');
+    </script>
+}

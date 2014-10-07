@@ -46,9 +46,10 @@ namespace LBCAlerterWeb.Controllers
         }
 
         // GET: /Search/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View();
+            var currentUser = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            return View(db.Searches.Where(search => search.User.Id == currentUser.Id).ToList());
         }
 
         [HttpPost]

@@ -10,49 +10,15 @@
 
 </head>
 <body class="bg-1">
-    @if (User.Identity.IsAuthenticated)
-    {
-        <div id="navbar" role="navigation" class="navbar navbar-default navbar-fixed-top navbar-transparent-black">
-            <div class="navbar-header col-md-2">
-                <a class="navbar-brand">LBC Alerter</a>
-                <div class="sidebar-collapse">
-                    <a href="#">
-                        <i class="fa fa-bars"></i>
-                    </a>
-                </div>
-            </div>
-
-            <div class="navbar-collapse">
-                <ul class="nav navbar-nav quick-actions">
-                    <li class="dropdown divided user" id="current-user">
-                        <div class="profile-photo">
-                            <img src="assets/images/profile-photo.jpg" alt="">
-                        </div>
-                        <a class="dropdown-toggle options" data-toggle="dropdown" href="#">
-                            John Douey <i class="fa fa-caret-down"></i>
-                        </a>
-                        <ul class="dropdown-menu arrow settings animated fadeInDown">
-                            <li>
-                                <a href="#"><i class="fa fa-user"></i> Profile</a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#"><i class="fa fa-power-off"></i> Logout</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                <!-- /Quick Actions -->
-            </div>
-        </div>
-    }
+    @Html.Partial("_NavBarPartial")
 
     <div class="form">
         @RenderBody()
     </div>
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/minimal")
     @RenderSection("scripts", required: false)
-    </body>
+</body>
 </html>

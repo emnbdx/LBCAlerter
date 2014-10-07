@@ -4,7 +4,21 @@
     ViewBag.Title = "Liste de tous les utilisateurs";
 }
 
-<h2>Liste de tous les utilisateurs (@Model.Count())</h2>
+<!-- page header -->
+<div class="pageheader">
+    <h2>
+        <i class="fa fa-users"></i> Liste de tous les utilisateurs
+        <span>// @Model.Count()</span>
+    </h2>
+    <div class="breadcrumbs">
+        <ol class="breadcrumb">
+            <li>You are here</li>
+            <li><a href="index.html">Minimal</a></li>
+            <li class="active">Dashboard</li>
+        </ol>
+    </div>
+</div>
+<!-- /page header -->
 
 <table class="table">
     <tr>
@@ -41,3 +55,13 @@
 }
 
 </table>
+
+@section Scripts {
+    <script type="text/javascript">
+        $('.menu li').each(function() {
+            $(this).removeClass('active');
+        });
+
+        $('#user').addClass('active');
+    </script>
+}

@@ -20,16 +20,26 @@
     @Html.EditorFor(model => model.KeyWord, new { @placeholder = @Html.DisplayNameFor(model => model.KeyWord), @required = "required" })
     @Html.ValidationMessageFor(model => model.KeyWord)
 
-    <div class="label-cb">
-        @Html.CheckBoxFor(m => m.MailAlert, new { @class = "ios-toggle grey-cb" })
-        @Html.LabelFor(m => m.MailAlert, new { @class = "checkbox-label", @dataon = "oui", @dataoff = "non" })
-        @Html.Label("", "Alertes email ?")
+    @Html.Label("", "Alertes email ?", new { @class = "col-xs-8 control-label" })
+    <div class="col-xs-4 control-label">
+        <div class="onoffswitch dutch">
+            @Html.CheckBoxFor(m => m.MailAlert, new { @class = "onoffswitch-checkbox" })
+            <label class="onoffswitch-label" for="MailAlert">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+            </label>
+        </div>
     </div>
 
-    <div class="label-cb">
-        @Html.CheckBoxFor(m => m.MailRecap, new { @class = "ios-toggle grey-cb" })
-        @Html.LabelFor(m => m.MailRecap, new { @class = "checkbox-label", @dataon = "oui", @dataoff = "non" })
-        @Html.Label("", "Récap. email ?")
+    @Html.Label("", "Récap. email ?", new { @class = "col-xs-8 control-label" })
+    <div class="col-xs-4 control-label">
+        <div class="onoffswitch dutch">
+            @Html.CheckBoxFor(m => m.MailRecap, new { @class = "onoffswitch-checkbox" })
+            <label class="onoffswitch-label" for="MailRecap">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+            </label>
+        </div>
     </div>
 
     @Html.EditorFor(model => model.RefreshTime, new { @placeholder = @Html.DisplayNameFor(model => model.RefreshTime), @required = "required" })

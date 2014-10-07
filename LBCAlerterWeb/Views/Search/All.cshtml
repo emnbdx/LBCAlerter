@@ -4,7 +4,21 @@
     Layout = "~/Views/Shared/_PrettyLayout.cshtml";
 }
 
-<h2>Liste de toutes les alertes (@Model.Count())</h2>
+<!-- page header -->
+<div class="pageheader">
+    <h2>
+        <i class="fa fa-list"></i> Liste de toutes les alertes 
+        <span>// @Model.Count()</span>
+    </h2>
+    <div class="breadcrumbs">
+        <ol class="breadcrumb">
+            <li>You are here</li>
+            <li><a href="@Url.Action("Index", "Search")">LBC Alerter</a></li>
+            <li class="active">Toutes les alertes</li>
+        </ol>
+    </div>
+</div>
+<!-- /page header -->
 
 <table class="table">
     <tr>
@@ -35,37 +49,47 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.KeyWord)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.User.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MailAlert)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MailRecap)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RefreshTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Url)
-        </td>
-        <td>
-            @Html.ActionLink("Liste", "AdList", new { id = item.ID })
-        </td>
-        <td>
-            @Html.ActionLink("Flux", "AdListFeed", new { id = item.ID })
-        </td>
-        <td>
-            @Html.ActionLink("Editer", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Supprimer", "Delete", new { id = item.ID })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.KeyWord)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MailAlert)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MailRecap)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RefreshTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Url)
+            </td>
+            <td>
+                @Html.ActionLink("Liste", "AdList", new { id = item.ID })
+            </td>
+            <td>
+                @Html.ActionLink("Flux", "AdListFeed", new { id = item.ID })
+            </td>
+            <td>
+                @Html.ActionLink("Editer", "Edit", new { id=item.ID }) |
+                @Html.ActionLink("Supprimer", "Delete", new { id = item.ID })
+            </td>
+        </tr>
+    }
 
 </table>
+
+@section Scripts {
+    <script type="text/javascript">
+        $('.menu li').each(function() {
+            $(this).removeClass('active');
+        });
+
+        $('#search').addClass('active');
+    </script>
+}

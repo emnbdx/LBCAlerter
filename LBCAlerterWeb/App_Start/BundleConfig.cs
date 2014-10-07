@@ -34,8 +34,7 @@ namespace LBCAlerterWeb
                       "~/Content/font-awesome.css",
                       "~/Content/jquery.mmenu.*",
                       "~/Content/minimal.css",
-                      "~/Content/pretty.css",
-                      "~/Content/nice-button.css"));
+                      "~/Content/pretty.css"));
         }
     }
 }
