@@ -3,11 +3,16 @@
 }
 
 <h2>@ViewBag.Title</h2>
+<hr />
 
 Votre inscription a bien été prise en compte.<br/>
 Nous vous avons envoyé un email de confirmation afin de prouver que vous en êtes bien le propriétaire.<br />
 <br />
 Pensez à vérifier votre boite de courrier indésirable, si celui-ci n'arrive pas dans les 5 mins.<br />
+
+<div class="links">
+    @Html.ActionLink("Retour à l'accueil", "Index", "Search")
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

@@ -3,6 +3,7 @@
 }
 
 <h2>@ViewBag.Title</h2>
+<hr/>
 
 @if (ViewContext.RouteData.Values["id"].ToString() == "Register")
 {
@@ -24,6 +25,10 @@ else
         OK cowboy
     </p>
 }
+
+<div class="links">
+    @Html.ActionLink("Retour à l'accueil", "Index", "Search")
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
