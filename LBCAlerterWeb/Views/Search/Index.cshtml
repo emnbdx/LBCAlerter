@@ -49,7 +49,7 @@
             <td>
                 <div class="col-xs-4 control-label">
                     <div class="onoffswitch dutch">
-                        @Html.CheckBoxFor(modelItem => item.MailAlert, new { @id = "alert", @class = "onoffswitch-checkbox", @disabled = "true" })
+                        @Html.CheckBoxFor(modelItem => item.MailAlert, new { @class = "onoffswitch-checkbox", @disabled = "true" })
                         <label class="onoffswitch-label" for="MailAlert">
                             <span class="onoffswitch-inner"></span>
                             <span class="onoffswitch-switch"></span>
@@ -60,7 +60,7 @@
             <td>
                 <div class="col-xs-4 control-label">
                     <div class="onoffswitch dutch">
-                        @Html.CheckBoxFor(modelItem => item.MailRecap, new { @id = "recap", @class = "onoffswitch-checkbox", @disabled = "true" })
+                        @Html.CheckBoxFor(modelItem => item.MailRecap, new { @class = "onoffswitch-checkbox", @disabled = "true" })
                         <label class="onoffswitch-label" for="MailRecap">
                             <span class="onoffswitch-inner"></span>
                             <span class="onoffswitch-switch"></span>
