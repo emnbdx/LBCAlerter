@@ -27,6 +27,7 @@ namespace LBCAlerterWeb
                       "~/Scripts/jquery.mmenu.*",
                       "~/Scripts/jquery.sparkline.*",
                       "~/Scripts/jquery.nicescroll.*",
+                      "~/Scripts/jquery.animateNumbers.*",                      
                       "~/Scripts/minimal.js"));
 
             bundles.Add(new StyleBundle("~/Content/minimal").Include(

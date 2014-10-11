@@ -1,96 +1,111 @@
 ﻿@model IEnumerable<LBCAlerterWeb.Models.Search>
 @{
-    ViewBag.Title = "Liste des alertes";
-    Layout = "~/Views/Shared/_PrettyLayout.cshtml";
+    ViewBag.Title = "Tableau de bord";
+    ViewBag.Current = "dashboard";
+    ViewBag.Large = true;
+
+    var cardCount = 0;
 }
 
 <!-- page header -->
 <div class="pageheader">
     <h2>
-        <i class="fa fa-tachometer"></i> Liste des alertes
+        <i class="fa fa-tachometer"></i> Tableau de bord
     </h2>
     <div class="breadcrumbs">
         <ol class="breadcrumb">
-            <li>You are here</li>
+            <li>Vous êtes ici</li>
             <li class="active">LBC Alerter</li>
         </ol>
     </div>
 </div>
 <!-- /page header -->
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.KeyWord)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MailAlert)
-        </th>
-        <th>
-            Alertes email ?
-        </th>
-        <th>
-            Récap. email ?
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Ads)
-        </th>
-        <th>
-            Rss
-        </th>
-        <th></th>
-    </tr>
+<div class="row cards">
 
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.KeyWord)
-            </td>
-            <td>
-                <div class="col-xs-4 control-label">
-                    <div class="onoffswitch dutch">
-                        @Html.CheckBoxFor(modelItem => item.MailAlert, new { @class = "onoffswitch-checkbox", @disabled = "true" })
-                        <label class="onoffswitch-label" for="MailAlert">
-                            <span class="onoffswitch-inner"></span>
-                            <span class="onoffswitch-switch"></span>
-                        </label>
+    @foreach (var item in Model)
+    {
+        <div class="card-container col-lg-3 col-sm-6 col-sm-12">
+            <div class="card card-blue hover">
+                <div class="front">
+                    <div class="media">
+                        <span class="pull-left">
+                            <i class="fa fa-bell-o media-object"></i>
+                        </span>
+                        <div class="media-body">
+                            <small>@Html.DisplayFor(modelItem => item.KeyWord)</small>
+                        </div>
+                    </div>
+                    <div class="progress-list">
+                        <div class="details">
+                            @Html.DisplayNameFor(model => model.RefreshTime) :
+                            @Html.DisplayFor(modelItem => item.RefreshTime)
+
+                            <div class="onoffswitch-container">
+                                @Html.Label("", "Alertes email ?", new { @class = "control-label" })
+                                <div class="col-xs-4 control-block">
+                                    <div class="onoffswitch success">
+                                        @Html.CheckBoxFor(modelItem => item.MailAlert, new { @class = "onoffswitch-checkbox", @disabled = "true" })
+                                        <label class="onoffswitch-label" for="MailAlert">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                            <div class="onoffswitch-container">
+                                @Html.Label("", "Recap email ?", new { @class = "control-label" })
+                                <div class="col-xs-4 control-block">
+                                    <div class="onoffswitch success">
+                                        @Html.CheckBoxFor(modelItem => item.MailRecap, new { @class = "onoffswitch-checkbox", @disabled = "true" })
+                                        <label class="onoffswitch-label" for="MailRecap">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="back">
+                    <div class="back-links pull-left">
+                        <a href="@Url.Action("AdList", new { id = item.ID })">
+                            <i class="fa fa-search fa-4x"></i>
+                            <span>Résultats</span>
+                        </a>
+                    </div>
+                    <div class="back-links pull-left">
+                        <a href="@Url.Action("Edit", new { id = item.ID })">
+                            <i class="fa fa-edit fa-4x"></i>
+                            <span>Editer</span>
+                        </a>
+                    </div>
+                    <div class="back-links pull-right">
+                        <a href="@Url.Action("Delete", new { id = item.ID })">
+                            <i class="fa fa-remove fa-4x"></i>
+                            <span>Supprimer</span>
+                        </a>
                     </div>
                 </div>
-            </td>
-            <td>
-                <div class="col-xs-4 control-label">
-                    <div class="onoffswitch dutch">
-                        @Html.CheckBoxFor(modelItem => item.MailRecap, new { @class = "onoffswitch-checkbox", @disabled = "true" })
-                        <label class="onoffswitch-label" for="MailRecap">
-                            <span class="onoffswitch-inner"></span>
-                            <span class="onoffswitch-switch"></span>
-                        </label>
-                    </div>
-                </div>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RefreshTime)
-            </td>
-            <td>
-                @Html.ActionLink("Liste", "AdList", new { id = item.ID })
-            </td>
-            <td>
-                @Html.ActionLink("Flux", "AdListFeed", new { id = item.ID })
-            </td>
-            <td>
-                @Html.ActionLink("Editer", "Edit", new { id=item.ID }) |
-                @Html.ActionLink("Supprimer", "Delete", new { id=item.ID })
-            </td>
-        </tr>
+            </div>
+        </div>
+
+        /*
+         * Rss useless
+         * 
+         * @Html.ActionLink("Flux", "AdListFeed", new { id = item.ID })*/
+
+        cardCount++;
+
+        if (cardCount % 4 == 0)
+        {
+            cardCount = 0;
+            @Html.Raw("</div><div class=\"row cards\">");
+        }
     }
-</table>
-
-@section Scripts {
-    <script type="text/javascript">
-        $('.menu li').each(function() {
-            $(this).removeClass('active');
-        });
-
-        $('#dashboard').addClass('active');
-    </script>
-}
+</div>

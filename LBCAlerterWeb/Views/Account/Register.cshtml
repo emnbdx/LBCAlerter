@@ -16,8 +16,8 @@
     @Html.ValidationMessageFor(m => m.Password)
     @Html.PasswordFor(m => m.ConfirmPassword, new { @placeholder = @Html.DisplayNameFor(m => m.ConfirmPassword), @required = "required" })
     @Html.ValidationMessageFor(m => m.ConfirmPassword)
-    
-    <input type="submit" class="btn btn-primary btn-block btn-large" value="S'enregistrer" />
+
+    <input type="submit" class="btn btn-primary btn-lg" value="S'enregistrer" />
 
     <div class="links">
         @Html.ActionLink("Retour à l'accueil", "Index", "Search")

@@ -1,18 +1,19 @@
 ﻿@model IEnumerable<LBCAlerterWeb.Models.Search>
 @{
-    ViewBag.Title = "Liste de toutes les alertes";
-    Layout = "~/Views/Shared/_PrettyLayout.cshtml";
+    ViewBag.Title = "Toutes les alertes";
+    ViewBag.Current = "search";
+    ViewBag.Large = true;
 }
 
 <!-- page header -->
 <div class="pageheader">
     <h2>
-        <i class="fa fa-list"></i> Liste de toutes les alertes 
+        <i class="fa fa-list"></i> Toutes les alertes
         <span>// @Model.Count()</span>
     </h2>
     <div class="breadcrumbs">
         <ol class="breadcrumb">
-            <li>You are here</li>
+            <li>Vous êtes ici</li>
             <li><a href="@Url.Action("Index", "Search")">LBC Alerter</a></li>
             <li class="active">Toutes les alertes</li>
         </ol>
@@ -83,13 +84,3 @@
     }
 
 </table>
-
-@section Scripts {
-    <script type="text/javascript">
-        $('.menu li').each(function() {
-            $(this).removeClass('active');
-        });
-
-        $('#search').addClass('active');
-    </script>
-}

@@ -40,26 +40,27 @@
             <!-- /Quick Actions -->
             <!-- Sidebar -->
             <ul class="nav navbar-nav side-nav" id="sidebar" tabindex="5000" style="overflow: hidden; outline: none;">
-                <li class="collapsed-content">
-                    <ul>
-                        <li class="search"><!-- Collapsed search pasting here at 768px --></li>
-                    </ul>
-                </li>
                 <li class="navigation" id="navigation">
                     <a href="#" class="sidebar-toggle" data-toggle="#navigation">Navigation <i class="fa fa-angle-up"></i></a>
                     <ul class="menu">
                         <li id="dashboard">
                             <a href="@Url.Action("Index", "Search")">
-                                <i class="fa fa-tachometer"></i> Tableau de bord
-                                <!--<span class="badge badge-red">1</span>-->
+                                <i class="fa fa-dashboard"></i> Tableau de bord
                             </a>
                         </li>
+                        <!--<li class="dropdown active">
+                            <a href="@Url.Action("Index", "Search")" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-list"></i> Tableau de bord <b class="fa fa-plus dropdown-plus"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                
+                            </ul>
+                        </li>-->
                         <li id="new">
                             <a href="@Url.Action("Create", "Search")">
                                 <i class="fa fa-edit"></i> Nouvelle alerte
                             </a>
                         </li>
-
                     </ul>
                 </li>
                 @if (Roles.IsUserInRole("admin"))
@@ -69,12 +70,12 @@
                         <ul class="menu">
                             <li id="user">
                                 <a href="@Url.Action("All", "Account")">
-                                    <i class="fa fa-users"></i> Listes des utilisateurs
+                                    <i class="fa fa-users"></i> Liste des utilisateurs
                                 </a>
                             </li>
                             <li id="search">
                                 <a href="@Url.Action("All", "Search")">
-                                    <i class="fa fa-list"></i> Listes des alertes
+                                    <i class="fa fa-list"></i> Liste des alertes
                                 </a>
                             </li>
                         </ul>

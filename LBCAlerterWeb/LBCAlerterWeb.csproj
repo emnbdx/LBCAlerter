@@ -302,6 +302,7 @@
     <Content Include="Scripts\jquery-2.1.1.min.js" />
     <Content Include="Scripts\jquery-2.1.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.animateNumbers.js" />
     <Content Include="Scripts\jquery.mmenu.js" />
     <Content Include="Scripts\jquery.mmenu.min.all.js" />
     <Content Include="Scripts\jquery.mmenu.min.js" />
@@ -353,7 +354,6 @@
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\ResetPasswordStepTwo.cshtml" />
     <Content Include="Views\Shared\_PrettyLayout.cshtml" />
-    <Content Include="Views\Shared\_PrettyLayoutSmall.cshtml" />
     <Content Include="Views\Shared\_NavBarPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -203,7 +203,12 @@ $(function () {
             var o = $(":focus");
             o.is("input") || $(window).scrollTop(scrollLocation)
         }, 0)
-    }))
+    })),
+    $('.card.hover').hover(function () {
+        $(this).addClass('flip');
+    }, function () {
+        $(this).removeClass('flip');
+    });
 }), $(window).load(function () {
     $("#loader").delay(500).fadeOut(300), $(".mask").delay(800).fadeOut(300, function () {
         widthLess1024(), widthLess768()

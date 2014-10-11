@@ -1,6 +1,7 @@
 ﻿@model LBCAlerterWeb.Models.Search
 @{
     ViewBag.Title = "Editer";
+    ViewBag.Current = "dashboard";
 }
 
 @using (Html.BeginForm())
@@ -10,7 +11,7 @@
 
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
-    
+
     @Html.HiddenFor(model => model.ID)
     @Html.HiddenFor(model => model.CreationDate)
     @Html.HiddenFor(model => model.Url)
@@ -20,35 +21,44 @@
     @Html.EditorFor(model => model.KeyWord, new { @placeholder = @Html.DisplayNameFor(model => model.KeyWord), @required = "required" })
     @Html.ValidationMessageFor(model => model.KeyWord)
 
-    @Html.Label("", "Alertes email ?", new { @class = "col-xs-8 control-label" })
-    <div class="col-xs-4 control-label">
-        <div class="onoffswitch dutch">
-            @Html.CheckBoxFor(m => m.MailAlert, new { @class = "onoffswitch-checkbox" })
-            <label class="onoffswitch-label" for="MailAlert">
-                <span class="onoffswitch-inner"></span>
-                <span class="onoffswitch-switch"></span>
-            </label>
+    <div class="onoffswitch-container">
+        @Html.Label("", "Alertes email ?", new { @class = "control-label" })
+        <div class="col-xs-4 control-block">
+            <div class="onoffswitch primary">
+                @Html.CheckBoxFor(m => m.MailAlert, new { @class = "onoffswitch-checkbox" })
+                <label class="onoffswitch-label" for="MailAlert">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                </label>
+            </div>
         </div>
+        <div class="clearfix"></div>
     </div>
-
-    @Html.Label("", "Récap. email ?", new { @class = "col-xs-8 control-label" })
-    <div class="col-xs-4 control-label">
-        <div class="onoffswitch dutch">
-            @Html.CheckBoxFor(m => m.MailRecap, new { @class = "onoffswitch-checkbox" })
-            <label class="onoffswitch-label" for="MailRecap">
-                <span class="onoffswitch-inner"></span>
-                <span class="onoffswitch-switch"></span>
-            </label>
+    
+    <div class="onoffswitch-container">
+        @Html.Label("", "Récap. email ?", new { @class = "control-label" })
+        <div class="col-xs-4 control-block">
+            <div class="onoffswitch primary">
+                @Html.CheckBoxFor(m => m.MailRecap, new { @class = "onoffswitch-checkbox" })
+                <label class="onoffswitch-label" for="MailRecap">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                </label>
+            </div>
         </div>
+        <div class="clearfix"></div>
     </div>
 
     @Html.EditorFor(model => model.RefreshTime, new { @placeholder = @Html.DisplayNameFor(model => model.RefreshTime), @required = "required" })
     @Html.ValidationMessageFor(model => model.RefreshTime)
-    
-    @Html.LabelFor(model => model.Url, new { @class = "control-label col-md-2" })
-    @Html.DisplayFor(model => model.Url)
 
-    <input type="submit" value="Sauvegarder" class="btn btn-primary btn-block btn-large" />
+    if (Roles.IsUserInRole("admin"))
+    {
+        @Html.LabelFor(model => model.Url, new { @class = "control-label col-md-2" })
+        @Html.DisplayFor(model => model.Url)
+    }
+     
+    <input type="submit" value="Sauvegarder" class="btn btn-primary btn-lg" />
 
     <div class="links">
         @Html.ActionLink("Retour à la liste", "Index")

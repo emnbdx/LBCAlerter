@@ -8483,6 +8483,12 @@ li.dropdown ul.dropdown-menu.bordered > li:last-child {
 .onoffswitch.green .onoffswitch-inner:before {
   background-color: #a2d200;
 }
+.onoffswitch.primary .onoffswitch-inner:before {
+  background-color: #428bca;
+}
+.onoffswitch.success .onoffswitch-inner:before {
+  background-color: #5cb85c;
+}
 .onoffswitch.red .onoffswitch-inner:before {
   background-color: #ff4a43;
 }

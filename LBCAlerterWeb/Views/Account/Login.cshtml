@@ -4,7 +4,7 @@
 }
 
 <h2>@ViewBag.Title</h2>
-@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
@@ -15,19 +15,21 @@
     @Html.PasswordFor(m => m.Password, new { @placeholder = @Html.DisplayNameFor(m => m.Password), @required = "required" })
     @Html.ValidationMessageFor(m => m.Password)
 
-
-    @Html.Label("Se souvenir de moi ?", new { @class = "col-xs-8 control-label" })
-    <div class="col-xs-4 control-label">
-        <div class="onoffswitch dutch">
-            @Html.CheckBoxFor(m => m.RememberMe, new { @class = "onoffswitch-checkbox" })
-            <label class="onoffswitch-label" for="RememberMe">
-                <span class="onoffswitch-inner"></span>
-                <span class="onoffswitch-switch"></span>
-            </label>
+    <div class="onoffswitch-container">
+        @Html.Label("Se souvenir de moi ?", new { @class = "control-label" })
+        <div class="col-xs-4 control-block">
+            <div class="onoffswitch primary">
+                @Html.CheckBoxFor(m => m.RememberMe, new { @class = "onoffswitch-checkbox" })
+                <label class="onoffswitch-label" for="RememberMe">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                </label>
+            </div>
         </div>
+        <div class="clearfix"></div>
     </div>
 
-   <input type="submit" value="Connexion" class="btn btn-primary btn-block btn-large" />
+    <input type="submit" value="Connexion" class="btn btn-primary btn-lg" />
 
    <div class="links">
        @Html.ActionLink("Mot de passe oublié ?", "ResetPassword")<br />

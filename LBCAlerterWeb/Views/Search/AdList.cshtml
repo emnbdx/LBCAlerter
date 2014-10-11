@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<LBCAlerterWeb.Models.Ad>
 @{
-    ViewBag.Title = "Annonces";
-    Layout = "~/Views/Shared/_PrettyLayout.cshtml";
+    ViewBag.Title = "Dernières annonces";
+    ViewBag.Current = "dashboard";
+    ViewBag.Large = true;
 
     var s = "50";
     if (Model.Count() < 50)
@@ -14,53 +15,56 @@
 <div class="pageheader">
     <h2>
         <i class="fa fa-tachometer"></i> Liste des @s dernières annonces trouvées
-        <span>// Place subtitle here...</span>
     </h2>
     <div class="breadcrumbs">
         <ol class="breadcrumb">
-            <li>You are here</li>
+            <li>Vous êtes ici</li>
             <li><a href="@Url.Action("Index", "Search")">LBC Alerter</a></li>
-            <li class="active">Tableau de bord</li>
+            <li class="active">Dernières annonces</li>
         </ol>
     </div>
 </div>
 <!-- /page header -->
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<div class="main">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
-    if (Model.Count() > 0) {
-        @Html.ActionLink("Flux Rss", "AdListFeed", new { id = Model.First().Search.ID })
+        if (Model.Count() > 0)
+        {
+            <i class="fa fa-rss"></i>
+            @Html.ActionLink("Flux Rss", "AdListFeed", new { id = Model.First().Search.ID })
+        }
+        <table class="table">
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <a href="@Html.DisplayFor(modelItem => item.Url)">@Html.DisplayFor(modelItem => item.Title)</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @if (item != null && item.PictureUrl.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length > 0)
+                        {
+                            <img src="@Html.DisplayFor(modelItem => item.PictureUrl).ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First()" />
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Place)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price).ToString().Replace("&amp;nbsp;&amp;euro;", " €")
+                    </td>
+                </tr>
+            }
+
+        </table>
+        <div class="links">
+            @Html.ActionLink("Retour à la liste", "Index")
+        </div>
     }
-
-    <table class="table">
-
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                <a href="@Html.DisplayFor(modelItem => item.Url)">@Html.DisplayFor(modelItem => item.Title)</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @if (item != null && item.PictureUrl.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length > 0) {
-                    <img src="@Html.DisplayFor(modelItem => item.PictureUrl).ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First()" />
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Place)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price).ToString().Replace("&amp;nbsp;&amp;euro;", " €")
-            </td>
-        </tr>
-    }
-
-    </table>
-
-    <div class="links">
-        @Html.ActionLink("Retour à la liste", "Index")
-    </div>
-}
+</div>

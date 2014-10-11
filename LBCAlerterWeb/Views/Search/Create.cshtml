@@ -1,17 +1,18 @@
 ﻿@model IEnumerable<LBCAlerterWeb.Models.Search>
 @{
-    ViewBag.Title = "Ajouter";
-    Layout = "~/Views/Shared/_PrettyLayout.cshtml";
+    ViewBag.Title = "Nouvelle Alerte";
+    ViewBag.Current = "new";
+    ViewBag.Large = true;
 }
 
 <!-- page header -->
 <div class="pageheader">
     <h2>
-        <i class="fa fa-edit"></i> Ajout d'une alerte
+        <i class="fa fa-edit"></i> Nouvelle Alerte
     </h2>
     <div class="breadcrumbs">
         <ol class="breadcrumb">
-            <li>You are here</li>
+            <li>Vous êtes ici</li>
             <li><a href="@Url.Action("Index", "Search")">LBC Alerter</a></li>
             <li class="active">Nouvelle alerte</li>
         </ol>
@@ -47,14 +48,6 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
-    <script type="text/javascript">
-        $('.menu li').each(function () {
-            $(this).removeClass('active');
-        });
-
-        $('#new').addClass('active');
-    </script>
 
     <script type="text/javascript">
         function showSecondPage(link) {
