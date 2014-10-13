@@ -177,12 +177,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Code\Helper.cs" />
     <Compile Include="App_Code\RssActionResult.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -219,12 +221,17 @@
     <Compile Include="Migrations\201406240036419_UpdateAspIdentity.Designer.cs">
       <DependentUpon>201406240036419_UpdateAspIdentity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201410121343055_AddNotification.cs" />
+    <Compile Include="Migrations\201410121343055_AddNotification.Designer.cs">
+      <DependentUpon>201410121343055_AddNotification.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Ad.cs" />
     <Compile Include="Models\Attempt.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\SearchModels.cs" />
+    <Compile Include="Models\Notification.cs" />
+    <Compile Include="Models\Search.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -283,6 +290,9 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\FontAwesome.otf" />
+    <EmbeddedResource Include="Migrations\201410121343055_AddNotification.resx">
+      <DependentUpon>201410121343055_AddNotification.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\PublishProfiles\perso.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
@@ -355,6 +365,11 @@
     <Content Include="Views\Account\ResetPasswordStepTwo.cshtml" />
     <Content Include="Views\Shared\_PrettyLayout.cshtml" />
     <Content Include="Views\Shared\_NavBarPartial.cshtml" />
+    <Content Include="Views\Notification\Create.cshtml" />
+    <Content Include="Views\Notification\Delete.cshtml" />
+    <Content Include="Views\Notification\Details.cshtml" />
+    <Content Include="Views\Notification\Edit.cshtml" />
+    <Content Include="Views\Notification\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -61,6 +61,11 @@
                                 <i class="fa fa-edit"></i> Nouvelle alerte
                             </a>
                         </li>
+                        <li id="notif">
+                            <a href="@Url.Action("Index", "Notification")">
+                                <i class="fa fa-exclamation"></i> Quoi de neuf ?
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @if (Roles.IsUserInRole("admin"))
@@ -76,6 +81,11 @@
                             <li id="search">
                                 <a href="@Url.Action("All", "Search")">
                                     <i class="fa fa-list"></i> Liste des alertes
+                                </a>
+                            </li>
+                            <li id="notification">
+                                <a href="@Url.Action("Index", "Notification")">
+                                    <i class="fa fa-exclamation-circle"></i> Gestion des notifications
                                 </a>
                             </li>
                         </ul>

@@ -24,7 +24,7 @@
     <div class="onoffswitch-container">
         @Html.Label("", "Alertes email ?", new { @class = "control-label" })
         <div class="col-xs-4 control-block">
-            <div class="onoffswitch primary">
+            <div class="onoffswitch labeled primary">
                 @Html.CheckBoxFor(m => m.MailAlert, new { @class = "onoffswitch-checkbox" })
                 <label class="onoffswitch-label" for="MailAlert">
                     <span class="onoffswitch-inner"></span>
@@ -38,7 +38,7 @@
     <div class="onoffswitch-container">
         @Html.Label("", "Récap. email ?", new { @class = "control-label" })
         <div class="col-xs-4 control-block">
-            <div class="onoffswitch primary">
+            <div class="onoffswitch labeled primary">
                 @Html.CheckBoxFor(m => m.MailRecap, new { @class = "onoffswitch-checkbox" })
                 <label class="onoffswitch-label" for="MailRecap">
                     <span class="onoffswitch-inner"></span>
