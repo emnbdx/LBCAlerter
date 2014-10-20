@@ -13,7 +13,7 @@ namespace LBCAlerterWeb.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201410121343055_AddNotification"; }
+            get { return "201410172346257_AddNotification"; }
         }
         
         string IMigrationMetadata.Source

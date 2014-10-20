@@ -177,7 +177,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Code\Helper.cs" />
+    <Content Include="App_Code\Helper.cs" />
     <Compile Include="App_Code\RssActionResult.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -221,9 +221,9 @@
     <Compile Include="Migrations\201406240036419_UpdateAspIdentity.Designer.cs">
       <DependentUpon>201406240036419_UpdateAspIdentity.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201410121343055_AddNotification.cs" />
-    <Compile Include="Migrations\201410121343055_AddNotification.Designer.cs">
-      <DependentUpon>201410121343055_AddNotification.cs</DependentUpon>
+    <Compile Include="Migrations\201410172346257_AddNotification.cs" />
+    <Compile Include="Migrations\201410172346257_AddNotification.Designer.cs">
+      <DependentUpon>201410172346257_AddNotification.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -290,8 +290,8 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\FontAwesome.otf" />
-    <EmbeddedResource Include="Migrations\201410121343055_AddNotification.resx">
-      <DependentUpon>201410121343055_AddNotification.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201410172346257_AddNotification.resx">
+      <DependentUpon>201410172346257_AddNotification.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\PublishProfiles\perso.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

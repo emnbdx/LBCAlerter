@@ -1,5 +1,9 @@
 ﻿@using Microsoft.AspNet.Identity
 
+@{
+    var notifCount = Helper.GetNotificationCount(User.Identity.GetUserId());
+}
+
 @if (User.Identity.IsAuthenticated)
 {
     <div id="navbar" role="navigation" class="navbar navbar-default navbar-fixed-top navbar-transparent-black">
@@ -64,6 +68,10 @@
                         <li id="notif">
                             <a href="@Url.Action("Index", "Notification")">
                                 <i class="fa fa-exclamation"></i> Quoi de neuf ?
+                                @if (notifCount > 0)
+                                {
+                                    <span class="badge badge-red">@notifCount</span>
+                                }
                             </a>
                         </li>
                     </ul>
@@ -84,7 +92,7 @@
                                 </a>
                             </li>
                             <li id="notification">
-                                <a href="@Url.Action("Index", "Notification")">
+                                <a href="@Url.Action("Create", "Notification")">
                                     <i class="fa fa-exclamation-circle"></i> Gestion des notifications
                                 </a>
                             </li>

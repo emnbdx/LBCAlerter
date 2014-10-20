@@ -2,7 +2,24 @@
 
 @{
     ViewBag.Title = "Create";
+    ViewBag.Current = "notification";
+    ViewBag.Large = true;
 }
+
+<!-- page header -->
+<div class="pageheader">
+    <h2>
+        <i class="fa fa-exclamation-circle"></i> Gestion des notifications
+    </h2>
+    <div class="breadcrumbs">
+        <ol class="breadcrumb">
+            <li>Vous êtes ici</li>
+            <li><a href="@Url.Action("Index", "Search")">LBC Alerter</a></li>
+            <li class="active">Gestion des notifications</li>
+        </ol>
+    </div>
+</div>
+<!-- /page header -->
 
 <h2>Create</h2>
 

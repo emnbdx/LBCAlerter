@@ -34,7 +34,8 @@ namespace LBCAlerterWeb.Controllers
         // GET: /Search/
         public ActionResult Index()
         {
-            return View(db.Searches.Where(search => search.User.Id == User.Identity.GetUserId()).ToList());
+            var userID = User.Identity.GetUserId();
+            return View(db.Searches.Where(search => search.User.Id == userID).ToList());
         }
 
         [Authorize(Roles = "admin")]
@@ -46,7 +47,8 @@ namespace LBCAlerterWeb.Controllers
         // GET: /Search/Create
         public ActionResult Create()
         {
-            return View(db.Searches.Where(search => search.User.Id == User.Identity.GetUserId()).ToList());
+            var userID = User.Identity.GetUserId();
+            return View(db.Searches.Where(search => search.User.Id == userID).ToList());
         }
 
         [HttpPost]
@@ -95,7 +97,7 @@ namespace LBCAlerterWeb.Controllers
             var currentUser = UserManager.FindById(User.Identity.GetUserId());
 
             //Does user have already search
-            IEnumerable<Search> searches = db.Searches.Where(entry => entry.User.Id == User.Identity.GetUserId()).ToList();
+            IEnumerable<Search> searches = db.Searches.Where(entry => entry.User.Id == currentUser.Id).ToList();
 
             if (searches.Count() >= 5 && !Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium"))
             {

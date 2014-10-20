@@ -20,6 +20,8 @@ namespace LBCAlerterWeb.Models
         public DateTime? EmailResetDate { get; set; }
 
         public virtual ICollection<Search> Searches { get; set; }
+
+        public virtual ICollection<Notification> Notifications { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

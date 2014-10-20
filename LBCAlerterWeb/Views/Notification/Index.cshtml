@@ -1,21 +1,21 @@
 ﻿@model IEnumerable<LBCAlerterWeb.Models.Notification>
 
 @{
-    ViewBag.Title = "Gestion des notifications";
-    ViewBag.Current = "notification";
+    ViewBag.Title = "Quoi de neuf ?";
+    ViewBag.Current = "notif";
     ViewBag.Large = true;
 }
 
 <!-- page header -->
 <div class="pageheader">
     <h2>
-        <i class="fa fa-exclamation-circle"></i> Gestion des notifications
+        <i class="fa fa-exclamation-circle"></i> Quoi de neuf ?
     </h2>
     <div class="breadcrumbs">
         <ol class="breadcrumb">
             <li>Vous êtes ici</li>
             <li><a href="@Url.Action("Index", "Search")">LBC Alerter</a></li>
-            <li class="active">Gestion des notifications</li>
+            <li class="active">Quoi de neuf ?</li>
         </ol>
     </div>
 </div>
@@ -29,7 +29,6 @@
             <h1><strong>@Html.DisplayFor(modelItem => item.Title)</strong></h1>
             <div class="controls">
                 <a href="#" class="minimize"><i class="fa fa-chevron-down"></i></a>
-                <a href="#" class="refresh"><i class="fa fa-refresh"></i></a>
                 <a href="#" class="remove"><i class="fa fa-times"></i></a>
             </div>
         </div>

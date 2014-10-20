@@ -1,9 +1,12 @@
-﻿@model IEnumerable<LBCAlerterWeb.Models.Search>
+﻿@using Microsoft.AspNet.Identity
+@model IEnumerable<LBCAlerterWeb.Models.Search>
 @{
     ViewBag.Title = "Tableau de bord";
     ViewBag.Current = "dashboard";
     ViewBag.Large = true;
 
+    var notifs = Helper.GetImportantNotifications(User.Identity.GetUserId());
+    
     var cardCount = 0;
 }
 
@@ -109,3 +112,26 @@
         }
     }
 </div>
+
+<div class="modal" id="modalDialog" tabindex="-1" role="dialog" aria-labelledby="modalDialogLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Close</button>
+                <h3 class="modal-title" id="modalDialogLabel">@notifs.FirstOrDefault().Title</h3>
+            </div>
+            <div class="modal-body">
+                <p>@notifs.FirstOrDefault().Message</p>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+@section Scripts {
+    @if (notifs.Count() > 0)
+    {
+        <script type="text/javascript">
+            $('#modalDialog').modal('show');
+        </script>
+    }
+}

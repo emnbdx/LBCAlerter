@@ -31,8 +31,8 @@ namespace LBCAlerterWeb.Models
         
         public virtual ApplicationUser User { get; set; }
         [DisplayName("Annonces")]
-        public virtual List<Ad> Ads { get; set; }
+        public virtual ICollection<Ad> Ads { get; set; }
         [DisplayName("Tentatives")]
-        public virtual List<Attempt> Attempts { get; set; }
+        public virtual ICollection<Attempt> Attempts { get; set; }
     }
 }
