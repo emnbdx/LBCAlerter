@@ -1,7 +1,7 @@
 ﻿@model LBCAlerterWeb.Models.Search
 @{
     ViewBag.Title = "Editer";
-    ViewBag.Current = "dashboard";
+    ViewBag.Current = "search_" + Model.ID;
 }
 
 @using (Html.BeginForm())
@@ -18,7 +18,7 @@
     @Html.HiddenFor(model => model.LastRecap)
 
 
-    @Html.EditorFor(model => model.KeyWord, new { @placeholder = @Html.DisplayNameFor(model => model.KeyWord), @required = "required" })
+    @Html.TextBoxFor(model => model.KeyWord, new { @placeholder = @Html.DisplayNameFor(model => model.KeyWord), @required = "required" })
     @Html.ValidationMessageFor(model => model.KeyWord)
 
     <div class="onoffswitch-container">
@@ -49,7 +49,7 @@
         <div class="clearfix"></div>
     </div>
 
-    @Html.EditorFor(model => model.RefreshTime, new { @placeholder = @Html.DisplayNameFor(model => model.RefreshTime), @required = "required" })
+    @Html.TextBoxFor(model => model.RefreshTime, new { @placeholder = @Html.DisplayNameFor(model => model.RefreshTime), @required = "required" })
     @Html.ValidationMessageFor(model => model.RefreshTime)
 
     if (Roles.IsUserInRole("admin"))

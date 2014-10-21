@@ -52,7 +52,7 @@
                 @Html.DisplayFor(modelItem => item.RegistrationDate)
             </td>
             <td>
-                <div class="onoffswitch success">
+                <div class="onoffswitch labeled success">
                     @Html.CheckBoxFor(modelItem => item.IsEmailVerified, new { @class = "onoffswitch-checkbox", @disabled = "true" })
                     <label class="onoffswitch-label" for="IsEmailVerified">
                         <span class="onoffswitch-inner"></span>

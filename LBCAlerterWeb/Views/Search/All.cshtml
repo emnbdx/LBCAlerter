@@ -30,14 +30,13 @@
             Nom d'utilisateur
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.MailAlert)
+            Alertes email ?
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.MailRecap)
+            Recap email ?
         </th>
         <th>
             @Html.DisplayNameFor(model => model.RefreshTime)
-        </th>
         <th>
             @Html.DisplayNameFor(model => model.Url)
         </th>
@@ -59,10 +58,22 @@
                 @Html.DisplayFor(modelItem => item.User.UserName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MailAlert)
+                <div class="onoffswitch labeled success">
+                    @Html.CheckBoxFor(modelItem => item.MailAlert, new { @class = "onoffswitch-checkbox", @disabled = "true" })
+                    <label class="onoffswitch-label" for="MailAlert">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MailRecap)
+                <div class="onoffswitch labeled success">
+                    @Html.CheckBoxFor(modelItem => item.MailRecap, new { @class = "onoffswitch-checkbox", @disabled = "true" })
+                    <label class="onoffswitch-label" for="MailRecap">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.RefreshTime)

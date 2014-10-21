@@ -10,7 +10,7 @@
     <p>
         Votre compte est validé<br />
         <br />
-        Rendez-vous dans l'onglet "Mes alertes" pour gérer vos alertes
+        Rendez-vous dans l'onglet "@Html.ActionLink("Tableau de bord", "Index", "Search")" pour gérer vos alertes
     </p>
 }
 else if (ViewContext.RouteData.Values["id"].ToString() == "Reset")
@@ -18,17 +18,21 @@ else if (ViewContext.RouteData.Values["id"].ToString() == "Reset")
     <p>
         Votre mot de passe a bien été réinitialisé
     </p>
+
+    <div class="links">
+        @Html.ActionLink("Retour à la liste", "Index", "Search")
+    </div>
 }
 else
 {
     <p>
         OK cowboy
     </p>
-}
 
-<div class="links">
-    @Html.ActionLink("Retour à l'accueil", "Index", "Search")
-</div>
+    <div class="links">
+        @Html.ActionLink("Retour à la liste", "Index", "Search")
+    </div>
+}
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

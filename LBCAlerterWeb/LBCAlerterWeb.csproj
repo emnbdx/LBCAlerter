@@ -183,7 +183,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AccountController.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Global.asax.cs">
@@ -225,6 +227,10 @@
     <Compile Include="Migrations\201410172346257_AddNotification.Designer.cs">
       <DependentUpon>201410172346257_AddNotification.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201410211346077_UpdateNotification.cs" />
+    <Compile Include="Migrations\201410211346077_UpdateNotification.Designer.cs">
+      <DependentUpon>201410211346077_UpdateNotification.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Ad.cs" />
@@ -245,6 +251,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\datepicker.css" />
     <Content Include="Content\extensions\jquery.mmenu.effects.css" />
     <Content Include="Content\extensions\jquery.mmenu.fullscreen.css" />
     <Content Include="Content\extensions\jquery.mmenu.ie8.css" />
@@ -293,6 +300,9 @@
     <EmbeddedResource Include="Migrations\201410172346257_AddNotification.resx">
       <DependentUpon>201410172346257_AddNotification.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201410211346077_UpdateNotification.resx">
+      <DependentUpon>201410211346077_UpdateNotification.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\PublishProfiles\perso.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
@@ -306,6 +316,7 @@
     <Content Include="Scripts\addons\jquery.mmenu.labels.min.js" />
     <Content Include="Scripts\addons\jquery.mmenu.searchfield.js" />
     <Content Include="Scripts\addons\jquery.mmenu.searchfield.min.js" />
+    <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
@@ -366,10 +377,8 @@
     <Content Include="Views\Shared\_PrettyLayout.cshtml" />
     <Content Include="Views\Shared\_NavBarPartial.cshtml" />
     <Content Include="Views\Notification\Create.cshtml" />
-    <Content Include="Views\Notification\Delete.cshtml" />
-    <Content Include="Views\Notification\Details.cshtml" />
-    <Content Include="Views\Notification\Edit.cshtml" />
     <Content Include="Views\Notification\Index.cshtml" />
+    <Content Include="Views\Notification\All.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

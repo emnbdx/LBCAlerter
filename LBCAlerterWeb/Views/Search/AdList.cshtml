@@ -1,13 +1,13 @@
-﻿@model IEnumerable<LBCAlerterWeb.Models.Ad>
+﻿@model LBCAlerterWeb.Models.Search
 @{
     ViewBag.Title = "Dernières annonces";
-    ViewBag.Current = "dashboard";
+    ViewBag.Current = "search_" + Model.ID;
     ViewBag.Large = true;
 
     var s = "50";
-    if (Model.Count() < 50)
+    if (Model.Ads.Count() < 50)
     {
-        s = Model.Count().ToString();
+        s = Model.Ads.Count().ToString();
     }
 }
 
@@ -31,14 +31,14 @@
     {
         @Html.AntiForgeryToken()
 
-        if (Model.Count() > 0)
+        if (Model.Ads.Any())
         {
             <i class="fa fa-rss"></i>
-            @Html.ActionLink("Flux Rss", "AdListFeed", new { id = Model.First().Search.ID })
+            @Html.ActionLink("Flux Rss", "AdListFeed", new { id = Model.ID })
         }
         <table class="table">
 
-            @foreach (var item in Model)
+            @foreach (var item in Model.Ads.Take(50))
             {
                 <tr>
                     <td>

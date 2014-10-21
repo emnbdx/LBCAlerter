@@ -1,0 +1,74 @@
+﻿@model IEnumerable<LBCAlerterWeb.Models.Notification>
+@{
+    ViewBag.Title = "Toutes les notifications";
+    ViewBag.Current = "notification";
+    ViewBag.Large = true;
+}
+
+<!-- page header -->
+<div class="pageheader">
+    <h2>
+        <i class="fa fa-exclamation-circle"></i> Toutes les notifications
+        <span>// @Model.Count()</span>
+    </h2>
+    <div class="breadcrumbs">
+        <ol class="breadcrumb">
+            <li>Vous êtes ici</li>
+            <li><a href="@Url.Action("Index", "Search")">LBC Alerter</a></li>
+            <li class="active">Toutes les notifications</li>
+        </ol>
+    </div>
+</div>
+<!-- /page header -->
+
+<div class="links">
+    @Html.ActionLink("Ajouter une notification", "Create")
+</div>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Message)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Important)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Viewed)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Message)
+            </td>
+            <td>
+                <div class="onoffswitch labeled success">
+                    @Html.CheckBoxFor(modelItem => item.Important, new { @class = "onoffswitch-checkbox", @disabled = "true" })
+                    <label class="onoffswitch-label" for="Important">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
+            </td>
+            <td>
+                <div class="onoffswitch labeled success">
+                    @Html.CheckBoxFor(modelItem => item.Viewed, new { @class = "onoffswitch-checkbox", @disabled = "true" })
+                    <label class="onoffswitch-label" for="Viewed">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
+            </td>
+        </tr>
+    }
+
+</table>

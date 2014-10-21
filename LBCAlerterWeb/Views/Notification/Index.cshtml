@@ -1,9 +1,11 @@
-﻿@model IEnumerable<LBCAlerterWeb.Models.Notification>
-
+﻿@using Microsoft.AspNet.Identity
+@model IEnumerable<LBCAlerterWeb.Models.Notification>
 @{
     ViewBag.Title = "Quoi de neuf ?";
     ViewBag.Current = "notif";
     ViewBag.Large = true;
+    
+    Helper.SetAllNotificationAsRead(User.Identity.GetUserId());
 }
 
 <!-- page header -->

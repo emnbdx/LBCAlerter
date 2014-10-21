@@ -27,13 +27,15 @@ namespace LBCAlerterWeb
                       "~/Scripts/jquery.mmenu.*",
                       "~/Scripts/jquery.sparkline.*",
                       "~/Scripts/jquery.nicescroll.*",
-                      "~/Scripts/jquery.animateNumbers.*",                      
+                      "~/Scripts/jquery.animateNumbers.*",
+                      "~/Scripts/bootstrap-datepicker.js",                 
                       "~/Scripts/minimal.js"));
 
             bundles.Add(new StyleBundle("~/Content/minimal").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/font-awesome.css",
                       "~/Content/jquery.mmenu.*",
+                      "~/Scripts/jquery.datepicker.css",
                       "~/Content/minimal.css",
                       "~/Content/pretty.css"));
         }

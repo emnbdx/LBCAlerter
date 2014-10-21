@@ -13,6 +13,8 @@ using System.Net.Sockets;
 
 namespace LBCMapping
 {
+    using System.Web;
+
     public class HtmlParser
     {
         private static ILog log = LogManager.GetLogger(typeof(HtmlParser));
@@ -68,7 +70,7 @@ namespace LBCMapping
 
             try
             {
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create(param[0].Replace("\"", "").Trim() + "/ajapi/get/phone?list_id=" + param[1].Trim());
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(param[0].Replace("\"", string.Empty).Trim() + "/ajapi/get/phone?list_id=" + param[1].Trim());
 
                 string json;
                 using (StreamReader sr = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()))
@@ -137,8 +139,12 @@ namespace LBCMapping
                 .Replace("bouches_du_rh_ne", "bouches_du_rhone")
                 .Replace("ard_che", "ardeche")
                 .Replace("dr_me", "drome")
-                .Replace("isère", "isere")
-                .Replace("rh_ne", "rhone");
+                .Replace("is_re", "isere")
+                .Replace("rh_ne", "rhone")
+                .Replace("franche_comt_", "franche_comte")
+                .Replace("midi_pyr_n_es", "midi_pyrenees")
+                .Replace("provence_alpes_c_te_d_azur", "provence_alpes_cote_d_azur")
+                .Replace("r_union", "reunion");
         }
 
         /// <summary>
@@ -147,22 +153,20 @@ namespace LBCMapping
         /// <returns>Keyword extracted and well formated</returns>
         public static string ExtractKeyWordFromCriteria(string criteria)
         {
-            string keyword;
+            // Get only param
+            var tmpCriteria = criteria.Substring(criteria.LastIndexOf('/'), criteria.Length - criteria.LastIndexOf('/'));
+            var tmp = HttpUtility.ParseQueryString(tmpCriteria);
 
-            //Cut path to get keyword
-            int startIndex = criteria.IndexOf(HtmlParser.KEYWORD_URL_PARAM);
-            int endIndex = criteria.IndexOf("&", startIndex + HtmlParser.KEYWORD_URL_PARAM.Length);
-            if (endIndex == -1)
+            var location = string.Empty;
+            if (tmp.AllKeys.Contains("location"))
             {
-                keyword = criteria.Substring(startIndex + HtmlParser.KEYWORD_URL_PARAM.Length, criteria.Length - (startIndex + HtmlParser.KEYWORD_URL_PARAM.Length));
+                location = tmp["location"];
             }
-            else
-            {
-                keyword = criteria.Substring(startIndex + HtmlParser.KEYWORD_URL_PARAM.Length, endIndex - (startIndex + HtmlParser.KEYWORD_URL_PARAM.Length));
-            }
-            keyword = keyword.Replace("+", " ");
 
-            return keyword;
+            var keyword = tmp.AllKeys.Contains("q") ? tmp["q"] : criteria.Substring(0, criteria.LastIndexOf('/'));
+            keyword = keyword.Replace("+", " ").Replace("/", " ").Replace("_", " ");
+
+            return keyword + " " + location;
         }
 
         /// <summary>
@@ -183,7 +187,7 @@ namespace LBCMapping
 
             //Make good date
             int month, day, hour, minute;
-            string date = dateNode != null ? dateNode[0].InnerText.Trim() : "";
+            string date = dateNode != null ? dateNode[0].InnerText.Trim() : string.Empty;
             if (date == "Aujourd'hui")
             {
                 day = DateTime.Now.Day;
@@ -226,7 +230,7 @@ namespace LBCMapping
                 else
                     month = DateTime.Now.Month;
             }
-            string time = dateNode != null ? dateNode[1].InnerText.Trim() : "";
+            string time = dateNode != null ? dateNode[1].InnerText.Trim() : string.Empty;
             string[] hourMinute = time.Split(':');
             hour = Convert.ToInt32(hourMinute[0]);
             minute = Convert.ToInt32(hourMinute[1]);
@@ -238,11 +242,11 @@ namespace LBCMapping
             Ad tmp = new Ad()
             {
                 Date = adDate,
-                AdUrl = link.GetAttributeValue("href", ""),
-                PictureUrl = imgNode != null ? imgNode.GetAttributeValue("src", "").Replace("thumbs", "images") : "",
-                Place = placementNode != null ? placementNode.InnerText.Replace("\r", "").Replace("\n", "").Replace(" ", "") : "",
-                Price = priceNode != null ? priceNode.InnerText.Trim() : "",
-                Title = titleNode != null ? titleNode.InnerText.Trim() : ""
+                AdUrl = link.GetAttributeValue("href", string.Empty),
+                PictureUrl = imgNode != null ? imgNode.GetAttributeValue("src", string.Empty).Replace("thumbs", "images") : string.Empty,
+                Place = placementNode != null ? placementNode.InnerText.Replace("\r", string.Empty).Replace("\n", string.Empty).Replace(" ", string.Empty) : string.Empty,
+                Price = priceNode != null ? priceNode.InnerText.Trim() : string.Empty,
+                Title = titleNode != null ? titleNode.InnerText.Trim() : string.Empty
             };
             
             return tmp;
@@ -259,18 +263,18 @@ namespace LBCMapping
             if (adContent.SelectNodes("//div[@id='thumbs_carousel']//span[@class='thumbs']") != null)
                 foreach (HtmlNode picture in adContent.SelectNodes("//div[@id='thumbs_carousel']//span[@class='thumbs']"))
                 {
-                    pictures.Add(picture.GetAttributeValue("style", "")
-                        .Replace("background-image: url('", "")
+                    pictures.Add(picture.GetAttributeValue("style", string.Empty)
+                        .Replace("background-image: url('", string.Empty)
                         .Replace("thumbs", "images")
-                        .Replace("');", ""));
+                        .Replace("');", string.Empty));
                 }
             else if (adContent.SelectSingleNode("//div[@class='images_cadre']/a") != null)
             {
                 HtmlNode picture = adContent.SelectSingleNode("//div[@class='images_cadre']/a");
                 
-                pictures.Add(picture.GetAttributeValue("style", "")
-                        .Replace("background-image: url('", "")
-                        .Replace("');", ""));
+                pictures.Add(picture.GetAttributeValue("style", string.Empty)
+                        .Replace("background-image: url('", string.Empty)
+                        .Replace("');", string.Empty));
             }
             //HtmlNode phoneNode = adContent.SelectSingleNode("//span[@class='lbcPhone']/span[@id='phoneNumber']/a");
             //HtmlNode commercialNode = adContent.SelectSingleNode("//div[@class='lbc_links']/span[.='(Je refuse tout d&eacute;marchage commercial)']");
@@ -280,9 +284,9 @@ namespace LBCMapping
             if (adContent.SelectNodes("//div[contains(@class, 'lbcParamsContainer')]/div[contains(@class, 'lbcParams')]//tr") != null)
                 foreach (HtmlNode parameter in adContent.SelectNodes("//div[contains(@class, 'lbcParamsContainer')]/div[contains(@class, 'lbcParams')]//tr"))
             {
-                string title = parameter.SelectSingleNode("th").InnerText.Replace(":", "").Trim();
+                string title = parameter.SelectSingleNode("th").InnerText.Replace(":", string.Empty).Trim();
 
-                string value = "";
+                string value = string.Empty;
                 if (parameter.SelectSingleNode("td//span") != null)
                     value = parameter.SelectSingleNode("td//span").InnerText;
                 else if (parameter.SelectSingleNode("td//a") != null)
@@ -298,10 +302,10 @@ namespace LBCMapping
             //TODO : find good solution to get phone number and commercial information
             //ad.Phone = phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", "")) : "";
             //ad.AllowCommercial = commercialNode == null;
-            ad.Name = nameNode != null ? nameNode.InnerText : "";
-            ad.ContactUrl = emailNode != null ? emailNode.GetAttributeValue("href", "") : "";
+            ad.Name = nameNode != null ? nameNode.InnerText : string.Empty;
+            ad.ContactUrl = emailNode != null ? emailNode.GetAttributeValue("href", string.Empty) : string.Empty;
             ad.Param = String.Join(",", parameters);
-            ad.Description = descriptionNode != null ? descriptionNode.InnerHtml : "";
+            ad.Description = descriptionNode != null ? descriptionNode.InnerHtml : string.Empty;
 
             return ad;
         }        

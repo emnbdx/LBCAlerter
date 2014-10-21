@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@using LBCAlerterWeb.Models
+@using Microsoft.AspNet.Identity
 
 @{
     var notifCount = Helper.GetNotificationCount(User.Identity.GetUserId());
@@ -52,14 +53,21 @@
                                 <i class="fa fa-dashboard"></i> Tableau de bord
                             </a>
                         </li>
-                        <!--<li class="dropdown active">
-                            <a href="@Url.Action("Index", "Search")" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-list"></i> Tableau de bord <b class="fa fa-plus dropdown-plus"></b>
+                        <li id="search" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-list"></i> Alertes <b class="fa fa-plus dropdown-plus"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                
+                                @foreach (var search in Helper.GetSearch(User.Identity.GetUserId()))
+                                {
+                                    <li id="search_@search.ID">
+                                        <a href="@Url.Action("Edit", "Search", new { ID = search.ID })">
+                                            <i class="fa fa-caret-right"></i> @search.KeyWord
+                                        </a>
+                                    </li>
+                                }
                             </ul>
-                        </li>-->
+                        </li>
                         <li id="new">
                             <a href="@Url.Action("Create", "Search")">
                                 <i class="fa fa-edit"></i> Nouvelle alerte
@@ -83,17 +91,17 @@
                         <ul class="menu">
                             <li id="user">
                                 <a href="@Url.Action("All", "Account")">
-                                    <i class="fa fa-users"></i> Liste des utilisateurs
+                                    <i class="fa fa-users"></i> Tout les utilisateurs
                                 </a>
                             </li>
                             <li id="search">
                                 <a href="@Url.Action("All", "Search")">
-                                    <i class="fa fa-list"></i> Liste des alertes
+                                    <i class="fa fa-list"></i> Toutes les alertes
                                 </a>
                             </li>
                             <li id="notification">
-                                <a href="@Url.Action("Create", "Notification")">
-                                    <i class="fa fa-exclamation-circle"></i> Gestion des notifications
+                                <a href="@Url.Action("All", "Notification")">
+                                    <i class="fa fa-exclamation-circle"></i> Toutes les notifications
                                 </a>
                             </li>
                         </ul>
