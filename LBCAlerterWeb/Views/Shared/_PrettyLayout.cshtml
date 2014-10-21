@@ -1,65 +1,71 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Eddy MONTUS">
+    <meta name="description" content="Fournisseur d’alertes sur le site leboncoin.fr, ce site n’est aucunement affilié à leboncoin.fr" />
+    <meta property="og:title" content="@ViewBag.Title" />
+    <meta property="og:type " content="leboncoin.alertes" />
+    <meta property="og:url" content="http://lbcalerter.com" />
+    <meta property="og:site_name" content="LBC Alerter" />
+    <meta property="og:description" content="Fournisseur d’alertes sur le site leboncoin.fr, ce site n’est aucunement affilié à leboncoin.fr" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/minimal")
     @Scripts.Render("~/bundles/modernizr")
 
-</head>
-<body class="bg-1">
-    
-    <div class="mm-page">
-        <div id="wrap">
-            <div class="row">
-                @Html.Partial("_NavBarPartial")
+    </head>
+    <body class="bg-1">
 
-                @if (ViewBag.Large != null && ViewBag.Large)
-                {
-                    <div id="content" class="col-md-12" tabindex="5001" style="overflow: hidden; outline: none; padding-left: 265px;">
-                        @RenderBody()
-                    </div>
-                }
-                else
-                {
-                    <div class="small-form">
-                        @RenderBody()
-                    </div>
-                }
+        <div class="mm-page">
+            <div id="wrap">
+                <div class="row">
+                    @Html.Partial("_NavBarPartial")
+
+                    @if (ViewBag.Large != null && ViewBag.Large)
+                    {
+                        <div id="content" class="col-md-12" tabindex="5001" style="overflow: hidden; outline: none; padding-left: 265px;">
+                            @RenderBody()
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="small-form">
+                            @RenderBody()
+                        </div>
+                    }
+                </div>
             </div>
         </div>
-    </div>
-    
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/minimal")
 
-    <script type="text/javascript">
-        if (!String.prototype.startsWith) {
-            Object.defineProperty(String.prototype, 'startsWith', {
-                enumerable: false,
-                configurable: false,
-                writable: false,
-                value: function (searchString, position) {
-                    position = position || 0;
-                    return this.lastIndexOf(searchString, position) === position;
-                }
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @Scripts.Render("~/bundles/minimal")
+
+        <script type="text/javascript">
+            if (!String.prototype.startsWith) {
+                Object.defineProperty(String.prototype, 'startsWith', {
+                    enumerable: false,
+                    configurable: false,
+                    writable: false,
+                    value: function (searchString, position) {
+                        position = position || 0;
+                        return this.lastIndexOf(searchString, position) === position;
+                    }
+                });
+            }
+
+            $('.menu li').each(function () {
+                $(this).removeClass('active');
             });
-        }
 
-        $('.menu li').each(function () {
-            $(this).removeClass('active');
-        });
+            if ('@ViewBag.Current'.startsWith('search_')) {
+                $('#search').addClass('open');
+            }
 
-        if ('@ViewBag.Current'.startsWith('search_')) {
-            $('#search').addClass('open');
-        }
-
-        $('#@ViewBag.Current').addClass('active');
-    </script>
-
-    @RenderSection("scripts", required: false)
-</body>
+            $('#@ViewBag.Current').addClass('active');
+        </script>
+        @RenderSection("scripts", required: false)
+    </body>
 </html>
