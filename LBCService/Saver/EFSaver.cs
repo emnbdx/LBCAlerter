@@ -25,7 +25,7 @@ namespace LBCService.Saver
 
             if (dbAd == null)
             {
-                LBCAlerterWeb.Models.Ad tmpAd = LBCAlerterWeb.Models.Ad.ConvertLBCAd(ad);
+                LBCAlerterWeb.Models.Ad tmpAd = LBCAlerterWeb.Models.Ad.ConvertLbcAd(ad);
                 Search s = db.Searches.FirstOrDefault(entry => entry.ID == m_searchId);
                 if (s == null)
                     throw new Exception("Recherche inexistante...");

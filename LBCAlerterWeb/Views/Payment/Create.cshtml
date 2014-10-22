@@ -1,0 +1,40 @@
+﻿@model LBCAlerterWeb.Models.Payment
+@{
+    ViewBag.Title = "Soyez sympa !";
+    ViewBag.Current = "pay";
+    ViewBag.Large = true;
+}
+
+<!-- page header -->
+<div class="pageheader">
+    <h2>
+        <i class="fa fa-credit-card"></i> Soyez sympa !
+    </h2>
+    <div class="breadcrumbs">
+        <ol class="breadcrumb">
+            <li>Vous êtes ici</li>
+            <li><a href="@Url.Action("Index", "Search")">LBC Alerter</a></li>
+            <li class="active">Soyez sympa !</li>
+        </ol>
+    </div>
+</div>
+<!-- /page header -->
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div>
+        Ce système fonctionne en <a href="http://en.wikipedia.org/wiki/Pay_what_you_want" target="_blank">pay as you want</a>. Vous êtes donc libre de payer pour le service ou non.
+        <br/>
+        Avec l'argent je garantie la stabilité, l'évolution et l'achat de bières.
+        <br/><br />
+        THX,<br />
+        Eddy.
+
+
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

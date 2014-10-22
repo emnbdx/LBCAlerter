@@ -1,0 +1,82 @@
+﻿@model LBCAlerterWeb.Models.Payment
+@{
+    ViewBag.Title = "Détail paiement";
+    ViewBag.Current = "payments";
+    ViewBag.Large = true;
+}
+
+<!-- page header -->
+<div class="pageheader">
+    <h2>
+        <i class="fa fa-usd"></i> Détail paiement
+        <span>//</span>
+    </h2>
+    <div class="breadcrumbs">
+        <ol class="breadcrumb">
+            <li>Vous êtes ici</li>
+            <li><a href="@Url.Action("Index", "Search")">LBC Alerter</a></li>
+            <li><a href="@Url.Action("Index", "Payment")">Tout les paiements</a></li>
+            <li class="active">Détail paiement</li>
+        </ol>
+    </div>
+</div>
+<!-- /page header -->
+
+<div>
+    <h4>Payment</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PaypalId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PaypalId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreationDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreationDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.State)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.State)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Currency)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Currency)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

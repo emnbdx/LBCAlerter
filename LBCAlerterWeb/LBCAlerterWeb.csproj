@@ -111,6 +111,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PayPalCoreSDK">
+      <HintPath>..\packages\PayPalCoreSDK.1.5.1\lib\net45\PayPalCoreSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="RestApiSDK">
+      <HintPath>..\packages\RestApiSDK.0.10.0\lib\net45\RestApiSDK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
@@ -187,6 +193,7 @@
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Controllers\NotificationController.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -231,11 +238,16 @@
     <Compile Include="Migrations\201410211346077_UpdateNotification.Designer.cs">
       <DependentUpon>201410211346077_UpdateNotification.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201410221231546_AddPayment.cs" />
+    <Compile Include="Migrations\201410221231546_AddPayment.Designer.cs">
+      <DependentUpon>201410221231546_AddPayment.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Ad.cs" />
     <Compile Include="Models\Attempt.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Payment.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Search.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -302,6 +314,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201410211346077_UpdateNotification.resx">
       <DependentUpon>201410211346077_UpdateNotification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201410221231546_AddPayment.resx">
+      <DependentUpon>201410221231546_AddPayment.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\PublishProfiles\perso.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -379,6 +394,9 @@
     <Content Include="Views\Notification\Create.cshtml" />
     <Content Include="Views\Notification\Index.cshtml" />
     <Content Include="Views\Notification\All.cshtml" />
+    <Content Include="Views\Payment\Create.cshtml" />
+    <Content Include="Views\Payment\Details.cshtml" />
+    <Content Include="Views\Payment\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -82,6 +82,11 @@
                                 }
                             </a>
                         </li>
+                        <li id="pay" class="hidden">
+                            <a href="@Url.Action("Create", "Payment")">
+                                <i class="fa fa-credit-card"></i> Soyez sympa !
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @if (Roles.IsUserInRole("admin"))
@@ -94,7 +99,7 @@
                                     <i class="fa fa-users"></i> Tout les utilisateurs
                                 </a>
                             </li>
-                            <li id="search">
+                            <li id="searchs">
                                 <a href="@Url.Action("All", "Search")">
                                     <i class="fa fa-list"></i> Toutes les alertes
                                 </a>
@@ -104,9 +109,24 @@
                                     <i class="fa fa-exclamation-circle"></i> Toutes les notifications
                                 </a>
                             </li>
+                            <li id="payments">
+                                <a href="@Url.Action("Index", "Payment")">
+                                    <i class="fa fa-usd"></i> Tout les paiements
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 }
+                <li id="social">
+                    <a href="#" class="sidebar-toggle underline" data-toggle="#social">Parlez-en ! <i class="fa fa-angle-up"></i></a>
+
+                    <div class="social-container">
+                        <i class="fa fa-facebook icon-facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=http://lbcalerter.com')"></i>
+                        <i class="fa fa-twitter icon-twitter" onclick="window.open('https://twitter.com/home?status=Faites%20comme%20moi,%20créez%20des%20alertes%20sur%20le%20bon%20coin%20avec%20http://lbcalerter.com')"></i>
+                        <i class="fa fa-google-plus icon-googleplus" onclick="window.open('https://plus.google.com/share?url=http://lbcalerter.com')"></i>
+                    </div>
+
+                </li>
             </ul>
             <!-- Sidebar end -->
         </div>
