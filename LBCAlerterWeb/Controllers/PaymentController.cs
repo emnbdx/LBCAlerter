@@ -1,18 +1,12 @@
 ﻿
 namespace LBCAlerterWeb.Controllers
 {
-    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
     using LBCAlerterWeb.Models;
-
-    using PayPal;
-    using PayPal.Api.Payments;
-
-    using Payment = LBCAlerterWeb.Models.Payment;
 
     /// <summary>
     /// The payment controller.
@@ -24,23 +18,6 @@ namespace LBCAlerterWeb.Controllers
         /// The db.
         /// </summary>
         private readonly ApplicationDbContext db = new ApplicationDbContext();
-
-        /// <summary>
-        /// The token credential.
-        /// </summary>
-        private readonly OAuthTokenCredential tokenCredential;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PaymentController"/> class.
-        /// </summary>
-        public PaymentController()
-        {
-            var config = PayPal.Manager.ConfigManager.Instance.GetProperties();
-            var clientId = config[BaseConstants.ClientId];
-            var clientSecret = config[BaseConstants.ClientSecret];
-
-            this.tokenCredential = new OAuthTokenCredential(clientId, clientSecret);
-        }
 
         /// <summary>
         /// GET: Payment
@@ -88,56 +65,6 @@ namespace LBCAlerterWeb.Controllers
         /// </returns>
         public ActionResult Create()
         {
-            var accessToken = this.tokenCredential.GetAccessToken();
-
-            var billingAddress = new Address
-                                     {
-                                         line1 = "52 N Main ST",
-                                         city = "Johnstown",
-                                         country_code = "US",
-                                         postal_code = "43210",
-                                         state = "OH"
-                                     };
-
-            var creditCard = new CreditCard
-                                 {
-                                     number = "4417119669820331",
-                                     type = "visa",
-                                     expire_month = 11,
-                                     expire_year = 2018,
-                                     cvv2 = 874,
-                                     first_name = "Joe",
-                                     last_name = "Shopper",
-                                     billing_address = billingAddress
-                                 };
-
-            var amountDetails = new Details { subtotal = "7.41", tax = "0.03", shipping = "0.03" };
-
-            var amount = new Amount { total = "7.47", currency = "USD", details = amountDetails };
-
-            var transaction = new Transaction
-                                  {
-                                      amount = amount,
-                                      description = "This is the payment transaction description."
-                                  };
-
-            var transactions = new List<Transaction> { transaction };
-
-            var fundingInstrument = new FundingInstrument { credit_card = creditCard };
-
-            var fundingInstruments = new List<FundingInstrument> { fundingInstrument };
-
-            var payer = new Payer { funding_instruments = fundingInstruments, payment_method = "credit_card" };
-
-            var payment = new PayPal.Api.Payments.Payment
-                              {
-                                  intent = "sale",
-                                  payer = payer,
-                                  transactions = transactions
-                              };
-
-            var createdPayment = payment.Create(accessToken);
-
             return this.View();
         }
         

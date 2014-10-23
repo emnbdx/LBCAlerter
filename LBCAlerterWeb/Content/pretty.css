@@ -164,3 +164,74 @@ input:focus {
 .icon-googleplus:hover {
     background: #db4a39;
 }
+
+/*
+    SLIDER
+*/
+.ui-slider {
+    background-color: #1ABC9C;
+    background-image: -webkit-linear-gradient(left, #1ABC9C 0%, #F1C40F 50%, #E74C3C 100%);
+    background-image: linear-gradient(to right,#1ABC9C 0%, #F1C40F 50%, #E74C3C 100%);
+    margin: 20px;
+}
+
+.ui-slider * {
+    outline: none;
+}
+
+.ui-slider, .ui-slider .slider-range-inverse, .ui-slider .ui-slider-range {
+    height: 14px;
+    border-radius: 10px;
+    border-width: 0;
+}
+
+.ui-slider .ui-slider-range {
+    background: transparent;
+}
+
+.ui-slider .slider-range-inverse {
+    background: #CCC;
+    position: absolute;
+    right: 0;
+}
+
+.ui-slider .ui-slider-handle {
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+    background: #FFF;
+    top: -7px;
+    border-radius: 50%;
+    border-width: 0;
+}
+
+.ui-slider .ui-slider-handle:active {
+    box-shadow: 0 3px 20px rgba(0, 0, 0, 0.5);
+}
+
+.ui-slider .ui-slider-handle .dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: transparent;
+    overflow: hidden;
+}
+
+.ui-slider .ui-slider-handle .dot .handle-track {
+    display: block;
+    height: 18px;
+    background-color: #1ABC9C;
+    background-image: -webkit-linear-gradient(left, #1ABC9C 0%, #F1C40F 50%, #E74C3C 100%);
+    background-image: linear-gradient(to right,#1ABC9C 0%, #F1C40F 50%, #E74C3C 100%);
+    position: absolute;
+    padding-right: 18px;
+}
+
+/*
+
+
+*/

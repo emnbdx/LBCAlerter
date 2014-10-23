@@ -30,11 +30,62 @@
         <br/><br />
         THX,<br />
         Eddy.
+        
+        <div id="js-slider"></div>
+        
+        <script async="async" src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=VELSTCZ97PXDG"
+                data-button="donate"
+                data-name="Me faire un don"
+                data-amount="10"
+                data-currency="EUR"
+                data-callback="lbcalerter.com/payment/merci"
+                data-env="sandbox"></script>
 
-
+        <!--<script async="async" src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=EMX2CL4XN28LG"
+                data-button="donate"
+                data-name="Me faire un don"
+                data-amount="10"
+                data-currency="EUR"
+                data-callback="lbcalerter.com/payment/merci"></script>-->
     </div>
 }
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        var update_handle_track_pos = function (slider, ui_handle_pos) {
+            var handle_track_xoffset, slider_range_inverse_width;
+            handle_track_xoffset = -((ui_handle_pos / 100) * slider.clientWidth);
+            $(slider).find(".handle-track").css("left", handle_track_xoffset);
+            slider_range_inverse_width = (100 - ui_handle_pos) + "%";
+            return $(slider).find(".slider-range-inverse").css("width", slider_range_inverse_width);
+        };
+
+        $('form.paypal-button').attr('class', 'custom');
+        $('form.custom button[type="submit"]').attr('class', 'btn btn-primary btn-lg');
+
+        $("#js-slider").slider({
+            range: "min",
+            max: 100,
+            min: 0,
+            value: 50,
+            create: function (event, ui) {
+                var slider;
+                slider = $(event.target);
+                slider.find('.ui-slider-handle').append('<span class="dot"><span class="handle-track"></span></span>');
+                slider.prepend('<div class="slider-range-inverse"></div>');
+                slider.find(".handle-track").css("width", event.target.clientWidth);
+                return update_handle_track_pos(event.target, $(this).slider("value"));
+            },
+            slide: function (event, ui) {
+                if (ui.value == 0) {
+                    $('form.custom').hide();
+                } else {
+                    $('form.custom').show();
+                    $('form.custom input[name="amount"]').val(ui.value);
+                }
+
+                return update_handle_track_pos(event.target, ui.value);
+            }
+        });
+    </script>
 }

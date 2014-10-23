@@ -12,60 +12,63 @@
     <meta property="og:site_name" content="LBC Alerter" />
     <meta property="og:description" content="Fournisseur d’alertes sur le site leboncoin.fr, ce site n’est aucunement affilié à leboncoin.fr" />
     <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/jqueryui")
     @Styles.Render("~/Content/minimal")
     @Scripts.Render("~/bundles/modernizr")
 
     </head>
-    <body class="bg-1">
+<body class="bg-1">
 
-        <div class="mm-page">
-            <div id="wrap">
-                <div class="row">
-                    @Html.Partial("_NavBarPartial")
+    <div class="mm-page">
+        <div id="wrap">
+            <div class="row">
+                @Html.Partial("_NavBarPartial")
 
-                    @if (ViewBag.Large != null && ViewBag.Large)
-                    {
-                        <div id="content" class="col-md-12" tabindex="5001" style="overflow: hidden; outline: none; padding-left: 265px;">
-                            @RenderBody()
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="small-form">
-                            @RenderBody()
-                        </div>
-                    }
-                </div>
+                @if (ViewBag.Large != null && ViewBag.Large)
+                {
+                    <div id="content" class="col-md-12" tabindex="5001" style="overflow: hidden; outline: none; padding-left: 265px;">
+                        @RenderBody()
+                    </div>
+                }
+                else
+                {
+                    <div class="small-form">
+                        @RenderBody()
+                    </div>
+                }
             </div>
         </div>
+    </div>
 
-        @Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/bootstrap")
-        @Scripts.Render("~/bundles/minimal")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/minimal")
 
-        <script type="text/javascript">
-            if (!String.prototype.startsWith) {
-                Object.defineProperty(String.prototype, 'startsWith', {
-                    enumerable: false,
-                    configurable: false,
-                    writable: false,
-                    value: function (searchString, position) {
-                        position = position || 0;
-                        return this.lastIndexOf(searchString, position) === position;
-                    }
-                });
-            }
-
-            $('.menu li').each(function () {
-                $(this).removeClass('active');
+    <script type="text/javascript">
+        if (!String.prototype.startsWith) {
+            Object.defineProperty(String.prototype, 'startsWith', {
+                enumerable: false,
+                configurable: false,
+                writable: false,
+                value: function (searchString, position) {
+                    position = position || 0;
+                    return this.lastIndexOf(searchString, position) === position;
+                }
             });
+        }
 
-            if ('@ViewBag.Current'.startsWith('search_')) {
-                $('#search').addClass('open');
-            }
+        $('.menu li').each(function () {
+            $(this).removeClass('active');
+        });
 
-            $('#@ViewBag.Current').addClass('active');
-        </script>
-        @RenderSection("scripts", required: false)
-    </body>
+        if ('@ViewBag.Current'.startsWith('search_')) {
+            $('#search').addClass('open');
+        }
+
+        $('#@ViewBag.Current').addClass('active');
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+
 </html>
