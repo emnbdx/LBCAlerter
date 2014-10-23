@@ -187,7 +187,7 @@
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Controllers\NotificationController.cs" />
-    <Compile Include="Controllers\PaymentController.cs" />
+    <Compile Include="Controllers\DonController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -232,16 +232,16 @@
     <Compile Include="Migrations\201410211346077_UpdateNotification.Designer.cs">
       <DependentUpon>201410211346077_UpdateNotification.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201410221231546_AddPayment.cs" />
-    <Compile Include="Migrations\201410221231546_AddPayment.Designer.cs">
-      <DependentUpon>201410221231546_AddPayment.cs</DependentUpon>
+    <Compile Include="Migrations\201410232048564_AddDon.cs" />
+    <Compile Include="Migrations\201410232048564_AddDon.Designer.cs">
+      <DependentUpon>201410232048564_AddDon.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Ad.cs" />
     <Compile Include="Models\Attempt.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\Payment.cs" />
+    <Compile Include="Models\Don.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Search.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -342,8 +342,8 @@
     <EmbeddedResource Include="Migrations\201410211346077_UpdateNotification.resx">
       <DependentUpon>201410211346077_UpdateNotification.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201410221231546_AddPayment.resx">
-      <DependentUpon>201410221231546_AddPayment.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201410232048564_AddDon.resx">
+      <DependentUpon>201410232048564_AddDon.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\PublishProfiles\perso.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -423,9 +423,9 @@
     <Content Include="Views\Notification\Create.cshtml" />
     <Content Include="Views\Notification\Index.cshtml" />
     <Content Include="Views\Notification\All.cshtml" />
-    <Content Include="Views\Payment\Create.cshtml" />
-    <Content Include="Views\Payment\Details.cshtml" />
-    <Content Include="Views\Payment\Index.cshtml" />
+    <Content Include="Views\Don\Create.cshtml" />
+    <Content Include="Views\Don\Details.cshtml" />
+    <Content Include="Views\Don\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

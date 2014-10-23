@@ -8,8 +8,8 @@ namespace LBCAlerterWeb.Models
     /// <summary>
     /// The payment.
     /// </summary>
-    [Table("Payment")]
-    public class Payment
+    [Table("Don")]
+    public class Don
     {
         /// <summary>
         /// Gets or sets the id.

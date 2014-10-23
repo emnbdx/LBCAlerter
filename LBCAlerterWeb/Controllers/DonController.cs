@@ -12,7 +12,7 @@ namespace LBCAlerterWeb.Controllers
     /// The payment controller.
     /// </summary>
     [Authorize]
-    public class PaymentController : Controller
+    public class DonController : Controller
     {
         /// <summary>
         /// The db.
@@ -28,7 +28,7 @@ namespace LBCAlerterWeb.Controllers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> Index()
         {
-            return this.View(await this.db.Payments.ToListAsync());
+            return this.View(await this.db.Dons.ToListAsync());
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace LBCAlerterWeb.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var payment = await this.db.Payments.FindAsync(id);
+            var payment = await this.db.Dons.FindAsync(id);
             if (payment == null)
             {
                 return this.HttpNotFound();
@@ -81,14 +81,14 @@ namespace LBCAlerterWeb.Controllers
         /// </returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ID,PaypalId,CreationDate,UpdateDate,State,Amount,Currency")] Payment payment)
+        public async Task<ActionResult> Create([Bind(Include = "ID,PaypalId,CreationDate,UpdateDate,State,Amount,Currency")] Don payment)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View(payment);
             }
 
-            this.db.Payments.Add(payment);
+            this.db.Dons.Add(payment);
             await this.db.SaveChangesAsync();
             return this.RedirectToAction("Index");
         }

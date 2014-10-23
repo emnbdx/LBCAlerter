@@ -84,7 +84,10 @@ namespace LBCAlerterWeb.Models
         /// </summary>
         public DbSet<Notification> Notifications { get; set; }
 
-        public System.Data.Entity.DbSet<LBCAlerterWeb.Models.Payment> Payments { get; set; }
+        /// <summary>
+        /// Gets or sets the dons.
+        /// </summary>
+        public DbSet<Don> Dons { get; set; }
     }
 
     /// <summary>
