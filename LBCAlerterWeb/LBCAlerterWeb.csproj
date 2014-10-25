@@ -271,6 +271,7 @@
     <Content Include="Content\images\backgrounds\4.jpg" />
     <Content Include="Content\images\backgrounds\5.jpg" />
     <Content Include="Content\images\backgrounds\6.jpg" />
+    <Content Include="Content\images\chaton.gif" />
     <Content Include="Content\images\dot_pattern.png" />
     <Content Include="Content\images\loader.gif" />
     <Content Include="Content\images\minimal-logo.png" />
@@ -426,6 +427,7 @@
     <Content Include="Views\Don\Create.cshtml" />
     <Content Include="Views\Don\Details.cshtml" />
     <Content Include="Views\Don\Index.cshtml" />
+    <Content Include="Views\Don\Merci.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

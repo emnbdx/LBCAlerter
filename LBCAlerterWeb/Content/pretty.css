@@ -114,6 +114,11 @@ input:focus {
     SOCIAL
 */
 
+.social-container-pay {
+    text-align: left;
+    display: none;
+}
+
 .social-container {
     text-align: center;
 }

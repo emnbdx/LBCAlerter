@@ -1,10 +1,10 @@
-﻿@model LBCAlerterWeb.Models.Don
+﻿@using System.Configuration
+@model LBCAlerterWeb.Models.Don
 @{
     ViewBag.Title = "Soyez sympa !";
     ViewBag.Current = "pay";
     ViewBag.Large = true;
 }
-
 <!-- page header -->
 <div class="pageheader">
     <h2>
@@ -19,36 +19,66 @@
     </div>
 </div>
 <!-- /page header -->
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
 
-    <div>
-        Ce système fonctionne en <a href="http://en.wikipedia.org/wiki/Pay_what_you_want" target="_blank">pay as you want</a>. Vous êtes donc libre de payer pour le service ou non.
-        <br/>
-        Avec l'argent je garantie la stabilité, l'évolution et l'achat de bières.
-        <br/><br />
-        THX,<br />
-        Eddy.
-        
-        <div id="js-slider"></div>
-        
-        <script async="async" src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=VELSTCZ97PXDG"
-                data-button="donate"
-                data-name="Me faire un don"
-                data-amount="10"
-                data-currency="EUR"
-                data-callback="lbcalerter.com/payment/merci"
-                data-env="sandbox"></script>
 
-        <!--<script async="async" src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=EMX2CL4XN28LG"
-                data-button="donate"
-                data-name="Me faire un don"
-                data-amount="10"
-                data-currency="EUR"
-                data-callback="lbcalerter.com/payment/merci"></script>-->
+<div>
+    Ce système fonctionne en <a href="http://en.wikipedia.org/wiki/Pay_what_you_want" target="_blank">pay as you want</a>. Vous êtes donc libre de payer pour le service ou non.
+    <br />
+    Avec l'argent je garantie l'évolution et la stabilité du site
+    (pas la pérénité, car c'est de la bonne volonté du bon coin !)<br />
+    J'utilise également cette argent pour payer le serveur et me payer un peu de bière aussi.<br />
+    Vous permettrez aussi de sauver un chaton mignon:<br />
+    <img src="~/Content/images/chaton.gif" alt="chat" width="200px" />
+    <br /><br />
+    Merci d'avance,<br />
+    Eddy.
+
+    <div id="js-slider"></div>
+
+    @if (ConfigurationManager.AppSettings["paypalMode"] == "sandbox")
+    {
+        <form method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" target="_top">
+            <div class="hide" id="errorBox"></div>
+            <input type="hidden" name="button" value="donate">
+            <input type="hidden" name="item_name" value="Don pour LBCAlerter">
+            <input type="hidden" name="amount" value="10">
+            <input type="hidden" name="currency_code" value="EUR">
+            <input type="hidden" name="return_Url" value="http://lbcalerter.com/Don/Merci">
+            <input type="hidden" name="notify_url" value="http://lbcalerter.com/Don/PayPalPaymentNotification">
+            <input type="hidden" name="env" value="www.sandbox">
+            <input type="hidden" name="cmd" value="_donations">
+            <input type="hidden" name="business" value="VELSTCZ97PXDG">
+            <input type="hidden" name="bn" value="JavaScriptButton_donate">
+            <button type="submit" class="btn btn-primary btn-lg"></button>
+        </form>
+    }
+    else if (ConfigurationManager.AppSettings["paypalMode"] == "prod")
+    {
+        <form method="post" action="https://www.paypal.com/cgi-bin/webscr" target="_top">
+            <div class="hide" id="errorBox"></div>
+            <input type="hidden" name="button" value="donate">
+            <input type="hidden" name="item_name" value="Me faire un don">
+            <input type="hidden" name="amount" value="10">
+            <input type="hidden" name="currency_code" value="EUR">
+            <input type="hidden" name="return_Url" value="http://lbcalerter.com/Don/Merci">
+            <input type="hidden" name="notify_url" value="http://lbcalerter.com/Don/PayPalPaymentNotification">
+            <input type="hidden" name="cmd" value="_donations">
+            <input type="hidden" name="business" value="EMX2CL4XN28LG">
+            <input type="hidden" name="bn" value="JavaScriptButton_donate">
+            <input type="hidden" name="env" value="www">
+            <button type="submit" class="btn btn-primary btn-lg"></button>
+        </form>
+    }
+
+    <div class="social-container-pay">
+        D'accord mais vous pouvez peut-être en parler sur les réseaux sociaux ?
+        <div class="social-container">
+            <i class="fa fa-facebook icon-facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=http://lbcalerter.com')"></i>
+            <i class="fa fa-twitter icon-twitter" onclick="window.open('https://twitter.com/home?status=Faites%20comme%20moi,%20créez%20des%20alertes%20sur%20le%20bon%20coin%20avec%20http://lbcalerter.com')"></i>
+            <i class="fa fa-google-plus icon-googleplus" onclick="window.open('https://plus.google.com/share?url=http://lbcalerter.com')"></i>
+        </div>
     </div>
-}
+</div>
 
 @section Scripts {
     <script type="text/javascript">
@@ -60,28 +90,30 @@
             return $(slider).find(".slider-range-inverse").css("width", slider_range_inverse_width);
         };
 
-        $('form.paypal-button').attr('class', 'custom');
-        $('form.custom button[type="submit"]').attr('class', 'btn btn-primary btn-lg');
-
         $("#js-slider").slider({
             range: "min",
             max: 100,
             min: 0,
-            value: 50,
-            create: function (event, ui) {
+            value: 2,
+            create: function (event) {
                 var slider;
                 slider = $(event.target);
                 slider.find('.ui-slider-handle').append('<span class="dot"><span class="handle-track"></span></span>');
                 slider.prepend('<div class="slider-range-inverse"></div>');
                 slider.find(".handle-track").css("width", event.target.clientWidth);
+
+                $('button[type="submit"]').html('Me donner ' + $(this).slider("value") + ' €');
                 return update_handle_track_pos(event.target, $(this).slider("value"));
             },
             slide: function (event, ui) {
                 if (ui.value == 0) {
-                    $('form.custom').hide();
+                    $('button[type="submit"]').hide();
+                    $('.social-container-pay').show();
                 } else {
-                    $('form.custom').show();
-                    $('form.custom input[name="amount"]').val(ui.value);
+                    $('button[type="submit"]').show();
+                    $('.social-container-pay').hide();
+                    $('button[type="submit"]').html('Me donner ' + ui.value + ' €');
+                    $('form input[name="amount"]').val(ui.value);
                 }
 
                 return update_handle_track_pos(event.target, ui.value);
