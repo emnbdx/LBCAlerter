@@ -172,7 +172,7 @@ namespace LBCAlerterWeb.Controllers
                         new
                             {
                                 success = false,
-                                message = "Vous devez avoir un compte premium pour ajouter plus de cinq recherches"
+                                message = "Il vous faut un compte premium pour ajouter plus de 5 recherches.\r\nUn compte premium s'obtient en faisant un don du montant que vous voulez."
                             });
             }
 
@@ -185,6 +185,16 @@ namespace LBCAlerterWeb.Controllers
             search.CreationDate = DateTime.Now;
             search.KeyWord = LBCMapping.HtmlParser.ExtractKeyWordFromCriteria(search.Url);
             search.User = currentUser;
+
+            if (!Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium"))
+            {
+                search.RefreshTime = 60;
+            }
+            else
+            {
+                search.RefreshTime = 10;
+            }
+
             this.db.Searches.Add(search);
             this.db.SaveChanges();
 
@@ -241,6 +251,11 @@ namespace LBCAlerterWeb.Controllers
             if (!this.ModelState.IsValid)
             {
                 return this.View(search);
+            }
+
+            if (!Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium") && search.RefreshTime < 60)
+            {
+                search.RefreshTime = 60;
             }
 
             this.db.Entry(search).State = EntityState.Modified;

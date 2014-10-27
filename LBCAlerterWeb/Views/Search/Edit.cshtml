@@ -1,7 +1,42 @@
-﻿@model LBCAlerterWeb.Models.Search
+﻿@using System.Web.UI.HtmlControls
+@model LBCAlerterWeb.Models.Search
 @{
     ViewBag.Title = "Editer";
     ViewBag.Current = "search_" + Model.ID;
+
+    var list = new List<object>();
+    
+    if (Roles.IsUserInRole("admin") || Roles.IsUserInRole("premium"))
+    {
+        list.Add(new {value = 15, text = "15min" });
+        list.Add(new {value = 30, text = "30min" });
+        list.Add(new {value = 45, text = "45min" });
+    }
+    
+    list.Add(new {value = 60, text = "1h" });
+    list.Add(new {value = 120, text = "2h" });
+    list.Add(new {value = 180, text = "3h" });
+    list.Add(new {value = 240, text = "4h" });
+    list.Add(new {value = 300, text = "5h" });
+    list.Add(new {value = 360, text = "6h" });
+    list.Add(new {value = 420, text = "7h" });
+    list.Add(new {value = 480, text = "8h" });
+    list.Add(new {value = 540, text = "9h" });
+    list.Add(new {value = 600, text = "10h" });
+    list.Add(new {value = 660, text = "11h" });
+    list.Add(new {value = 720, text = "12h" });
+    list.Add(new {value = 780, text = "13h" });
+    list.Add(new {value = 840, text = "14h" });
+    list.Add(new {value = 900, text = "15h" });
+    list.Add(new {value = 960, text = "16h" });
+    list.Add(new {value = 1020, text = "17h" });
+    list.Add(new {value = 1080, text = "18h" });
+    list.Add(new {value = 1140, text = "19h" });
+    list.Add(new {value = 1200, text = "20h" });
+    list.Add(new {value = 1260, text = "21h" });
+    list.Add(new {value = 1320, text = "22h" });
+    list.Add(new {value = 1380, text = "23h" });
+    list.Add(new {value = 1440, text = "24h" });
 }
 
 @using (Html.BeginForm())
@@ -49,12 +84,14 @@
         <div class="clearfix"></div>
     </div>
 
-    @Html.TextBoxFor(model => model.RefreshTime, new { @placeholder = @Html.DisplayNameFor(model => model.RefreshTime), @required = "required" })
+    @Html.LabelFor(model => model.RefreshTime)
+    @Html.DropDownListFor(model => model.RefreshTime, new SelectList(@list, "value", "text", Model.RefreshTime))
     @Html.ValidationMessageFor(model => model.RefreshTime)
 
     if (Roles.IsUserInRole("admin"))
     {
-        @Html.LabelFor(model => model.Url, new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Url)
+        <br/>
         @Html.DisplayFor(model => model.Url)
     }
      
