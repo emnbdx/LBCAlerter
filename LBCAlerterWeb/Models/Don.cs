@@ -52,5 +52,25 @@ namespace LBCAlerterWeb.Models
         /// Gets or sets the user.
         /// </summary>
         public virtual ApplicationUser User { get; set; }
+
+        /// <summary>
+        /// Gets or sets the payer id.
+        /// </summary>
+        public string PayerId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the payer email.
+        /// </summary>
+        public string PayerEmail { get; set; }
+
+        /// <summary>
+        /// Gets or sets the payer first name.
+        /// </summary>
+        public string PayerFirstName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the payer last name.
+        /// </summary>
+        public string PayerLastName { get; set; }
     }
 }

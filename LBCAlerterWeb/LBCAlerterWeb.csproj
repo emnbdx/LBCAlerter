@@ -236,6 +236,10 @@
     <Compile Include="Migrations\201410232048564_AddDon.Designer.cs">
       <DependentUpon>201410232048564_AddDon.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201410251033141_UpdateDon.cs" />
+    <Compile Include="Migrations\201410251033141_UpdateDon.Designer.cs">
+      <DependentUpon>201410251033141_UpdateDon.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Ad.cs" />
@@ -346,6 +350,9 @@
     <EmbeddedResource Include="Migrations\201410232048564_AddDon.resx">
       <DependentUpon>201410232048564_AddDon.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201410251033141_UpdateDon.resx">
+      <DependentUpon>201410251033141_UpdateDon.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\PublishProfiles\perso.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
@@ -428,6 +435,7 @@
     <Content Include="Views\Don\Details.cshtml" />
     <Content Include="Views\Don\Index.cshtml" />
     <Content Include="Views\Don\Merci.cshtml" />
+    <Content Include="Views\Don\PayPalPaymentNotification.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

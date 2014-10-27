@@ -5,6 +5,8 @@ namespace LBCAlerterWeb.Controllers
     using System.Collections.Generic;
     using System.Configuration;
     using System.Data.Entity;
+    using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -113,32 +115,35 @@ namespace LBCAlerterWeb.Controllers
             // if you want to use the PayPal sandbox change this from false to true
             var response = GetPayPalResponse(formVals, ConfigurationManager.AppSettings["paypalMode"] != "prod");
 
-            if (response != "VERIFIED")
-            {
-                return this.View();
-            }
-
             var id = this.Request["txn_id"];
-            var stringAmount = this.Request["mc_gross"];
-            var currency = this.Request["mmc_currency"];
+            var date = this.Request["payment_date"];
             var state = this.Request["payment_status"];
-            var email = this.Request["payer_email"];
+            var amount = this.Request["mc_gross"];
+            var currency = this.Request["mc_currency"];
+            var payerId = this.Request["payer_id"];
+            var payerEmail = this.Request["payer_email"];
+            var payerFirstName = this.Request["first_name"];
+            var payerLastName = this.Request["last_name"];
+            
+            var user = this.db.Users.FirstOrDefault(entry => entry.UserName == payerEmail);
 
-            var user = this.db.Users.FirstOrDefault(entry => entry.UserName == email);
-
-            // validate the order
-            decimal amount = 0;
-            decimal.TryParse(stringAmount, out amount);
+            var realDate = ConvertPayPalDateTime(date);
+            decimal realAmount;
+            decimal.TryParse(amount, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out realAmount);
 
             var don = new Don
                           {
                               PaypalId = id,
-                              CreationDate = DateTime.Now,
+                              CreationDate = realDate,
                               UpdateDate = DateTime.Now,
-                              State = state,
-                              Amount = amount,
+                              State = response + "_" + state,
+                              Amount = realAmount,
                               Currency = currency,
-                              User = user
+                              User = user,
+                              PayerId = payerId,
+                              PayerEmail = payerEmail,
+                              PayerFirstName = payerFirstName,
+                              PayerLastName = payerLastName,
                           };
 
             this.db.Dons.Add(don);
@@ -203,6 +208,52 @@ namespace LBCAlerterWeb.Controllers
             }
 
             return response;
+        }
+
+        /// <summary>
+        /// The convert pay pal date time.
+        /// </summary>
+        /// <param name="payPalDateTime">
+        /// The pay pal date time.
+        /// </param>
+        /// <returns>
+        /// The <see cref="DateTime"/>.
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        private static DateTime ConvertPayPalDateTime(string payPalDateTime)
+        {
+            // Get the offset.
+            // If C# supports switching on strings, it's probably more sensible to do that.
+            int offset;
+            if (payPalDateTime.EndsWith(" PDT"))
+            {
+                offset = 7;
+            }
+            else if (payPalDateTime.EndsWith(" PST"))
+            {
+                offset = 8;
+            }
+            else
+            {
+                throw new ArgumentException("La date n'est pas au bon format...");
+            }
+
+            // We've "parsed" the time zone, so remove it from the string.
+            payPalDateTime = payPalDateTime.Substring(0, payPalDateTime.Length - 4);
+
+            // Same formats as above, but with PST/PDT removed.
+            string[] dateFormats = { "HH:mm:ss MMM dd, yyyy", "HH:mm:ss MMM. dd, yyyy" };
+
+            // Parse the date. Throw an exception if it fails.
+            DateTime ret = DateTime.ParseExact(
+                payPalDateTime,
+                dateFormats,
+                new CultureInfo("en-US"),
+                DateTimeStyles.None);
+
+            // Add the offset, and make it a universal time.
+            return ret.AddHours(offset);
         }
 
         /// <summary>
