@@ -5,6 +5,7 @@ namespace LBCAlerterWeb.Models
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Web.Mvc;
 
     /// <summary>
     /// The notification.
@@ -30,6 +31,7 @@ namespace LBCAlerterWeb.Models
         /// Gets or sets the message.
         /// </summary>
         [Required]
+        [AllowHtml]
         [DisplayName("Message")]
         public string Message { get; set; }
 

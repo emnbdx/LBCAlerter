@@ -125,7 +125,7 @@
                     <h3 class="modal-title" id="modalDialogLabel">@notifs.FirstOrDefault().Title</h3>
                 </div>
                 <div class="modal-body">
-                    <p>@notifs.FirstOrDefault().Message</p>
+                    <p>@Html.Raw(@notifs.FirstOrDefault().Message)</p>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

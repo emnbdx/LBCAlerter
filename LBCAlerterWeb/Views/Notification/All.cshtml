@@ -48,7 +48,7 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Message)
+                @Html.Raw(item.Message)
             </td>
             <td>
                 <div class="onoffswitch labeled success">

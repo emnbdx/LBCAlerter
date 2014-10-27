@@ -18,6 +18,9 @@ namespace LBCAlerterWeb.Controllers
 
     using log4net;
 
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
+
     using WebGrease;
 
     using LogManager = log4net.LogManager;
@@ -37,6 +40,20 @@ namespace LBCAlerterWeb.Controllers
         /// The db.
         /// </summary>
         private readonly ApplicationDbContext db = new ApplicationDbContext();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DonController"/> class.
+        /// </summary>
+        public DonController()
+        {
+            this.UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(this.db));
+            this.UserManager.UserValidator = new UserValidator<ApplicationUser>(this.UserManager) { AllowOnlyAlphanumericUserNames = false };
+        }
+
+        /// <summary>
+        /// Gets or sets the user manager.
+        /// </summary>
+        private UserManager<ApplicationUser> UserManager { get; set; }
 
         /// <summary>
         /// GET: Payment
@@ -124,8 +141,10 @@ namespace LBCAlerterWeb.Controllers
             var payerEmail = this.Request["payer_email"];
             var payerFirstName = this.Request["first_name"];
             var payerLastName = this.Request["last_name"];
+            var custom = this.Request["custom"];
             
-            var user = this.db.Users.FirstOrDefault(entry => entry.UserName == payerEmail);
+            var user = this.db.Users.FirstOrDefault(entry => entry.UserName == payerEmail)
+                       ?? this.db.Users.FirstOrDefault(entry => entry.Id == custom);
 
             var realDate = ConvertPayPalDateTime(date);
             decimal realAmount;
@@ -147,6 +166,12 @@ namespace LBCAlerterWeb.Controllers
                           };
 
             this.db.Dons.Add(don);
+
+            if (user != null && !this.UserManager.IsInRole(user.Id, "premium") && realAmount > 0)
+            {
+                this.UserManager.AddToRole(user.Id, "premium");
+            }
+
             this.db.SaveChanges();
 
             return this.View();

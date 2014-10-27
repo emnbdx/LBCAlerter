@@ -1,4 +1,5 @@
 ﻿@using System.Configuration
+@using Microsoft.AspNet.Identity
 @model LBCAlerterWeb.Models.Don
 @{
     ViewBag.Title = "Soyez sympa !";
@@ -43,12 +44,13 @@
             <input type="hidden" name="item_name" value="Don pour LBCAlerter">
             <input type="hidden" name="amount" value="2">
             <input type="hidden" name="currency_code" value="EUR">
-            <input type="hidden" name="return_Url" value="http://lbcalerter.com:8080/Don/Merci">
-            <input type="hidden" name="notify_url" value="http://lbcalerter.com:8080/Don/PayPalPaymentNotification">
+            <input type="hidden" name="return_Url" value="http://lbcalerter.com/Don/Merci">
+            <input type="hidden" name="notify_url" value="http://lbcalerter.com/Don/PayPalPaymentNotification">
             <input type="hidden" name="env" value="www.sandbox">
             <input type="hidden" name="cmd" value="_donations">
             <input type="hidden" name="business" value="VELSTCZ97PXDG">
             <input type="hidden" name="bn" value="JavaScriptButton_donate">
+            <input type="hidden" name="custom" value="@User.Identity.GetUserId()">
             <button type="submit" class="btn btn-primary btn-lg"></button>
         </form>
     }
@@ -62,10 +64,11 @@
             <input type="hidden" name="currency_code" value="EUR">
             <input type="hidden" name="return_Url" value="http://lbcalerter.com/Don/Merci">
             <input type="hidden" name="notify_url" value="http://lbcalerter.com/Don/PayPalPaymentNotification">
+            <input type="hidden" name="env" value="www">
             <input type="hidden" name="cmd" value="_donations">
             <input type="hidden" name="business" value="EMX2CL4XN28LG">
             <input type="hidden" name="bn" value="JavaScriptButton_donate">
-            <input type="hidden" name="env" value="www">
+            <input type="hidden" name="custom" value="@User.Identity.GetUserId()">
             <button type="submit" class="btn btn-primary btn-lg"></button>
         </form>
     }

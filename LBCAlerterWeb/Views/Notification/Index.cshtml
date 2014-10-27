@@ -25,6 +25,8 @@
 
 @foreach (var item in Model)
 {
+    
+    
     <section class="tile color transparent-black textured">
         <!-- tile header -->
         <div class="tile-header">
@@ -37,7 +39,7 @@
         <!-- /tile header -->
         <!-- tile body -->
         <div class="tile-body">
-            <p>@Html.DisplayFor(modelItem => item.Message)</p>
+            <p>@Html.Raw(item.Message)</p>
         </div>
         <!-- /tile body -->
     </section>
