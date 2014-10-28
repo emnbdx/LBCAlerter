@@ -371,7 +371,11 @@
             RelativeToAbsolute(doc, "//script");
             RelativeToAbsolute(doc, "//link");
 
-            string tmp = doc.DocumentNode.WriteTo();
+            RemoveBackground(doc, "//body[@id='all']");
+            RemoveBackground(doc, "//div[@id='page_width']");
+            RemoveBackground(doc, "//div[@class='search_box']");
+
+            var tmp = doc.DocumentNode.WriteTo();
 
             return tmp;
         }
@@ -449,7 +453,13 @@
             RelativeToAbsolute(doc, "//script");
             RelativeToAbsolute(doc, "//link");
 
-            return doc.DocumentNode.WriteTo();
+            RemoveBackground(doc, "//body[@id='all']");
+            RemoveBackground(doc, "//div[@id='page_width']");
+            RemoveBackground(doc, "//div[@class='search_box']");
+
+            var tmp = doc.DocumentNode.WriteTo();
+
+            return tmp;
         }
 
         /// <summary>
@@ -496,7 +506,33 @@
             }
         }
 
-/*
+        /// <summary>
+        /// The remove background.
+        /// </summary>
+        /// <param name="doc">
+        /// The doc.
+        /// </param>
+        /// <param name="xpathQuery">
+        /// The x path query.
+        /// </param>
+        private static void RemoveBackground(HtmlDocument doc, string xpathQuery)
+        {
+            if (doc.DocumentNode.SelectSingleNode(xpathQuery) == null)
+            {
+                return;
+            }
+
+            if (doc.DocumentNode.SelectSingleNode(xpathQuery).Attributes["style"] != null)
+            {
+                doc.DocumentNode.SelectSingleNode(xpathQuery).Attributes["style"].Value += "background-color: transparent;";
+            }
+            else
+            {
+                doc.DocumentNode.SelectSingleNode(xpathQuery).Attributes.Add("style", "background-color: transparent;");
+            }
+        }
+
+        /*
         /// <summary>
         /// Do ajax call to get phone gif url by replacing javascript call
         /// </summary>

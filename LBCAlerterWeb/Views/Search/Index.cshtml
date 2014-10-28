@@ -6,7 +6,7 @@
     ViewBag.Large = true;
 
     var notifs = Helper.GetImportantNotifications(User.Identity.GetUserId()).ToList();
-    
+
     var cardCount = 0;
 }
 
@@ -23,7 +23,6 @@
     </div>
 </div>
 <!-- /page header -->
-
 @if (Model.Any())
 {
     <div class="row cards">
@@ -61,7 +60,7 @@
                                 </div>
 
                                 <div class="onoffswitch-container">
-                                    @Html.Label("", "Recap email ?", new { @class = "control-label" })
+                                    @Html.Label("", "Recap. journalier ?", new { @class = "control-label" })
                                     <div class="col-xs-4 control-block">
                                         <div class="onoffswitch labeled success">
                                             @Html.CheckBoxFor(modelItem => item.MailRecap, new { @class = "onoffswitch-checkbox", @disabled = "true" })
@@ -102,7 +101,7 @@
 
             /*
          * Rss useless
-         * 
+         *
          * @Html.ActionLink("Flux", "AdListFeed", new { id = item.ID })*/
 
             cardCount++;
@@ -120,7 +119,10 @@
 }
 else
 {
-    <a href="@Url.Action("Create")" class="btn btn-primary btn-lg">C'est bien vide ici !</a>
+    <div class="col-md-12">
+        <h4>C'est bien vide ici !</h4>
+        <a href="@Url.Action("Create")" class="btn btn-primary btn-lg">Ajouter une alerte</a>
+    </div>
 }
 
 @if (notifs.Any())

@@ -1,5 +1,4 @@
-﻿@using System.Web.UI.HtmlControls
-@model LBCAlerterWeb.Models.Search
+﻿@model LBCAlerterWeb.Models.Search
 @{
     ViewBag.Title = "Editer";
     ViewBag.Current = "search_" + Model.ID;
@@ -71,7 +70,7 @@
     </div>
     
     <div class="onoffswitch-container">
-        @Html.Label("", "Récap. email ?", new { @class = "control-label" })
+        @Html.Label("", "Récap. journalier ?", new { @class = "control-label" })
         <div class="col-xs-4 control-block">
             <div class="onoffswitch labeled primary">
                 @Html.CheckBoxFor(m => m.MailRecap, new { @class = "onoffswitch-checkbox" })

@@ -31,8 +31,7 @@
 else
 {
     <div id="iframeContainer">
-        @Html.Raw(@LBCMapping.HtmlParser.GetHomePage())
-        <iframe></iframe>
+        <iframe id="firstPage" srcdoc="@LBCMapping.HtmlParser.GetHomePage()"></iframe>
     </div>
 }
 
@@ -43,47 +42,15 @@ else
 
 @section Scripts {
     <script type="text/javascript">
-        $('a[id^="county_"], area').each(function() {
-            $(this).attr('onclick', 'showSecondPage(\'' + $(this).attr('href') + '\');');
-            $(this).attr('href', '#');
-        });
-
         function showSecondPage(link) {
-            $('#iframeContainer').html('');
-
             $.ajax({
                 url: '@Url.Action("DisplaySecondPage", "Search")',
                 type: 'POST',
                 data: { url: link },
                 success: function(data) {
-                    $('#iframeContainer').html(data["html"].replace('window.location.href', 'var searchUrl')
-                        .replace('return false;',
-                            'if(searchUrl.indexOf("&q=") == -1) ' +
-                            '   if(!confirm("Attention vous n\'avez pas spécifié de mots clé, est-ce volontaire ?")) ' +
-                            '       return false; ' +
-                            '$.ajax({ ' +
-                            '   url: \'@Url.Action("Create", "Search")\', ' +
-                            '   type: \'POST\', ' +
-                            '   data: { ' +
-                            '       Url: searchUrl, ' +
-                            '       RefreshTime: 15, ' +
-                            '       MailAlert: true, ' +
-                            '       MailRecap: false, ' +
-                            '   }, ' +
-                            '   success: function (data) { ' +
-                            '       if(!data["success"]) ' +
-                            '          alert(data["message"]); ' +
-                            '       else ' +
-                            '           alert(\'Votre recherche a bien été crée vous allez recevoir 5 mails correspondants aux dernières annonces parues.\'); ' +
-                            '       window.top.location.href = \'@Url.Action("Index", "Search")\'; ' +
-                        '   } ' +
-                        '}); ' +
-                        'return false;'));
-
                     $('<iframe />', {
                         name: 'secondPage',
                         id: 'secondPage',
-                        style: 'width: 100%; height: 330px;',
                         srcdoc: data["html"].replace('window.location.href', 'var searchUrl')
                             .replace('return false;',
                                 'if(searchUrl.indexOf("&q=") == -1) ' +
@@ -104,12 +71,26 @@ else
                                 '       else ' +
                                 '           alert(\'Votre recherche a bien été crée vous allez recevoir 5 mails correspondants aux dernières annonces parues.\'); ' +
                                 '       window.top.location.href = \'@Url.Action("Index", "Search")\'; ' +
-                                '   } ' +
-                                '}); ' +
-                                'return false;')
+                            '   } ' +
+                            '}); ' +
+                            'return false;')
                     }).appendTo('#iframeContainer');
                 }
             });
         }
+
+        $('#firstPage').load(function() {
+            $(this).contents().find("area").click(function(event) {
+                $('#firstPage').hide();
+                showSecondPage($(this).attr('href'));
+            });
+        });
+
+        $('#firstPage').load(function() {
+            $(this).contents().find("a").click(function(event) {
+                $('#firstPage').hide();
+                showSecondPage($(this).attr('href'));
+            });
+        });
     </script>
 }
