@@ -371,7 +371,9 @@
             RelativeToAbsolute(doc, "//script");
             RelativeToAbsolute(doc, "//link");
 
-            return doc.DocumentNode.WriteTo();
+            string tmp = doc.DocumentNode.WriteTo();
+
+            return tmp;
         }
 
         /// <summary>
