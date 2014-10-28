@@ -1,11 +1,9 @@
-﻿
-namespace LBCAlerterWeb.Controllers
+﻿namespace LBCAlerterWeb.Controllers
 {
     using System;
     using System.Collections.Generic;
     using System.Configuration;
     using System.Data.Entity;
-    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -20,8 +18,6 @@ namespace LBCAlerterWeb.Controllers
 
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
-
-    using WebGrease;
 
     using LogManager = log4net.LogManager;
 
@@ -130,7 +126,7 @@ namespace LBCAlerterWeb.Controllers
             var formVals = new Dictionary<string, string> { { "cmd", "_notify-validate" } };
 
             // if you want to use the PayPal sandbox change this from false to true
-            var response = GetPayPalResponse(formVals, ConfigurationManager.AppSettings["paypalMode"] != "prod");
+            var response = this.GetPayPalResponse(formVals, ConfigurationManager.AppSettings["paypalMode"] != "prod");
 
             var id = this.Request["txn_id"];
             var date = this.Request["payment_date"];
@@ -146,7 +142,7 @@ namespace LBCAlerterWeb.Controllers
             var user = this.db.Users.FirstOrDefault(entry => entry.UserName == payerEmail)
                        ?? this.db.Users.FirstOrDefault(entry => entry.Id == custom);
 
-            var realDate = ConvertPayPalDateTime(date);
+            var realDate = this.ConvertPayPalDateTime(date);
             decimal realAmount;
             decimal.TryParse(amount, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out realAmount);
 
@@ -177,6 +173,22 @@ namespace LBCAlerterWeb.Controllers
             return this.View();
         }
 
+        /// <summary>
+        /// The dispose.
+        /// </summary>
+        /// <param name="disposing">
+        /// The disposing.
+        /// </param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.db.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+        
         /// <summary>
         /// The get pay pal response.
         /// </summary>
@@ -245,8 +257,9 @@ namespace LBCAlerterWeb.Controllers
         /// The <see cref="DateTime"/>.
         /// </returns>
         /// <exception cref="ArgumentException">
+        /// If date not in good format
         /// </exception>
-        private static DateTime ConvertPayPalDateTime(string payPalDateTime)
+        private DateTime ConvertPayPalDateTime(string payPalDateTime)
         {
             // Get the offset.
             // If C# supports switching on strings, it's probably more sensible to do that.
@@ -271,7 +284,7 @@ namespace LBCAlerterWeb.Controllers
             string[] dateFormats = { "HH:mm:ss MMM dd, yyyy", "HH:mm:ss MMM. dd, yyyy" };
 
             // Parse the date. Throw an exception if it fails.
-            DateTime ret = DateTime.ParseExact(
+            var ret = DateTime.ParseExact(
                 payPalDateTime,
                 dateFormats,
                 new CultureInfo("en-US"),
@@ -279,22 +292,6 @@ namespace LBCAlerterWeb.Controllers
 
             // Add the offset, and make it a universal time.
             return ret.AddHours(offset);
-        }
-
-        /// <summary>
-        /// The dispose.
-        /// </summary>
-        /// <param name="disposing">
-        /// The disposing.
-        /// </param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                this.db.Dispose();
-            }
-
-            base.Dispose(disposing);
         }
     }
 }

@@ -1,56 +1,69 @@
-﻿using System;
-using EMToolBox.Mail;
-using log4net;
-using LBCMapping;
-using System.Collections.Generic;
-using System.Reflection;
-using System.IO;
-
-namespace LBCService.Alerter
+﻿namespace LBCService.Alerter
 {
+    using EMToolBox.Mail;
+    using LBCMapping;
+    using log4net;
+
     /// <summary>
     /// Send mail to alert
     /// </summary>
     public class MailAlerter : IAlerter
     {
-        #region private
+        /// <summary>
+        /// The log.
+        /// </summary>
+        private static readonly ILog Log = LogManager.GetLogger(typeof(MailAlerter));
 
-        private static ILog log = LogManager.GetLogger(typeof(MailAlerter));
-        private EMMail mailer = new EMMail();
-
-        private string m_to;
-        private string m_subject;
-        private bool m_fullMode;
-
-        #endregion private
-
-        #region public
-
+        /// <summary>
+        /// The mailer.
+        /// </summary>
+        private readonly EMMail mailer = new EMMail();
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MailAlerter"/> class.
+        /// </summary>
+        /// <param name="to">
+        /// The to.
+        /// </param>
+        /// <param name="subject">
+        /// The subject.
+        /// </param>
+        /// <param name="fullMode">
+        /// The full mode.
+        /// </param>
         public MailAlerter(string to, string subject, bool fullMode)
         {
-            m_to = to;
-            m_subject = subject;
-            m_fullMode = fullMode;
+            this.To = to;
+            this.Subject = subject;
+            this.FullMode = fullMode;
         }
 
         /// <summary>
-        ///
+        /// Gets the to.
         /// </summary>
-        /// <param name="ad"></param>
+        public string To { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the subject.
+        /// </summary>
+        public string Subject { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether full mode.
+        /// </summary>
+        public bool FullMode { get; set; }
+
+        /// <summary>
+        /// The alert.
+        /// </summary>
+        /// <param name="ad">
+        /// The ad.
+        /// </param>
         public void Alert(Ad ad)
         {
-            log.Info("Ajout d'un mail à la file d'envoie [" + ad.Title + "]");
+            Log.Info("Ajout d'un mail à la file d'envoie [" + ad.Title + "]");
 
-            if (m_fullMode)
-                mailer.Add(m_subject, m_to, "LBC_AD_FULL", ad);
-            else
-                mailer.Add(m_subject, m_to, "LBC_AD", ad);
+            this.mailer.Add(this.Subject, this.To, this.FullMode ? "LBC_AD_FULL" : "LBC_AD", ad);
         }
-
-        public string To { get { return m_to; } }
-        public string Subject { get { return m_subject; } set { m_subject = value; } }
-        public bool FullMode { get { return m_fullMode; } set { m_fullMode = value; } }
-
-        #endregion public
     }
 }

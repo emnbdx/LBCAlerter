@@ -1,47 +1,109 @@
-﻿using EMToolBox.Job;
-using EMToolBox.Mail;
-using EMToolBox.Services;
-using LBCAlerterWeb.Models;
-using LBCMapping;
-using LBCService.Alerter;
-using LBCService.Counter;
-using LBCService.Saver;
-using log4net;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LBCService
+﻿namespace LBCService
 {
-    class NotificationService : SimpleService
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Linq;
+    using System.Text;
+
+    using EMToolBox.Job;
+    using EMToolBox.Mail;
+    using EMToolBox.Services;
+    using LBCAlerterWeb.Models;
+    using LBCMapping;
+    using LBCService.Alerter;
+    using LBCService.Counter;
+    using LBCService.Saver;
+    using log4net;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
+
+    /// <summary>
+    /// The notification service.
+    /// </summary>
+    public class NotificationService : SimpleService
     {
-        private static ILog log = LogManager.GetLogger(typeof(NotificationService));
-        private static Dictionary<Int32, RandomJobLauncher> jobs = new Dictionary<Int32, RandomJobLauncher>();
+        /// <summary>
+        /// The jobs.
+        /// </summary>
+        private static readonly Dictionary<int, RandomJobLauncher> Jobs = new Dictionary<int, RandomJobLauncher>();
         
+        /// <summary>
+        /// The log.
+        /// </summary>
+        private static readonly ILog Log = LogManager.GetLogger(typeof(NotificationService));
+        
+        /// <summary>
+        /// The process.
+        /// </summary>
+        public override void Process()
+        {
+            base.Process();
+
+            using (var db = new ApplicationDbContext())
+            {
+                // Add or edit job
+                foreach (var s in db.Searches.Where(s => s.MailAlert || s.MailRecap))
+                {
+                    this.SendMailRecap(s);
+
+                    RandomJobLauncher jobLauncher;
+                    Jobs.TryGetValue(s.ID, out jobLauncher);
+
+                    if (jobLauncher == null)
+                    {
+                        this.CreateNewJob(s);
+                    }
+                    else
+                    {
+                        this.UpdateJob(s, jobLauncher);
+                    }
+                }
+
+                this.StopDeletedJobs(db.Searches);
+            }
+            
+            GC.Collect();
+        }
+
         /// <summary>
         /// Check if user is in admin or premium group
         /// </summary>
         /// <param name="user">Current search</param>
         /// <returns>True is user is admin or premium</returns>
-        private bool IsPremium(ApplicationUser user)
+        private bool IsPremium(IUser<string> user)
         {
             try
             {
-                using (ApplicationDbContext db = new ApplicationDbContext())
+                using (var db = new ApplicationDbContext())
                 {
-                    UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+                    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
                     return userManager.IsInRole(user.Id, "admin") || userManager.IsInRole(user.Id, "premium");
                 }
             }
             catch
-            { 
-                return false; 
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Delete job if deleted by user
+        /// </summary>
+        /// <param name="searches">Search in context</param>
+        private void StopDeletedJobs(IQueryable<Search> searches)
+        {
+            if (Jobs.Count() <= searches.Count())
+            {
+                return;
+            }
+
+            var toStop = Jobs.Keys.Where(id => searches.FirstOrDefault(entry => entry.ID == id) == null).ToList();
+
+            foreach (var id in toStop)
+            {
+                Jobs[id].Stop();
+                Jobs.Remove(id);
             }
         }
 
@@ -51,48 +113,64 @@ namespace LBCService
         /// <param name="search">Current search</param>
         private void SendMailRecap(Search search)
         {
-            if (search.MailRecap
-                && (!search.LastRecap.HasValue ||
-                    search.LastRecap.HasValue && search.LastRecap.Value.DayOfYear < DateTime.Today.DayOfYear)
-                && DateTime.Now.Hour == Convert.ToInt32(ConfigurationManager.AppSettings["Heure mail recap"]))
+            if (!search.MailRecap
+                || (search.LastRecap.HasValue
+                    && (search.LastRecap.Value.DayOfYear >= DateTime.Today.DayOfYear))
+                || DateTime.Now.Hour != Convert.ToInt32(ConfigurationManager.AppSettings["Heure mail recap"]))
             {
-                DateTime lastDay = DateTime.Now.AddDays(-1);
+                return;
+            }
 
-                EMMail mail = new EMMail();
-                Dictionary<string, object> parameters = new Dictionary<string, object>();
-                parameters.Add("{Title}", "Recap quotidien pour [" + search.KeyWord + "]");
-                parameters.Add("{AdCount}", search.Ads.Where(entry => entry.Date > lastDay).Count());
-                int attempsCount = search.Attempts.Where(entry => entry.ProcessDate > lastDay).Count();
-                parameters.Add("{AttemptCount}", attempsCount);
-                parameters.Add("{AttemptCadence}", 24 * 60 / (attempsCount <= 0 ? 1 : attempsCount));
+            var lastDay = DateTime.Now.AddDays(-1);
 
-                StringBuilder ads = new StringBuilder();
-                foreach (LBCAlerterWeb.Models.Ad ad in search.Ads.Where(entry => entry.Date > lastDay).OrderBy(entry => entry.Date))
+            var mail = new EMMail();
+            var parameters = new Dictionary<string, object>
+                                 {
+                                     {
+                                         "{Title}",
+                                         "Recap quotidien pour [" + search.KeyWord + "]"
+                                     },
+                                     {
+                                         "{AdCount}",
+                                         search.Ads.Count(entry => entry.Date > lastDay)
+                                     }
+                                 };
+            var attempsCount = search.Attempts.Count(entry => entry.ProcessDate > lastDay);
+            parameters.Add("{AttemptCount}", attempsCount);
+            parameters.Add("{AttemptCadence}", 24 * 60 / (attempsCount <= 0 ? 1 : attempsCount));
+
+            var ads = new StringBuilder();
+            foreach (
+                var formater in
+                    search.Ads.Where(entry => entry.Date > lastDay)
+                        .OrderBy(entry => entry.Date)
+                        .Select(
+                            ad =>
+                            this.IsPremium(search.User)
+                                ? new MailFormater(mail.GetPattern("LBC_RECAP_AD_FULL").CONTENT, ad)
+                                : new MailFormater(mail.GetPattern("LBC_RECAP_AD").CONTENT, ad)))
+            {
+                ads.Append(formater.Formated);
+            }
+
+            parameters.Add("{Ads}", ads.ToString());
+
+            mail.Add(
+                "[LBCAlerter] - Recap quotidien pour [" + search.KeyWord + "]",
+                search.User.UserName,
+                this.IsPremium(search.User) ? "LBC_RECAP" : "LBC_RECAP_FULL",
+                parameters);
+
+            using (var db = new ApplicationDbContext())
+            {
+                var s = db.Searches.FirstOrDefault(entry => entry.ID == search.ID);
+                if (s == null)
                 {
-                    MailFormater formater;
-                    if (IsPremium(search.User))
-                        formater = new MailFormater(mail.GetPattern("LBC_RECAP_AD_FULL").CONTENT, ad);
-                    else
-                        formater = new MailFormater(mail.GetPattern("LBC_RECAP_AD").CONTENT, ad);
-
-                    ads.Append(formater.Formated);
+                    throw new Exception("Recherche inexistante...");
                 }
 
-                parameters.Add("{Ads}", ads.ToString());
-
-                if(IsPremium(search.User))
-                    mail.Add("[LBCAlerter] - Recap quotidien pour [" + search.KeyWord + "]", search.User.UserName, "LBC_RECAP", parameters);
-                else
-                    mail.Add("[LBCAlerter] - Recap quotidien pour [" + search.KeyWord + "]", search.User.UserName, "LBC_RECAP_FULL", parameters);
-
-                using (ApplicationDbContext db = new ApplicationDbContext())
-                {
-                    Search s = db.Searches.FirstOrDefault(entry => entry.ID == search.ID);
-                    if (s == null)
-                        throw new Exception("Recherche inexistante...");
-                    s.LastRecap = DateTime.Now;
-                    db.SaveChanges();
-                }
+                s.LastRecap = DateTime.Now;
+                db.SaveChanges();
             }
         }
 
@@ -103,24 +181,32 @@ namespace LBCService
         private void CreateNewJob(Search search)
         {
             if (!search.MailAlert)
+            {
                 return;
+            }
 
-            SearchJob job = new SearchJob(search.Url, search.KeyWord, IsPremium(search.User), search.Ads.Count == 0);
-            job.FistTimeCount = 5;
-            job.SaveMode = new EFSaver(search.ID);
+            var job = new SearchJob(search.Url, search.KeyWord, this.IsPremium(search.User), search.Ads.Count == 0)
+                          {
+                              FistTimeCount
+                                  =
+                                  5,
+                              SaveMode
+                                  = new EfSaver(search.ID)
+                          };
             IAlerter alerter = new LogAlerter();
             job.Alerters.Add(alerter);
             if (search.MailAlert)
             {
-                alerter = new MailAlerter(search.User.UserName, "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]", IsPremium(search.User));
+                alerter = new MailAlerter(search.User.UserName, "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]", this.IsPremium(search.User));
                 job.Alerters.Add(alerter);
             }
-            ICounter counter = new EFCounter(search.ID);
+
+            ICounter counter = new EfCounter(search.ID);
             job.Counter.Add(counter);
-            log.Info("Add job [" + search.ID + "] to list");
-            RandomJobLauncher launcher = new RandomJobLauncher(job, search.RefreshTime);
-            jobs.Add(search.ID, launcher);
-            log.Info("Launch job...");
+            Log.Info("Add job [" + search.ID + "] to list");
+            var launcher = new RandomJobLauncher(job, search.RefreshTime);
+            Jobs.Add(search.ID, launcher);
+            Log.Info("Launch job...");
             launcher.Start();
         }
 
@@ -131,101 +217,63 @@ namespace LBCService
         /// <param name="jobLauncher">Launcher of this search</param>
         private void UpdateJob(Search search, JobLauncher jobLauncher)
         {
-            if (jobLauncher.IntervalTime != search.RefreshTime)
-                jobLauncher.IntervalTime = search.RefreshTime;
-
-            SearchJob job = jobLauncher.Job as SearchJob;
-            MailAlerter alerter = null;
-            foreach (IAlerter alert in job.Alerters)
+            if (jobLauncher != null && jobLauncher.IntervalTime != search.RefreshTime)
             {
-                if (alert is MailAlerter)
-                {
-                    alerter = alert as MailAlerter; break;
-                }
+                jobLauncher.IntervalTime = search.RefreshTime;
             }
+
+            if (jobLauncher == null)
+            {
+                return;
+            }
+
+            var job = jobLauncher.Job as SearchJob;
+            if (job == null)
+            {
+                return;
+            }
+
+            var alerter = job.Alerters.OfType<MailAlerter>().Select(alert => alert).FirstOrDefault();
 
             if (alerter != null)
             {
-                if (!search.MailAlert) //delete
+                // delete
+                if (!search.MailAlert) 
                 {
                     job.Alerters.Remove(alerter);
                     jobLauncher.Stop();
-                    jobs.Remove(search.ID);
+                    Jobs.Remove(search.ID);
                 }
                 else
                 {
-                    if (alerter.Subject != "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]") //update
+                    // update
+                    if (alerter.Subject != null && alerter.Subject != "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]") 
+                    {
                         alerter.Subject = "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]";
+                    }
 
-                    if (job.Complete != IsPremium(search.User))
-                        job.Complete = IsPremium(search.User);
-                    
-                    if (alerter.FullMode != IsPremium(search.User))
-                        alerter.FullMode = IsPremium(search.User);
+                    if (search.User != null && job.Complete != this.IsPremium(search.User))
+                    {
+                        job.Complete = this.IsPremium(search.User);
+                    }
+
+                    if (search.User != null && alerter.FullMode != this.IsPremium(search.User))
+                    {
+                        alerter.FullMode = this.IsPremium(search.User);
+                    }
                 }
             }
             else
             {
-                if (search.MailAlert) //add
+                // add
+                if (!search.MailAlert)
                 {
-                    alerter = new MailAlerter(search.User.UserName, "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]", IsPremium(search.User));
-                    job.Alerters.Add(alerter);
+                    return;
                 }
+
+                alerter = new MailAlerter(search.User.UserName, "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]", this.IsPremium(search.User));
+                job.Alerters.Add(alerter);
             }
-        }
-
-        /// <summary>
-        /// Delete job if deleted by user
-        /// </summary>
-        /// <param name="searches">Search in context</param>
-        private void StopDeletedJobs(DbSet<Search> searches)
-        {
-            if (jobs.Count() > searches.Count())
-            {
-                List<Int32> toStop = new List<Int32>();
-                foreach (Int32 id in jobs.Keys)
-                {
-                    if (searches.FirstOrDefault(entry => entry.ID == id) == null)
-                        toStop.Add(id);
-                }
-
-                foreach (Int32 id in toStop)
-                {
-                    jobs[id].Stop();
-                    jobs.Remove(id);
-                }
-            }
-        }
-        
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
-
-        public override void Process()
-        {
-            base.Process();
-
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                //Add or edit job
-                foreach (Search s in db.Searches.Where(s => s.MailAlert || s.MailRecap))
-                {
-                    SendMailRecap(s);
-
-                    RandomJobLauncher jobLauncher;
-                    jobs.TryGetValue(s.ID, out jobLauncher);
-
-                    if (jobLauncher == null)
-                        CreateNewJob(s);
-                    else
-                        UpdateJob(s, jobLauncher);
-                }
-
-                StopDeletedJobs(db.Searches);
-            }
-            
-            GC.Collect();
         }
     }
 }

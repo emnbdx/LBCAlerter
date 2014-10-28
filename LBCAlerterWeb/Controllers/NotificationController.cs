@@ -1,5 +1,4 @@
-﻿
-namespace LBCAlerterWeb.Controllers
+﻿namespace LBCAlerterWeb.Controllers
 {
     using System.Data.Entity;
     using System.Linq;

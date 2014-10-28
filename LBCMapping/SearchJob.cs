@@ -1,102 +1,158 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using EMToolBox.Job;
-using HtmlAgilityPack;
-using System.Xml.Serialization;
-using log4net;
-
-namespace LBCMapping
+﻿namespace LBCMapping
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Xml.Serialization;
+
+    using EMToolBox.Job;
+    using log4net;
+
+    /// <summary>
+    /// The search job.
+    /// </summary>
     public class SearchJob : IJob
     {
-        private static ILog log = LogManager.GetLogger(typeof(SearchJob));
+        /// <summary>
+        /// The log.
+        /// </summary>
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SearchJob));
 
-        private string m_criteria;
-        private string m_keyword;
-        private bool m_complete;
-        private bool m_first;
-        private int m_firstCount = 35; //Default value 1 page of ads
-        private List<IAlerter> m_alerter = new List<IAlerter>();
-        private List<ICounter> m_counter = new List<ICounter>();
-        private ISaver m_saver;
+        /// <summary>
+        /// The criteria.
+        /// </summary>
+        private string criteria;
 
-        private string KeyWordNeeded()
+        /// <summary>
+        /// The keyword.
+        /// </summary>
+        private string keyword;
+
+        /// <summary>
+        /// The complete.
+        /// </summary>
+        private bool complete;
+
+        /// <summary>
+        /// The first.
+        /// </summary>
+        private bool first;
+
+        /// <summary>
+        /// The first count.
+        /// </summary>
+        private int firstCount = 35; // Default value 1 page of ads
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SearchJob"/> class.
+        /// </summary>
+        public SearchJob()
         {
-            if (String.IsNullOrEmpty(m_keyword))
-                m_keyword = HtmlParser.ExtractKeyWordFromCriteria(m_criteria);
-
-            return m_keyword;
+            this.Counter = new List<ICounter>();
+            this.Alerters = new List<IAlerter>();
         }
 
-        public SearchJob()
-        { }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SearchJob"/> class.
+        /// </summary>
+        /// <param name="criteria">
+        /// The criteria.
+        /// </param>
+        /// <param name="keyword">
+        /// The keyword.
+        /// </param>
+        /// <param name="complete">
+        /// The complete.
+        /// </param>
+        /// <param name="firstTime">
+        /// The first time.
+        /// </param>
         public SearchJob(string criteria, string keyword, bool complete, bool firstTime)
         {
-            m_criteria = HtmlParser.CleanCriteria(criteria);
-            m_keyword = keyword;
-            m_complete = complete;
-            m_first = firstTime;
+            this.Counter = new List<ICounter>();
+            this.Alerters = new List<IAlerter>();
+            this.criteria = HtmlParser.CleanCriteria(criteria);
+            this.keyword = keyword;
+            this.complete = complete;
+            this.first = firstTime;
         }
 
+        /// <summary>
+        /// Gets or sets the criteria.
+        /// </summary>
         [XmlElement("Criteria")]
         public string Criteria
         {
-            get { return m_criteria; }
-            set { m_criteria = value; }
+            get { return this.criteria; }
+            set { this.criteria = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the keyword.
+        /// </summary>
         [XmlElement("Keyword")]
         public string Keyword
         {
-            get { return KeyWordNeeded(); }
-            set { m_keyword = value; }
+            get
+            {
+                if (string.IsNullOrEmpty(this.keyword))
+                {
+                    this.keyword = HtmlParser.ExtractKeyWordFromCriteria(this.criteria);
+                }
+
+                return this.keyword;
+            }
+
+            set
+            {
+                this.keyword = value;
+            }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether complete.
+        /// </summary>
         [XmlElement("Complete")]
         public bool Complete
         {
-            get { return m_complete; }
-            set { m_complete = value; }
+            get { return this.complete; }
+            set { this.complete = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the fist time count.
+        /// </summary>
         public int FistTimeCount
         {
-            get { return m_firstCount; }
-            set { m_firstCount = value; }
+            get { return this.firstCount; }
+            set { this.firstCount = value; }
         }
 
         /// <summary>
-        /// Set saver, this is use to store ad
+        /// Gets or sets the save mode.
         /// </summary>
-        public ISaver SaveMode
-        {
-            get { return m_saver; }
-            set { m_saver = value; }
-        }
+        public ISaver SaveMode { get; set; }
 
         /// <summary>
-        /// Get or modify alerter
+        /// Gets or sets the alerters.
         /// </summary>
-        public List<IAlerter> Alerters
-        {
-            get { return m_alerter; }
-            set { m_alerter = value; }
-        }
-        
-        /// <summary>
-        /// Get or modify counter
-        /// </summary>
-        public List<ICounter> Counter
-        {
-            get { return m_counter; }
-            set { m_counter = value; }
-        }
+        public List<IAlerter> Alerters { get; set; }
 
+        /// <summary>
+        /// Gets or sets the counter.
+        /// </summary>
+        public List<ICounter> Counter { get; set; }
+
+        /// <summary>
+        /// The to string.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public override string ToString()
         {
-            return KeyWordNeeded();
+            return this.Keyword;
         }
 
         /// <summary>
@@ -105,7 +161,7 @@ namespace LBCMapping
         /// <param name="ad">New Ad</param>
         public void Alert(Ad ad)
         {
-            foreach (IAlerter alerter in m_alerter)
+            foreach (var alerter in this.Alerters)
             {
                 alerter.Alert(ad);
             }
@@ -116,7 +172,7 @@ namespace LBCMapping
         /// </summary>
         public void Count()
         {
-            foreach (ICounter counter in m_counter)
+            foreach (var counter in this.Counter)
             {
                 counter.Count();
             }
@@ -128,7 +184,7 @@ namespace LBCMapping
         /// <param name="count">Count ads found</param>
         public void Result(int count)
         {
-            foreach (ICounter counter in m_counter)
+            foreach (var counter in this.Counter)
             {
                 counter.Result(count);
             }
@@ -139,28 +195,28 @@ namespace LBCMapping
         /// </summary>
         public void Launch()
         {
-            Stopwatch timer = new Stopwatch();
+            var timer = new Stopwatch();
             timer.Start();
 
             try
             {
-                int currentPage = 1;
-                int currentAd = 0;
-                int elementFoundCount = 0;
+                var currentPage = 1;
+                var currentAd = 0;
+                var elementFoundCount = 0;
 
                 while (true)
                 {
-                    List<HtmlNode> links = HtmlParser.GetHtmlAd(m_criteria, currentPage);
+                    var links = HtmlParser.GetHtmlAd(this.criteria, currentPage);
 
                     if (links == null)
-                        break; //Nothing return or empty page go out
-
-                    bool limitReached = false;
-                    foreach (HtmlNode link in links)
                     {
-                        Ad tmp = HtmlParser.ExtractAdInformation(link);
+                        break; // Nothing return or empty page go out
+                    }
 
-                        if (m_complete)
+                    var limitReached = false;
+                    foreach (var tmp in links.Select(HtmlParser.ExtractAdInformation))
+                    {
+                        if (this.complete)
                         {
                             try
                             {
@@ -168,53 +224,63 @@ namespace LBCMapping
                             }
                             catch (Exception e)
                             {
-                                log.Error("Erreur lors de la récupération des informations complètes", e);
+                                Log.Error("Erreur lors de la récupération des informations complètes", e);
                             }
                         }
 
-                        if (!m_saver.Store(tmp))
+                        if (!this.SaveMode.Store(tmp))
                         {
                             elementFoundCount++;
 
                             if (elementFoundCount >= 5)
-                                break; //Element already exist go out
-                            else
-                                continue;
+                            {
+                                break; // Element already exist go out
+                            }
+
+                            continue;
                         }
-                        else
-                            Alert(tmp);
+
+                        this.Alert(tmp);
 
                         currentAd++;
-                        Count();
+                        this.Count();
 
-                        if (m_first && currentAd >= FistTimeCount)
+                        if (!this.first || currentAd < this.FistTimeCount)
                         {
-                            limitReached = true;
-                            break;
+                            continue;
                         }
+
+                        limitReached = true;
+                        break;
                     }
 
                     if (elementFoundCount >= 5 || limitReached)
+                    {
                         break;
+                    }
 
                     currentPage++;
                 }
 
                 timer.Stop();
-                log.Debug("Terminée en " + timer.ElapsedMilliseconds + "ms");
-                Result(currentAd);
+                Log.Debug("Terminée en " + timer.ElapsedMilliseconds + "ms");
+                this.Result(currentAd);
             }
             catch (Exception e)
             {
-                log.Error("Erreur lors de la récupération des annonces pour [" + m_criteria + "]\r\n" + e);
+                Log.Error("Erreur lors de la récupération des annonces pour [" + this.criteria + "]\r\n" + e);
             }
             finally
             {
                 if (timer.IsRunning)
+                {
                     timer.Stop();
+                }
 
-                if (m_first)
-                    m_first = false;
+                if (this.first)
+                {
+                    this.first = false;
+                }
             }
         }
     }

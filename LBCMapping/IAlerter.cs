@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IAlerter.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   Implement this interface to make your own alert system
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace LBCMapping
+﻿namespace LBCMapping
 {
     /// <summary>
     /// Implement this interface to make your own alert system

@@ -1,19 +1,16 @@
-﻿using EMToolBox.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LBCService
+﻿namespace LBCService
 {
-    static class Program
+    using EMToolBox.Services;
+
+    /// <summary>
+    /// The program.
+    /// </summary>
+    public static class Program
     {
         /// <summary>
         /// Point d'entrée principal de l'application.
         /// </summary>
-        static void Main()
+        public static void Main()
         {
             log4net.Config.XmlConfigurator.Configure();
             ServiceManager.Run(typeof(NotificationService));

@@ -1,18 +1,27 @@
-﻿using LBCMapping;
-using log4net;
-
-namespace LBCService.Alerter
+﻿namespace LBCService.Alerter
 {
+    using LBCMapping;
+    using log4net;
+
     /// <summary>
     /// Display alert in log file
     /// </summary>
     public class LogAlerter : IAlerter
     {
-        private static ILog log = LogManager.GetLogger(typeof(LogAlerter));
+        /// <summary>
+        /// The log.
+        /// </summary>
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LogAlerter));
 
+        /// <summary>
+        /// The alert.
+        /// </summary>
+        /// <param name="ad">
+        /// The ad.
+        /// </param>
         public void Alert(Ad ad)
         {
-            log.Info("Nouvelle annonce [" + ad.Title + "]");
+            Log.Info("Nouvelle annonce [" + ad.Title + "]");
         }
     }
 }

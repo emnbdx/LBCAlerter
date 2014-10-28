@@ -1,41 +1,67 @@
-﻿using LBCAlerterWeb.Models;
-using LBCMapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LBCService.Counter
+﻿namespace LBCService.Counter
 {
-    public class EFCounter : ICounter
-    {
-        private ApplicationDbContext db = new ApplicationDbContext();
-        private int m_searchId;
+    using System;
+    using System.Linq;
 
-        public EFCounter(int id)
+    using LBCAlerterWeb.Models;
+    using LBCMapping;
+
+    /// <summary>
+    /// The ef counter.
+    /// </summary>
+    public class EfCounter : ICounter
+    {
+        /// <summary>
+        /// The db.
+        /// </summary>
+        private readonly ApplicationDbContext db = new ApplicationDbContext();
+
+        /// <summary>
+        /// The m_search id.
+        /// </summary>
+        private readonly int searchId;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EfCounter"/> class.
+        /// </summary>
+        /// <param name="id">
+        /// The id.
+        /// </param>
+        public EfCounter(int id)
         {
-            m_searchId = id;
+            this.searchId = id;
         }
 
+        /// <summary>
+        /// The count.
+        /// </summary>
         public void Count()
         {
-            //Nothing to do
+            // Nothing to do
         }
 
+        /// <summary>
+        /// The result.
+        /// </summary>
+        /// <param name="count">
+        /// The count.
+        /// </param>
         public void Result(int count)
         {
-            Search search = db.Searches.FirstOrDefault(entry => entry.ID == m_searchId);
+            var search = this.db.Searches.FirstOrDefault(entry => entry.ID == this.searchId);
 
-            search.Attempts.Add(
-                new Attempt
-                {
-                    ProcessDate = DateTime.Now,
-                    AdsFound = count,
-                    Search = search
-                });
+            if (search != null)
+            {
+                search.Attempts.Add(
+                    new Attempt
+                        {
+                            ProcessDate = DateTime.Now,
+                            AdsFound = count,
+                            Search = search
+                        });
+            }
 
-            db.SaveChanges();
+            this.db.SaveChanges();
         }
     }
 }

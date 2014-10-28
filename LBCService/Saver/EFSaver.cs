@@ -1,42 +1,70 @@
-﻿using LBCAlerterWeb.Models;
-using LBCMapping;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LBCService.Saver
+﻿namespace LBCService.Saver
 {
-    public class EFSaver : ISaver
-    {
-        private ApplicationDbContext db = new ApplicationDbContext();
-        private int m_searchId;
+    using System;
+    using System.Linq;
 
-        public EFSaver(int id)
+    using LBCAlerterWeb.Models;
+    using LBCMapping;
+
+    /// <summary>
+    /// The ef saver.
+    /// </summary>
+    public class EfSaver : ISaver
+    {
+        /// <summary>
+        /// The db.
+        /// </summary>
+        private readonly ApplicationDbContext db = new ApplicationDbContext();
+
+        /// <summary>
+        /// The search id.
+        /// </summary>
+        private readonly int searchId;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EfSaver"/> class.
+        /// </summary>
+        /// <param name="id">
+        /// The id.
+        /// </param>
+        public EfSaver(int id)
         {
-            m_searchId = id;
+            this.searchId = id;
         }
 
+        /// <summary>
+        /// The store.
+        /// </summary>
+        /// <param name="ad">
+        /// The ad.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        /// <exception cref="Exception">
+        /// If search doesn't exist
+        /// </exception>
         public bool Store(LBCMapping.Ad ad)
         {
-            LBCAlerterWeb.Models.Ad dbAd = db.Ads.FirstOrDefault(entry => entry.Search.ID == m_searchId && entry.Url == ad.AdUrl);
+            var databaseAd = this.db.Ads.FirstOrDefault(entry => entry.Search.ID == this.searchId && entry.Url == ad.AdUrl);
 
-            if (dbAd == null)
+            if (databaseAd != null)
             {
-                LBCAlerterWeb.Models.Ad tmpAd = LBCAlerterWeb.Models.Ad.ConvertLbcAd(ad);
-                Search s = db.Searches.FirstOrDefault(entry => entry.ID == m_searchId);
-                if (s == null)
-                    throw new Exception("Recherche inexistante...");
-                tmpAd.Search = s;
-                db.Ads.Add(tmpAd);
-
-                db.SaveChanges();
-                return true;
-            }
-            else
                 return false;
+            }
+
+            var tmpAd = LBCAlerterWeb.Models.Ad.ConvertLbcAd(ad);
+            var s = this.db.Searches.FirstOrDefault(entry => entry.ID == this.searchId);
+            if (s == null)
+            {
+                throw new Exception("Recherche inexistante...");
+            }
+
+            tmpAd.Search = s;
+            this.db.Ads.Add(tmpAd);
+
+            this.db.SaveChanges();
+            return true;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿
-namespace LBCAlerterWeb.Controllers
+﻿namespace LBCAlerterWeb.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -137,7 +136,7 @@ namespace LBCAlerterWeb.Controllers
             var postItems = this.db.Ads.Where(ad => ad.Search.ID == id).OrderByDescending(ad => ad.Date).Take(50).ToList()
                 .Select(p => new SyndicationItem(p.Title, string.Empty, new Uri(p.Url)));
 
-            var feed = new SyndicationFeed(search.KeyWord, string.Empty, new Uri(LBCMapping.HtmlParser.URL_BASE + search.Url), postItems)
+            var feed = new SyndicationFeed(search.KeyWord, string.Empty, new Uri(LBCMapping.HtmlParser.UrlBase + search.Url), postItems)
             {
                 Copyright = new TextSyndicationContent("© " + DateTime.Today.Year + " - LBCAlerter"),
                 Language = "fr"
