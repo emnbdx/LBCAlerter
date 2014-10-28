@@ -29,6 +29,52 @@
         private static readonly ILog Log = LogManager.GetLogger(typeof(HtmlParser));
 
         /// <summary>
+        /// The remove nodes.
+        /// </summary>
+        private static readonly List<string> RemoveNodes = new List<string>
+                                                               {
+                                                                   "//table[@id='TableContentTop']",
+                                                                   "//span[@class='SeparatorText']//..",
+                                                                   "//div[@class='Deposer']",
+                                                                   "//div[@id='incr_renc_home_button']",
+                                                                   "//div[@id='Footer']",
+                                                                   "//div[@id='Banner_sky']",
+                                                                   "//div[@id='oas-top1']",
+                                                                   "//div[@id='cookieFrame']",
+                                                                   "//div[@id='account_login_f']",
+                                                                   "//header[@id='headermain']",
+                                                                   "//div[@class='oas-x01']",
+                                                                   "//div[@class='oas-x02']",
+                                                                   "//div[@class='oas-x03']",
+                                                                   "//div[@class='oas-x04']",
+                                                                   "//div[@class='oas-top']",
+                                                                   "//div[@id='account_submenu']",
+                                                                   "//div[@class='comment']",
+                                                                   "//div[@class='content-border list']",
+                                                                   "//div[@id='categories_container']",
+                                                                   "//nav",
+                                                               };
+
+        /// <summary>
+        /// The remove sripts.
+        /// </summary>
+        private static readonly List<string> RemoveSripts = new List<string>
+                                                                {
+                                                                    "cedexis",
+                                                                    "xiti",
+                                                                };
+
+        /// <summary>
+        /// The remove styles.
+        /// </summary>
+        private static readonly List<string> RemoveStyles = new List<string>
+                                                                {
+                                                                    "//body[@id='all']",
+                                                                    "//div[@id='page_width']",
+                                                                    "//div[@class='search_box']"
+                                                                };
+
+        /// <summary>
         /// Due to encoding issue not solvable, replace some parameter in criteria
         /// </summary>
         /// <param name="basePath">Base path for search</param>
@@ -327,53 +373,12 @@
             var web = new HtmlWeb { OverrideEncoding = System.Text.Encoding.GetEncoding(Encoding) };
             var doc = web.Load(UrlBase);
 
-            // Delete unused div
-            if (doc.DocumentNode.SelectSingleNode("//table[@id='TableContentTop']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//table[@id='TableContentTop']").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//span[@class='SeparatorText']//..") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//span[@class='SeparatorText']//..").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@class='Deposer']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@class='Deposer']").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@id='incr_renc_home_button']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@id='incr_renc_home_button']").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@id='Footer']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@id='Footer']").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@id='Banner_sky']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@id='Banner_sky']").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@id='oas-top1']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@id='oas-top1']").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@id='cookieFrame']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@id='cookieFrame']").Remove();
-            }
+            RemoveUnusedDiv(doc);
+            RemoveBackground(doc);
+            RemoveScript(doc);
 
             RelativeToAbsolute(doc, "//script");
             RelativeToAbsolute(doc, "//link");
-
-            RemoveBackground(doc, "//body[@id='all']");
-            RemoveBackground(doc, "//div[@id='page_width']");
-            RemoveBackground(doc, "//div[@class='search_box']");
 
             var tmp = doc.DocumentNode.WriteTo();
 
@@ -392,70 +397,12 @@
             var web = new HtmlWeb { OverrideEncoding = System.Text.Encoding.GetEncoding(Encoding) };
             var doc = web.Load(requestUrl);
 
-            // Delete unused div
-            doc.DocumentNode.SelectSingleNode("//div[@id='account_login_f']").Remove();
-            doc.DocumentNode.SelectSingleNode("//header[@id='headermain']").Remove();
-            foreach (var node in doc.DocumentNode.SelectNodes("//nav"))
-            {
-                node.Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@class='oas-x01']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@class='oas-x01']").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@class='oas-x02']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@class='oas-x02']").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@class='oas-x03']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@class='oas-x03']").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@class='oas-x04']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@class='oas-x04']").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@class='oas-top']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@class='oas-top']").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@id='account_submenu']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@id='account_submenu']").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@class='comment']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@class='comment']").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@class='content-border list']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@class='content-border list']").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@id='categories_container']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@id='categories_container']").Remove();
-            }
-
-            if (doc.DocumentNode.SelectSingleNode("//div[@id='cookieFrame']") != null)
-            {
-                doc.DocumentNode.SelectSingleNode("//div[@id='cookieFrame']").Remove();
-            }
+            RemoveUnusedDiv(doc);
+            RemoveBackground(doc);
+            RemoveScript(doc);
 
             RelativeToAbsolute(doc, "//script");
             RelativeToAbsolute(doc, "//link");
-
-            RemoveBackground(doc, "//body[@id='all']");
-            RemoveBackground(doc, "//div[@id='page_width']");
-            RemoveBackground(doc, "//div[@class='search_box']");
 
             var tmp = doc.DocumentNode.WriteTo();
 
@@ -482,6 +429,55 @@
         }
 
         /// <summary>
+        /// The remove unused div.
+        /// </summary>
+        /// <param name="doc">
+        /// The doc.
+        /// </param>
+        private static void RemoveUnusedDiv(HtmlDocument doc)
+        {
+            foreach (var node in RemoveNodes.Where(removeNode => doc.DocumentNode.SelectSingleNode(removeNode) != null).SelectMany(removeNode => doc.DocumentNode.SelectNodes(removeNode)))
+            {
+                node.Remove();
+            }
+        }
+
+        /// <summary>
+        /// The remove background.
+        /// </summary>
+        /// <param name="doc">
+        /// The doc.
+        /// </param>
+        private static void RemoveBackground(HtmlDocument doc)
+        {
+            foreach (var removeStyle in RemoveStyles.Where(removeStyle => doc.DocumentNode.SelectSingleNode(removeStyle) != null))
+            {
+                if (doc.DocumentNode.SelectSingleNode(removeStyle).Attributes["style"] != null)
+                {
+                    doc.DocumentNode.SelectSingleNode(removeStyle).Attributes["style"].Value += "background-color: transparent;";
+                }
+                else
+                {
+                    doc.DocumentNode.SelectSingleNode(removeStyle).Attributes.Add("style", "background-color: transparent;");
+                }
+            }
+        }
+
+        /// <summary>
+        /// The remove script.
+        /// </summary>
+        /// <param name="doc">
+        /// The doc.
+        /// </param>
+        private static void RemoveScript(HtmlDocument doc)
+        {
+            foreach (var node in RemoveSripts.Select(removeSript => doc.DocumentNode.SelectNodes("//script[contains(@src, '" + removeSript + "')]")).SelectMany(nodes => nodes))
+            {
+                node.Remove();
+            }
+        }
+
+        /// <summary>
         /// Replace relative link by absolute
         /// </summary>
         /// <param name="doc">
@@ -503,32 +499,6 @@
                 {
                     node.SetAttributeValue("href", UrlBase + node.Attributes["href"].Value);
                 }
-            }
-        }
-
-        /// <summary>
-        /// The remove background.
-        /// </summary>
-        /// <param name="doc">
-        /// The doc.
-        /// </param>
-        /// <param name="xpathQuery">
-        /// The x path query.
-        /// </param>
-        private static void RemoveBackground(HtmlDocument doc, string xpathQuery)
-        {
-            if (doc.DocumentNode.SelectSingleNode(xpathQuery) == null)
-            {
-                return;
-            }
-
-            if (doc.DocumentNode.SelectSingleNode(xpathQuery).Attributes["style"] != null)
-            {
-                doc.DocumentNode.SelectSingleNode(xpathQuery).Attributes["style"].Value += "background-color: transparent;";
-            }
-            else
-            {
-                doc.DocumentNode.SelectSingleNode(xpathQuery).Attributes.Add("style", "background-color: transparent;");
             }
         }
 
