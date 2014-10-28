@@ -39,21 +39,6 @@ namespace LBCMapping
             }
         }
 
-        private static void RemoveBackground(HtmlDocument doc, string xPathQuery)
-        {
-            if (doc.DocumentNode.SelectSingleNode(xPathQuery) != null)
-            {
-                if (doc.DocumentNode.SelectSingleNode(xPathQuery).Attributes["style"] != null)
-                {
-                    doc.DocumentNode.SelectSingleNode(xPathQuery).Attributes["style"].Value += "background-color: transparent;";
-                }
-                else
-                {
-                    doc.DocumentNode.SelectSingleNode(xPathQuery).Attributes.Add("style", "background-color: transparent;");
-                }
-            }
-        }
-
         /// <summary>
         /// Do ajax call to get phone gif url by replacing javascript call
         /// </summary>
@@ -340,12 +325,10 @@ namespace LBCMapping
 
             RelativeToAbsolute(doc, "//script");
             RelativeToAbsolute(doc, "//link");
-            
-            RemoveBackground(doc, "//body[@id='all']");
-            RemoveBackground(doc, "//div[@id='page_width']");
-            RemoveBackground(doc, "//div[@class='search_box']");
 
-            return doc.DocumentNode.WriteTo();
+            string tmp = doc.DocumentNode.WriteTo();
+
+            return tmp;
         }
 
         /// <summary>
@@ -393,10 +376,6 @@ namespace LBCMapping
 
             RelativeToAbsolute(doc, "//script");
             RelativeToAbsolute(doc, "//link");
-
-            RemoveBackground(doc, "//body[@id='all']");
-            RemoveBackground(doc, "//div[@id='page_width']");
-            RemoveBackground(doc, "//div[@class='search_box']");
 
             return doc.DocumentNode.WriteTo();
         }

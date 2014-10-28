@@ -20,9 +20,7 @@
 </div>
 <!-- /page header -->
 
-@using (Html.BeginForm())
-{
-    if (Model.Count() >= 5 && !Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium"))
+    @if (Model.Count() >= 5 && !Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium"))
     {
         <p style="color: red;">
             Il vous faut un compte premium pour ajouter plus de 5 recherches.<br />
@@ -40,7 +38,6 @@
     <div class="links">
         @Html.ActionLink("Retour à la liste", "Index")
     </div>
-}
 
 @section Scripts {
     <script type="text/javascript">
