@@ -46,7 +46,18 @@
                 @Html.DisplayFor(modelItem => item.UserName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Roles.FirstOrDefault().RoleId)
+                @if (Roles.GetRolesForUser(item.UserName).Contains("admin"))
+                {
+                    <label>admin</label>
+                }
+                else if (Roles.GetRolesForUser(item.UserName).Contains("premium"))
+                {
+                    <label>premium</label>
+                }
+                else
+                {
+                    <label>user</label>
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.RegistrationDate)
@@ -59,6 +70,9 @@
                         <span class="onoffswitch-switch"></span>
                     </label>
                 </div>
+            </td>
+            <td>
+                @Html.ActionLink("Premium", "AddToPremium", new { id = item.Id }, new { @class = "btn btn-primary" })
             </td>
         </tr>
     }

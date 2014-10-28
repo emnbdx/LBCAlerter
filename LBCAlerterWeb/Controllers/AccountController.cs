@@ -39,9 +39,14 @@
         private void SendEmailConfirmation(string to, string confirmationToken)
         {
             var mail = new EMMail();
-            var parameters = new Dictionary<string, object>();
-            parameters.Add("{Title}", "Vous venez de vous inscrire sur LBCAlerter, MERCI !");
-            parameters.Add("{Token}", confirmationToken);
+            var parameters = new Dictionary<string, object>
+                                 {
+                                     {
+                                         "{Title}",
+                                         "Vous venez de vous inscrire sur LBCAlerter, MERCI !"
+                                     },
+                                     { "{Token}", confirmationToken }
+                                 };
             mail.Add("[LBCAlerter] - Confirmation de votre compte", to, "LBC_CONFIRMATION", parameters);
         }
 
@@ -430,6 +435,28 @@
         public async Task<ActionResult> All()
         {
             return this.View(await this.db.Users.OrderByDescending(entry => entry.RegistrationDate).ToListAsync());
+        }
+
+        /// <summary>
+        /// The add to premium.
+        /// </summary>
+        /// <param name="id">
+        /// The user id.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult> AddToPremium(string id)
+        {
+            var user = await this.db.Users.FirstOrDefaultAsync(entry => entry.Id == id);
+
+            if (user != null && !this.UserManager.IsInRole(user.Id, "premium"))
+            {
+                this.UserManager.AddToRole(user.Id, "premium");
+            }
+
+            return this.RedirectToAction("All");
         }
 
         /// <summary>
