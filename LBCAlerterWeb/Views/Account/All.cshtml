@@ -1,9 +1,14 @@
-﻿@model IEnumerable<LBCAlerterWeb.Models.ApplicationUser>
+﻿@using LBCAlerterWeb.Models
+@model IEnumerable<LBCAlerterWeb.Models.ApplicationUser>
 
 @{
     ViewBag.Title = "Tout les utilisateurs";
     ViewBag.Current = "user";
     ViewBag.Large = true;
+
+    var dbContext = new ApplicationDbContext();
+    var adminRoleId = dbContext.Roles.FirstOrDefault(role => role.Name == "admin").Id;
+    var premiumRoleId = dbContext.Roles.FirstOrDefault(role => role.Name == "premium").Id;
 }
 
 <!-- page header -->
@@ -46,11 +51,11 @@
                 @Html.DisplayFor(modelItem => item.UserName)
             </td>
             <td>
-                @if (Roles.GetRolesForUser(item.UserName).Contains("admin"))
+                @if (item.Roles.Any(role => role.RoleId == adminRoleId))
                 {
                     <label>admin</label>
                 }
-                else if (Roles.GetRolesForUser(item.UserName).Contains("premium"))
+                else if (item.Roles.Any(role => role.RoleId == premiumRoleId))
                 {
                     <label>premium</label>
                 }
