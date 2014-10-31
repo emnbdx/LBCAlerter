@@ -11,6 +11,9 @@
     using System.Web.Security;
 
     using LBCAlerterWeb.Models;
+
+    using LBCMapping;
+
     using log4net;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
@@ -82,7 +85,7 @@
         }
 
         /// <summary>
-        /// The display second page.
+        /// The create step two.
         /// </summary>
         /// <param name="url">
         /// The url.
@@ -90,11 +93,17 @@
         /// <returns>
         /// The <see cref="ActionResult"/>.
         /// </returns>
-        [HttpPost]
-        public ActionResult DisplaySecondPage(string url)
+        public ActionResult CreateStepTwo(string url)
         {
-            var htmlCode = LBCMapping.HtmlParser.GetCriteriaPage(url);
-            return this.Json(new { success = true, html = htmlCode });
+            if (string.IsNullOrEmpty(url))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            ViewBag.Url = url;
+
+            var userId = User.Identity.GetUserId();
+            return this.View(this.db.Searches.Where(search => search.User.Id == userId));
         }
 
         /// <summary>
@@ -136,7 +145,7 @@
             var postItems = this.db.Ads.Where(ad => ad.Search.ID == id).OrderByDescending(ad => ad.Date).Take(50).ToList()
                 .Select(p => new SyndicationItem(p.Title, string.Empty, new Uri(p.Url)));
 
-            var feed = new SyndicationFeed(search.KeyWord, string.Empty, new Uri(LBCMapping.HtmlParser.UrlBase + search.Url), postItems)
+            var feed = new SyndicationFeed(search.KeyWord, string.Empty, new Uri(HtmlParser.UrlBase + search.Url), postItems)
             {
                 Copyright = new TextSyndicationContent("© " + DateTime.Today.Year + " - LBCAlerter"),
                 Language = "fr"
@@ -180,9 +189,9 @@
                 return this.Json(new { success = false, message = "Something bad..." });
             }
 
-            search.Url = LBCMapping.HtmlParser.CleanCriteria(search.Url);
+            search.Url = HtmlParser.CleanCriteria(search.Url);
             search.CreationDate = DateTime.Now;
-            search.KeyWord = LBCMapping.HtmlParser.ExtractKeyWordFromCriteria(search.Url);
+            search.KeyWord = HtmlParser.ExtractKeyWordFromCriteria(search.Url);
             search.User = currentUser;
 
             if (!Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium"))

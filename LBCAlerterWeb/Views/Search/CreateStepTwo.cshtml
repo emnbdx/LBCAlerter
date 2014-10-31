@@ -1,0 +1,70 @@
+﻿@using LBCMapping
+@model IEnumerable<LBCAlerterWeb.Models.Search>
+@{
+    ViewBag.Title = "Nouvelle alerte";
+    ViewBag.Current = "new";
+    ViewBag.Large = true;
+}
+
+<!-- page header -->
+<div class="pageheader">
+    <h2>
+        <i class="fa fa-edit"></i> Nouvelle alerte
+    </h2>
+    <div class="breadcrumbs">
+        <ol class="breadcrumb">
+            <li>Vous êtes ici</li>
+            <li>@Html.ActionLink("LBC Alerter", "Index")</li>
+            <li class="active">Nouvelle alerte</li>
+        </ol>
+    </div>
+</div>
+<!-- /page header -->
+
+@if (Model.Count() >= 5 && !Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium"))
+{
+    <p style="color: red;">
+        Il vous faut un compte premium pour ajouter plus de 5 recherches.<br />
+        Un compte premium s'obtient en faisant un don du montant que vous voulez.<br />
+        @Html.ActionLink("Soyez sympa !", "Create", "Don")
+    </p>
+}
+else
+{
+    <div id="iframeContainer">
+        @Html.Raw(HtmlParser.GetSpecificContent(PageType.Criteria, ContentType.Body, ViewBag.Url)[0])
+        <div class="clearfix"></div>
+    </div>
+}
+
+<div class="links">
+    @Html.ActionLink("Retour à la carte", "Create")
+</div>
+
+@section Scripts {
+    @foreach (var script in HtmlParser.GetSpecificContent(PageType.Criteria, ContentType.Script, ViewBag.Url))
+    {
+        @Html.Raw(script.Replace("window.location.href", "var searchUrl")
+          .Replace("return false;", @"if(searchUrl.indexOf('&q=') == -1)
+                           if(!confirm('Attention vous n\'avez pas spécifié de mots clé, est-ce volontaire ?'))
+                               return false;
+                        $.ajax({
+                           url: '" + @Url.Action("Create") + @"',
+                           type: 'POST',
+                           data: {
+                               Url: searchUrl,
+                               RefreshTime: 15,
+                               MailAlert: true,
+                               MailRecap: false,
+                           },
+                           success: function (data) {
+                               if(!data['success'])
+                                  alert(data['message']);
+                               else
+                                   alert('Votre recherche a bien été crée vous allez recevoir 5 mails correspondants aux dernières annonces parues.');
+                               window.top.location.href = '" + @Url.Action("Index") + @"';
+                           }
+                        });
+                        return false;"))
+    }
+}

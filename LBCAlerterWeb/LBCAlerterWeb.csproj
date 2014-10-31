@@ -278,12 +278,14 @@
     <Content Include="Content\images\chaton.gif" />
     <Content Include="Content\images\dot_pattern.png" />
     <Content Include="Content\images\loader.gif" />
+    <Content Include="Content\images\map.png" />
     <Content Include="Content\images\minimal-logo.png" />
     <Content Include="Content\images\noise.png" />
     <Content Include="Content\images\backgrounds\1.jpg" />
     <Content Include="Content\images\profil.gif" />
     <Content Include="Content\jquery.mmenu.all.css" />
     <Content Include="Content\jquery.mmenu.css" />
+    <Content Include="Content\leboncoin.css" />
     <Content Include="Content\minimal.css" />
     <Content Include="Content\pretty.css" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -436,6 +438,7 @@
     <Content Include="Views\Don\Index.cshtml" />
     <Content Include="Views\Don\Merci.cshtml" />
     <Content Include="Views\Don\PayPalPaymentNotification.cshtml" />
+    <Content Include="Views\Search\CreateStepTwo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

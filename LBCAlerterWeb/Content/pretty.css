@@ -18,7 +18,7 @@
     text-align:center; 
 }
 
-input, textarea, select {
+:not(#iframeContainer) input, :not(#iframeContainer) textarea, :not(#iframeContainer) select {
     display: block;
     width: 100%; 
 	margin-bottom: 10px; 
@@ -99,23 +99,6 @@ input:focus {
 .card .front .details label {
     margin-bottom: 0px;
     font-weight: normal;
-}
-
-/*
-    LBC IFRAME
-*/
-
-#iframeContainer>iframe {
-    width: 100%;
-    border: none;
-}
-
-#iframeContainer>#firstPage {
-    height: 520px;
-}
-
-#iframeContainer>#secondPage {
-    height: 330px;
 }
 
 /*

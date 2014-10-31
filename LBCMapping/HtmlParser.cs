@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.Serialization.Configuration;
     using System.Web;
     
     using HtmlAgilityPack;
@@ -365,13 +366,31 @@
         }        
 
         /// <summary>
-        /// Return clean home page only map and region name
+        /// Return clean page
         /// </summary>
+        /// <param name="type">Page type</param>
+        /// <param name="path">Criteria path from home page (contain region)</param>
         /// <returns>Html code of page</returns>
-        public static string GetHomePage()
+        public static string GetPage(PageType type, string path = null)
         {
+            var url = string.Empty;
+            switch (type)
+            {
+                case PageType.Home:
+                    url = UrlBase;
+                    break;
+                case PageType.Criteria:
+                    if (string.IsNullOrEmpty(path))
+                    {
+                        throw new Exception("path is needed for criteria page");
+                    }
+
+                    url = path.StartsWith(UrlBase) ? string.Format(CleanCriteria(path), 0) : string.Format(UrlBase + CleanCriteria(path), 0);
+                    break;
+            }
+            
             var web = new HtmlWeb { OverrideEncoding = System.Text.Encoding.GetEncoding(Encoding) };
-            var doc = web.Load(UrlBase);
+            var doc = web.Load(url);
 
             RemoveUnusedDiv(doc);
             RemoveBackground(doc);
@@ -381,31 +400,6 @@
             RelativeToAbsolute(doc, "//link");
 
             var tmp = doc.DocumentNode.WriteTo();
-
-            return tmp;
-        }
-
-        /// <summary>
-        /// Return clean search page only criteria section
-        /// </summary>
-        /// <param name="path">Cirteria path from home page (contain region)</param>
-        /// <returns>Html code of page</returns>
-        public static string GetCriteriaPage(string path)
-        {
-            var requestUrl = path.StartsWith(UrlBase) ? string.Format(CleanCriteria(path), 0) : string.Format(UrlBase + CleanCriteria(path), 0);
-
-            var web = new HtmlWeb { OverrideEncoding = System.Text.Encoding.GetEncoding(Encoding) };
-            var doc = web.Load(requestUrl);
-
-            RemoveUnusedDiv(doc);
-            RemoveBackground(doc);
-            RemoveScript(doc);
-
-            RelativeToAbsolute(doc, "//script");
-            RelativeToAbsolute(doc, "//link");
-
-            var tmp = doc.DocumentNode.WriteTo();
-
             return tmp;
         }
 
@@ -426,6 +420,81 @@
             var links = doc.DocumentNode.SelectNodes("//div[@class='list-lbc']//a");
 
             return links == null ? null : links.ToList();
+        }
+
+        /// <summary>
+        /// The get specific content.
+        /// </summary>
+        /// <param name="pageType">
+        /// The page type.
+        /// </param>
+        /// <param name="contentType">
+        /// The content type.
+        /// </param>
+        /// <param name="path">
+        /// The path.
+        /// </param>
+        /// <exception cref="Exception">
+        /// If parameter not coherent
+        /// </exception>
+        /// <returns>
+        /// The <see>
+        ///         <cref>List</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        public static List<string> GetSpecificContent(PageType pageType, ContentType contentType, string path = null)
+        {
+            var url = string.Empty;
+            switch (pageType)
+            {
+                case PageType.Home:
+                    url = UrlBase;
+                    break;
+                case PageType.Criteria:
+                    if (string.IsNullOrEmpty(path))
+                    {
+                        throw new Exception("path is needed for criteria page");
+                    }
+
+                    url = path.StartsWith(UrlBase) ? string.Format(CleanCriteria(path), 0) : string.Format(UrlBase + CleanCriteria(path), 0);
+                    break;
+            }
+
+            var web = new HtmlWeb { OverrideEncoding = System.Text.Encoding.GetEncoding(Encoding) };
+            var doc = web.Load(url);
+
+            RemoveScript(doc);
+
+            foreach (var node in doc.DocumentNode.SelectNodes("//comment()"))
+            {
+                node.Remove();
+            }
+
+            HtmlNodeCollection nodes = null;
+            switch (contentType)
+            {
+                case ContentType.Style:
+                    RelativeToAbsolute(doc, "//link");
+                    nodes = doc.DocumentNode.SelectNodes("//link[@type='text/css'] | //style");
+                    break;
+                case ContentType.Script:
+                    RelativeToAbsolute(doc, "//script");
+                    nodes = doc.DocumentNode.SelectNodes("//script");
+                    break;
+                case ContentType.Body:
+                    RemoveUnusedDiv(doc);
+                    nodes = doc.DocumentNode.SelectNodes("//body");
+
+                    // body only one node
+                    foreach (var node in nodes[0].SelectNodes("//script"))
+                    {
+                        node.Remove();
+                    }
+                    break;
+            }
+
+            return nodes != null ? nodes.Select(node => node.WriteTo()).ToList() : null;
         }
 
         /// <summary>
@@ -502,7 +571,7 @@
             }
         }
 
-        /*
+/*
         /// <summary>
         /// Do ajax call to get phone gif url by replacing javascript call
         /// </summary>
