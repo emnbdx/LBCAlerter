@@ -18,8 +18,15 @@
     text-align:center; 
 }
 
-:not(#iframeContainer) input, :not(#iframeContainer) textarea, :not(#iframeContainer) select {
+:not(.lbc-content) input[type]:not([type="checkbox"]),
+:not(.lbc-content) textarea,
+:not(.lbc-content) select {
     display: block;
+}
+
+:not(.lbc-content) input,
+:not(.lbc-content) textarea,
+:not(.lbc-content) select {
     width: 100%; 
 	margin-bottom: 10px; 
 	background: rgba(0,0,0,0.3);

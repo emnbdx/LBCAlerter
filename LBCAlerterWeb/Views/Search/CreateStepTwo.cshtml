@@ -31,9 +31,8 @@
 }
 else
 {
-    <div id="iframeContainer">
+    <div class="lbc-content">
         @Html.Raw(HtmlParser.GetSpecificContent(PageType.Criteria, ContentType.Body, ViewBag.Url)[0])
-        <div class="clearfix"></div>
     </div>
 }
 
@@ -44,27 +43,38 @@ else
 @section Scripts {
     @foreach (var script in HtmlParser.GetSpecificContent(PageType.Criteria, ContentType.Script, ViewBag.Url))
     {
-        @Html.Raw(script.Replace("window.location.href", "var searchUrl")
-          .Replace("return false;", @"if(searchUrl.indexOf('&q=') == -1)
-                           if(!confirm('Attention vous n\'avez pas spécifié de mots clé, est-ce volontaire ?'))
-                               return false;
-                        $.ajax({
-                           url: '" + @Url.Action("Create") + @"',
-                           type: 'POST',
-                           data: {
-                               Url: searchUrl,
-                               RefreshTime: 15,
-                               MailAlert: true,
-                               MailRecap: false,
-                           },
-                           success: function (data) {
-                               if(!data['success'])
-                                  alert(data['message']);
-                               else
-                                   alert('Votre recherche a bien été crée vous allez recevoir 5 mails correspondants aux dernières annonces parues.');
-                               window.top.location.href = '" + @Url.Action("Index") + @"';
-                           }
-                        });
-                        return false;"))
+        if (script.Contains("perform_search"))
+        {
+            @Html.Raw(script.Replace("window.location.href", "var searchUrl")
+                .Replace("return false;", @"if(searchUrl.indexOf('&q=') == -1) {
+                                                if(!confirm('Attention vous n\'avez pas spécifié de mots clé, est-ce volontaire ?')) {
+                                                    return false;
+                                                }
+                                            }
+
+                                            $.ajax({
+                                               url: '" + @Url.Action("Create") + @"',
+                                               type: 'POST',
+                                               data: {
+                                                   Url: searchUrl,
+                                                   RefreshTime: 15,
+                                                   MailAlert: true,
+                                                   MailRecap: false,
+                                               },
+                                               success: function (data) {
+                                                   if(!data['success']) {
+                                                      alert(data['message']);
+                                                   } else {
+                                                       alert('Votre recherche a bien été crée vous allez recevoir 5 mails correspondants aux dernières annonces parues.');
+                                                   }
+                                                    window.top.location.href = '" + @Url.Action("Index") + @"';
+                                               }
+                                            });
+                                            return false;"))
+        }
+        else
+        {
+            @Html.Raw(script)
+        }
     }
 }
