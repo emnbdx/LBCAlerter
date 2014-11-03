@@ -50,8 +50,12 @@ else
             });
         });
     </script>
+    
+    @{
+        var nodes = HtmlParser.GetSpecificContent(PageType.Home, ContentType.Script);
+    }
 
-    @foreach (var script in HtmlParser.GetSpecificContent(PageType.Home, ContentType.Script))
+    @foreach (var script in nodes)
     {
         @Html.Raw(script)
     }

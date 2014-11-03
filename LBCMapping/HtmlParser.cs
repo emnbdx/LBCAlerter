@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Runtime.Serialization.Configuration;
     using System.Web;
     
@@ -471,30 +473,85 @@
                 node.Remove();
             }
 
-            HtmlNodeCollection nodes = null;
+            var results = new List<string>();
             switch (contentType)
             {
                 case ContentType.Style:
-                    RelativeToAbsolute(doc, "//link");
-                    nodes = doc.DocumentNode.SelectNodes("//link[@type='text/css'] | //style");
-                    break;
-                case ContentType.Script:
-                    RelativeToAbsolute(doc, "//script");
-                    nodes = doc.DocumentNode.SelectNodes("//script");
-                    break;
-                case ContentType.Body:
-                    RemoveUnusedDiv(doc);
-                    nodes = doc.DocumentNode.SelectNodes("//body");
-
-                    // body only one node
-                    foreach (var node in nodes[0].SelectNodes("//script"))
                     {
-                        node.Remove();
+                        RelativeToAbsolute(doc, "//link");
+                        var nodes = doc.DocumentNode.SelectNodes("//link[@type='text/css'] | //style");
+
+                        foreach (var node in nodes)
+                        {
+                            if (node.Attributes["href"] != null)
+                            {
+                                // Download content
+                                var httpWebRequest =
+                                    (HttpWebRequest)WebRequest.Create(node.Attributes["href"].Value);
+
+                                string style;
+                                using (var sr = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()))
+                                {
+                                    style = sr.ReadToEnd();
+                                }
+
+                                results.Add("<style type=\"text/css\">\r\n" + style + "\r\n</style>");
+                            }
+                            else
+                            {
+                                results.Add(node.WriteTo());
+                            }
+                        }
+                        break;
                     }
-                    break;
+
+                case ContentType.Script:
+                    {
+                        RelativeToAbsolute(doc, "//script");
+                        var nodes = doc.DocumentNode.SelectNodes("//script");
+
+                        foreach (var node in nodes)
+                        {
+                            if (node.Attributes["src"] != null)
+                            {
+                                // Download content
+                                var httpWebRequest =
+                                    (HttpWebRequest)WebRequest.Create(node.Attributes["src"].Value);
+
+                                string script;
+                                using (var sr = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()))
+                                {
+                                    script = sr.ReadToEnd();
+                                }
+
+                                results.Add("<script type=\"text/javascript\">\r\n" + script + "\r\n</script>");
+                            }
+                            else
+                            {
+                                results.Add(node.WriteTo());
+                            }
+                        }
+
+                        break;
+                    }
+
+                case ContentType.Body:
+                    {
+                        RemoveUnusedDiv(doc);
+                        var nodes = doc.DocumentNode.SelectNodes("//body");
+
+                        // body only one node
+                        foreach (var node in nodes[0].SelectNodes("//script"))
+                        {
+                            node.Remove();
+                        }
+
+                        results.AddRange(nodes.Select(node => node.WriteTo()));
+                        break;
+                    }
             }
 
-            return nodes != null ? nodes.Select(node => node.WriteTo()).ToList() : null;
+            return results;
         }
 
         /// <summary>

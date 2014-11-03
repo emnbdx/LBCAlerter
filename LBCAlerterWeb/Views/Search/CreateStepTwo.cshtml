@@ -42,15 +42,13 @@ else
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            
-        });
-    </script>
+    @{
+        var nodes = HtmlParser.GetSpecificContent(PageType.Criteria, ContentType.Script, ViewBag.Url);
+    }
 
-    @foreach (var script in HtmlParser.GetSpecificContent(PageType.Criteria, ContentType.Script, ViewBag.Url))
+    @foreach (var script in nodes)
     {
-        var val = script;
+        var val = string.Empty;
         if (script.Contains("perform_search"))
         {
             var start = script.IndexOf("window.location.href");
@@ -80,14 +78,25 @@ else
                                            }
                                         });
                                         return false;");
-
         }
-
-        if (val.Contains("oas_"))
+        else if (script.Contains("})(window);"))
         {
-            continue;
+            var start = script.IndexOf("(function(a,b){");
+            var stop = script.IndexOf("})(window);");
+
+            val += script.Substring(0, start);
+            val += script.Substring(stop + "})(window);".Length, script.Length - (stop + "})(window);".Length));
         }
-        
+        else
+        {
+            val = script;
+        }
+
+        if (val.Contains("/ajax/"))
+        {
+            val = val.Replace("/ajax/", "http://www.leboncoin.fr/ajax/");
+        }
+
         @Html.Raw(val)
     }
 }
