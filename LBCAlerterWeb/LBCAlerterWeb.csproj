@@ -285,18 +285,14 @@
     <Content Include="Content\images\profil.gif" />
     <Content Include="Content\jquery.mmenu.all.css" />
     <Content Include="Content\jquery.mmenu.css" />
-    <Content Include="Content\leboncoin.css.map">
-      <DependentUpon>leboncoin.css</DependentUpon>
-    </Content>
-    <None Include="Content\leboncoin.less" />
-    <Content Include="Content\leboncoin.css">
-      <DependentUpon>leboncoin.less</DependentUpon>
-    </Content>
-    <Content Include="Content\leboncoin.min.css">
-      <DependentUpon>leboncoin.css</DependentUpon>
-    </Content>
     <Content Include="Content\minimal.css" />
-    <Content Include="Content\pretty.css" />
+    <Content Include="Content\pretty.css">
+      <DependentUpon>pretty.less</DependentUpon>
+    </Content>
+    <Content Include="Content\pretty.less" />
+    <Content Include="Content\pretty.min.css">
+      <DependentUpon>pretty.css</DependentUpon>
+    </Content>
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -364,6 +360,9 @@
     <EmbeddedResource Include="Migrations\201410251033141_UpdateDon.resx">
       <DependentUpon>201410251033141_UpdateDon.cs</DependentUpon>
     </EmbeddedResource>
+    <Content Include="Content\pretty.css.map">
+      <DependentUpon>pretty.css</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\perso.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />

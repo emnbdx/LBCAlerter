@@ -43,8 +43,7 @@ namespace LBCAlerterWeb
                         "~/Content/jquery.mmenu.*",
                         "~/Scripts/jquery.datepicker.css",
                         "~/Content/minimal.css",
-                        "~/Content/pretty.css",
-                        "~/Content/leboncoin.css"));
+                        "~/Content/pretty.css"));
         }
     }
 }
