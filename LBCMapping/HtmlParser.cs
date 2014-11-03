@@ -540,7 +540,7 @@
         /// </param>
         private static void RemoveScript(HtmlDocument doc)
         {
-            foreach (var node in RemoveSripts.Select(removeSript => doc.DocumentNode.SelectNodes("//script[contains(@src, '" + removeSript + "')]")).SelectMany(nodes => nodes))
+            foreach (var node in RemoveSripts.Select(removeSript => doc.DocumentNode.SelectNodes("//script[contains(@src, '" + removeSript + "')]")).Where(nodes => nodes != null).SelectMany(nodes => nodes))
             {
                 node.Remove();
             }
