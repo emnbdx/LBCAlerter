@@ -46,6 +46,72 @@ textarea:focus,
 select:focus {
   box-shadow: inset 0 -5px 45px rgba(100, 100, 100, 0.4), 0 1px 1px rgba(255, 255, 255, 0.2);
 }
+.lbc-content {
+  /*h1 {
+        font-size: 2em;
+        font-weight: bold;
+        margin: 7px 0 0 0;
+        padding: 3px 0 0 0;
+    }
+
+    h2 {
+        font-size: 16px;
+        font-weight: bold;
+        margin: 15px 0 3px 0;
+        padding: 0;
+    }
+
+    h3 {
+        display: inline;
+        font-size: 16px;
+        font-weight: normal;
+    }
+
+    a {
+        font-weight: bold;
+        color: #369;
+    }
+
+    a:link {
+        text-decoration: none;
+    }
+
+    a:visited {
+        color: #936;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    form {
+        display: inline;
+    }
+
+    form p {
+        margin-top: 5px;
+        clear: left;
+    }
+
+    input, select {
+        margin-top: 0;
+        margin-left: 0;
+    }
+
+    br {
+        clear: left;
+    }
+
+    .red {
+        color: #C00;
+    }*/
+}
+.lbc-content * {
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+}
 .lbc-content #TableContentBottom .Map {
   background-image: url(images/map.png);
   background-repeat: no-repeat;
@@ -57,22 +123,46 @@ select:focus {
 .lbc-content input[type],
 .lbc-content textarea,
 .lbc-content select {
+  display: inline;
   width: auto;
   margin-bottom: 0;
   padding: 0;
   font-size: inherit;
   color: inherit;
   box-shadow: none;
+  -moz-transition: none;
+  -o-transition: none;
+  -webkit-transition: none;
   transition: none;
+}
+.lbc-content input[type]:focus,
+.lbc-content textarea:focus,
+.lbc-content select:focus {
+  box-shadow: none;
+}
+.lbc-content .page_width {
+  margin: auto;
+  position: relative;
+  text-align: left;
+  width: 980px;
+}
+.lbc-content .error {
+  border: 1px solid #C00;
+  color: #C00;
+  font-weight: bold;
+  padding: 1px 5px 2px 5px;
+  margin: 3px 0 5px 0;
+  display: block;
+  float: left;
+  clear: both;
 }
 .lbc-content .search_box {
   padding: 10px;
-  background: #E3DCCD;
-  border-radius: 12px 12px 12px 12px;
   -moz-border-radius: 12px 12px 12px 12px;
   -webkit-border-radius: 12px 12px 12px 12px;
   -o-border-radius: 12px 12px 12px 12px;
   -ms-border-radius: 12px 12px 12px 12px;
+  border-radius: 12px 12px 12px 12px;
   position: relative;
   min-height: 28px;
   z-index: 1000;
@@ -84,11 +174,11 @@ select:focus {
 .lbc-content #searchextras select {
   background: #FFF;
   border: 1px #AAA solid;
-  border-radius: 3px 3px 3px 3px;
   -moz-border-radius: 3px 3px 3px 3px;
   -webkit-border-radius: 3px 3px 3px 3px;
   -o-border-radius: 3px 3px 3px 3px;
   -ms-border-radius: 3px 3px 3px 3px;
+  border-radius: 3px 3px 3px 3px;
 }
 .lbc-content #searchmain {
   float: left;
@@ -107,11 +197,11 @@ select:focus {
 .lbc-content #searchmain .search_select {
   float: left;
   border: 1px #AAA solid;
-  border-radius: 3px 3px 3px 3px;
   -moz-border-radius: 3px 3px 3px 3px;
   -webkit-border-radius: 3px 3px 3px 3px;
   -o-border-radius: 3px 3px 3px 3px;
   -ms-border-radius: 3px 3px 3px 3px;
+  border-radius: 3px 3px 3px 3px;
   background: #FFF;
   height: 28px;
 }
@@ -152,28 +242,6 @@ select:focus {
   border: 0;
   background: #FFF;
 }
-.lbc-content .ua_IE7 #searchmain select {
-  font-size: 16px;
-  margin: 0;
-}
-.lbc-content .ua_IE7 #searchmain input[type=text] {
-  line-height: 22px;
-  height: 22px;
-}
-.lbc-content .ua_IE7 .location input[type=text] {
-  line-height: 17px;
-  height: 17px!important;
-}
-.lbc-content .ua_IE7 #searchmain .search_select {
-  border: 0;
-  background: none;
-}
-.lbc-content .ua_IE8 #searchmain input[type=text] {
-  line-height: 28px;
-}
-.lbc-content .ua_IE8 .location input[type=text] {
-  line-height: 24px;
-}
 .lbc-content .select-and-link {
   width: 700px;
   float: left;
@@ -181,12 +249,6 @@ select:focus {
 .lbc-content .select-and-link-boutique {
   width: 950px;
   float: left;
-}
-.lbc-content .ua_IE6 .select-and-link {
-  float: none;
-}
-.lbc-content .ua_IE6 .select-and-link-boutique {
-  float: none;
 }
 .lbc-content #searchextras {
   width: 703px;
@@ -200,9 +262,6 @@ select:focus {
 .lbc-content #searchextras input,
 .lbc-content #searchextras select {
   color: #666;
-}
-.lbc-content .ua_IE8 #searchextras .div_error span {
-  border: 0;
 }
 .lbc-content #searcharea_expanded,
 .lbc-content #country {
@@ -218,11 +277,11 @@ select:focus {
   line-height: 26px;
   width: 348px;
   margin: 21px 5px 0 0;
-  border-radius: 5px 5px 5px 5px;
   -moz-border-radius: 5px 5px 5px 5px;
   -webkit-border-radius: 5px 5px 5px 5px;
   -o-border-radius: 5px 5px 5px 5px;
   -ms-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
 }
 .lbc-content #subtypes label {
   padding: 0 20px;
@@ -243,14 +302,11 @@ select:focus {
   width: auto;
   padding: 0 8px 0 0;
   *padding: 0 5px 0 0;
-  border-radius: 5px 5px 5px 5px;
   -moz-border-radius: 5px 5px 5px 5px;
   -webkit-border-radius: 5px 5px 5px 5px;
   -o-border-radius: 5px 5px 5px 5px;
   -ms-border-radius: 5px 5px 5px 5px;
-}
-.lbc-content .ua_IE8 #real_estate_type {
-  padding: 0 5px 0 0;
+  border-radius: 5px 5px 5px 5px;
 }
 .lbc-content .real_estate_type {
   float: left;
@@ -259,15 +315,6 @@ select:focus {
 .lbc-content .real_estate_type input {
   vertical-align: middle;
   margin: 0 0 2px 7px;
-}
-.lbc-content .ua_IE7 .real_estate_type input,
-.lbc-content .ua_IE8 .real_estate_type input {
-  margin: 0 0 2px 2px;
-}
-.lbc-content .ua_IE9 .real_estate_type input,
-.lbc-content .ua_IE10 .real_estate_type input,
-.lbc-content .ua_SAF .real_estate_type input {
-  margin-left: 5px;
 }
 .lbc-content .real_estate_type label {
   *margin-left: -2px;
@@ -316,13 +363,13 @@ select:focus {
   background: #F60;
   text-transform: uppercase;
   border: 0;
-  border-radius: 5px 5px 5px 5px;
   -moz-border-radius: 5px 5px 5px 5px;
   -webkit-border-radius: 5px 5px 5px 5px;
   -o-border-radius: 5px 5px 5px 5px;
   -ms-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
   font-weight: bold;
-  color: #FFF!important;
+  color: #FFF !important;
   cursor: pointer;
   bottom: 0;
   right: 0;
@@ -333,14 +380,6 @@ select:focus {
 .lbc-content .featurebox {
   float: left;
 }
-.lbc-content .ua_IE7 .featurebox.between {
-  padding: 10px 0 0 0;
-}
-.lbc-content .ua_IE7 .featurebox.single,
-.lbc-content .ua_IE7 #real_estate_type,
-.lbc-content .ua_IE7 #subtypes {
-  margin-top: 10px;
-}
 .lbc-content .italic {
   font-style: italic;
 }
@@ -349,11 +388,11 @@ select:focus {
   margin-top: 21px;
   height: 26px;
   line-height: 26px;
-  border-radius: 5px 5px 5px 5px;
   -moz-border-radius: 5px 5px 5px 5px;
   -webkit-border-radius: 5px 5px 5px 5px;
   -o-border-radius: 5px 5px 5px 5px;
   -ms-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
   background: #FFF;
   padding: 0 5px;
 }
@@ -367,11 +406,11 @@ select:focus {
   background: #C4BDB0;
   height: 26px;
   line-height: 26px;
-  border-radius: 5px 0 0 5px;
   -moz-border-radius: 5px 0 0 5px;
   -webkit-border-radius: 5px 0 0 5px;
   -o-border-radius: 5px 0 0 5px;
   -ms-border-radius: 5px 0 0 5px;
+  border-radius: 5px 0 0 5px;
   font-weight: bold;
   color: #000;
   width: 61px;
@@ -384,11 +423,11 @@ select:focus {
   height: 26px;
   line-height: 26px;
   padding: 0 3px;
-  border-radius: 0 5px 5px 0;
   -moz-border-radius: 0 5px 5px 0;
   -webkit-border-radius: 0 5px 5px 0;
   -o-border-radius: 0 5px 5px 0;
   -ms-border-radius: 0 5px 5px 0;
+  border-radius: 0 5px 5px 0;
   font-size: 10px;
 }
 .lbc-content .featurebox select {
@@ -406,9 +445,6 @@ select:focus {
 }
 .lbc-content .comment {
   padding-bottom: 10px;
-}
-.lbc-content .ua_IE8 .comment {
-  padding-bottom: 5px;
 }
 .lbc-content .half_comment {
   float: left;
@@ -441,11 +477,11 @@ select:focus {
 .lbc-content .boutique_pub_box {
   padding: 10px;
   background: #E3DCCD;
-  border-radius: 12px 12px 12px 12px;
   -moz-border-radius: 12px 12px 12px 12px;
   -webkit-border-radius: 12px 12px 12px 12px;
   -o-border-radius: 12px 12px 12px 12px;
   -ms-border-radius: 12px 12px 12px 12px;
+  border-radius: 12px 12px 12px 12px;
   width: 190px;
   margin-left: 22px;
 }
@@ -454,7 +490,7 @@ select:focus {
   border: 0 none;
   border-radius: 5px 5px 5px 5px;
   bottom: 0;
-  color: #FFF!important;
+  color: #FFF !important;
   cursor: pointer;
   font-weight: bold;
   padding: 11px 0 10px;
@@ -487,11 +523,11 @@ select:focus {
   border: 1px solid #CCC;
   margin: -4px 2px 1px 1px;
   padding: 5px 5px 0 5px;
-  border-radius: 3px 3px 3px 3px;
   -moz-border-radius: 3px 3px 3px 3px;
   -webkit-border-radius: 3px 3px 3px 3px;
   -o-border-radius: 3px 3px 3px 3px;
   -ms-border-radius: 3px 3px 3px 3px;
+  border-radius: 3px 3px 3px 3px;
   z-index: 1000;
 }
 .lbc-content #location_hints_box ul {
@@ -504,11 +540,11 @@ select:focus {
   margin: 0;
   cursor: pointer;
   height: 15px;
-  border-radius: 3px 3px 3px 3px;
   -moz-border-radius: 3px 3px 3px 3px;
   -webkit-border-radius: 3px 3px 3px 3px;
   -o-border-radius: 3px 3px 3px 3px;
   -ms-border-radius: 3px 3px 3px 3px;
+  border-radius: 3px 3px 3px 3px;
 }
 .lbc-content #location_hints_box ul li:hover,
 .lbc-content #location_hints_box ul li.selected {
@@ -538,14 +574,14 @@ select:focus {
 .lbc-content input#zipcoded {
   width: 251px;
   height: 24px;
-  padding: 0!important;
+  padding: 0 !important;
   border: none;
   outline: 0;
-  border-radius: 0;
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
   -o-border-radius: 0;
   -ms-border-radius: 0;
+  border-radius: 0;
 }
 .lbc-content input.example {
   color: #999;
@@ -565,11 +601,11 @@ select:focus {
   padding: 2px;
   border: 1px solid #AAA;
   background: #FFF;
-  border-radius: 3px 3px 3px 3px;
   -moz-border-radius: 3px 3px 3px 3px;
   -webkit-border-radius: 3px 3px 3px 3px;
   -o-border-radius: 3px 3px 3px 3px;
   -ms-border-radius: 3px 3px 3px 3px;
+  border-radius: 3px 3px 3px 3px;
 }
 .lbc-content .location .error {
   float: none;
@@ -593,23 +629,14 @@ select:focus {
   background: #EFEFEF;
   font-size: 11px;
   border: 1px solid #999;
-  border-radius: 3px 3px 3px 3px;
   -moz-border-radius: 3px 3px 3px 3px;
   -webkit-border-radius: 3px 3px 3px 3px;
   -o-border-radius: 3px 3px 3px 3px;
   -ms-border-radius: 3px 3px 3px 3px;
+  border-radius: 3px 3px 3px 3px;
 }
 .lbc-content .location .crt:last-child {
   margin-right: 0;
-}
-.lbc-content .ua_IE7 .location ul {
-  width: auto;
-}
-.lbc-content .ua_IE7 .location .crt {
-  float: none;
-  position: relative;
-  zoom: 1;
-  display: inline;
 }
 .lbc-content .location .crt.active {
   background: #DDD;
@@ -621,6 +648,117 @@ select:focus {
   padding: 0 2px;
   color: #888;
   cursor: pointer;
+}
+.lbc-content .ui-datepicker {
+  width: 17em;
+  padding: .2em .2em 0;
+  display: none;
+}
+.lbc-content .ui-datepicker .ui-datepicker-header {
+  position: relative;
+  padding: .2em 0;
+}
+.lbc-content .ui-datepicker .ui-datepicker-prev,
+.lbc-content .ui-datepicker .ui-datepicker-next {
+  position: absolute;
+  top: 2px;
+  width: 1.8em;
+  height: 1.8em;
+}
+.lbc-content .ui-datepicker .ui-datepicker-prev-hover,
+.lbc-content .ui-datepicker .ui-datepicker-next-hover {
+  top: 1px;
+}
+.lbc-content .ui-datepicker .ui-datepicker-prev {
+  left: 2px;
+}
+.lbc-content .ui-datepicker .ui-datepicker-next {
+  right: 2px;
+}
+.lbc-content .ui-datepicker .ui-datepicker-prev-hover {
+  left: 1px;
+}
+.lbc-content .ui-datepicker .ui-datepicker-next-hover {
+  right: 1px;
+}
+.lbc-content .ui-datepicker .ui-datepicker-prev span,
+.lbc-content .ui-datepicker .ui-datepicker-next span {
+  display: block;
+  position: absolute;
+  left: 50%;
+  margin-left: -8px;
+  top: 50%;
+  margin-top: -8px;
+}
+.lbc-content .ui-datepicker .ui-datepicker-title {
+  margin: 0 2.3em;
+  line-height: 1.8em;
+  text-align: center;
+}
+.lbc-content .ui-datepicker .ui-datepicker-title select {
+  margin: 1px 0;
+}
+.lbc-content .ui-datepicker select.ui-datepicker-month-year {
+  width: 100%;
+}
+.lbc-content .ui-datepicker select.ui-datepicker-month,
+.lbc-content .ui-datepicker select.ui-datepicker-year {
+  width: 49%;
+}
+.lbc-content .ui-datepicker table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 .4em;
+}
+.lbc-content .ui-datepicker th {
+  padding: .7em .3em;
+  text-align: center;
+  font-weight: bold;
+  border: 0;
+}
+.lbc-content .ui-datepicker td {
+  border: 0;
+  padding: 1px;
+}
+.lbc-content .ui-datepicker td span,
+.lbc-content .ui-datepicker td a {
+  display: block;
+  padding: .2em;
+  text-align: right;
+  text-decoration: none;
+}
+.lbc-content .ui-datepicker .ui-datepicker-buttonpane {
+  background-image: none;
+  margin: .7em 0 0 0;
+  padding: 0 .2em;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 0;
+}
+.lbc-content .ui-datepicker .ui-datepicker-buttonpane button {
+  float: right;
+  margin: .5em .2em .4em;
+  cursor: pointer;
+  padding: .2em .6em .3em .6em;
+  width: auto;
+  overflow: visible;
+}
+.lbc-content .ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current {
+  float: left;
+}
+.lbc-content a.ui-priority-secondary {
+  color: #BBB !important;
+}
+.lbc-content .ui-datepicker-cover {
+  display: none;
+  display: block;
+  position: absolute;
+  z-index: -1;
+  filter: mask();
+  top: -4px;
+  left: -4px;
+  width: 200px;
+  height: 200px;
 }
 .field-validation-error {
   font-size: 13px;
