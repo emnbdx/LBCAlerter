@@ -77,7 +77,10 @@
                 </div>
             </td>
             <td>
-                @Html.ActionLink("Premium", "AddToPremium", new { id = item.Id }, new { @class = "btn btn-primary" })
+                @if (item.Roles.All(role => role.RoleId != premiumRoleId))
+                {
+                    @Html.ActionLink("Premium", "AddToPremium", new { id = item.Id }, new { @class = "btn btn-primary" })
+                }
             </td>
         </tr>
     }
