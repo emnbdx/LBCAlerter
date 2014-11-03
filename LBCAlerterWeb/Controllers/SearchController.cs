@@ -200,7 +200,7 @@
             }
             else
             {
-                search.RefreshTime = 10;
+                search.RefreshTime = 15;
             }
 
             this.db.Searches.Add(search);
