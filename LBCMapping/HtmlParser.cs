@@ -490,7 +490,7 @@
                                     (HttpWebRequest)WebRequest.Create(node.Attributes["href"].Value);
 
                                 string style;
-                                using (var sr = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()))
+                                using (var sr = new StreamReader(httpWebRequest.GetResponse().GetResponseStream(), System.Text.Encoding.GetEncoding(Encoding)))
                                 {
                                     style = sr.ReadToEnd();
                                 }
@@ -519,7 +519,7 @@
                                     (HttpWebRequest)WebRequest.Create(node.Attributes["src"].Value);
 
                                 string script;
-                                using (var sr = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()))
+                                using (var sr = new StreamReader(httpWebRequest.GetResponse().GetResponseStream(), System.Text.Encoding.GetEncoding(Encoding)))
                                 {
                                     script = sr.ReadToEnd();
                                 }

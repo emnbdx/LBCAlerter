@@ -47,12 +47,12 @@
                 <li class="navigation" id="navigation">
                     <a href="#" class="sidebar-toggle" data-toggle="#navigation">Navigation <i class="fa fa-angle-up"></i></a>
                     <ul class="menu">
-                        <li id="dashboard">
+                        <li id="dashboardMenu">
                             <a href="@Url.Action("Index", "Search")">
                                 <i class="fa fa-dashboard"></i> Tableau de bord
                             </a>
                         </li>
-                        <li id="search" class="dropdown">
+                        <li id="searchMenu" class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-list"></i> Alertes <b class="fa fa-plus dropdown-plus"></b>
                             </a>
@@ -67,12 +67,12 @@
                                 }
                             </ul>
                         </li>
-                        <li id="new">
+                        <li id="newMenu">
                             <a href="@Url.Action("Create", "Search")">
                                 <i class="fa fa-edit"></i> Nouvelle alerte
                             </a>
                         </li>
-                        <li id="notif">
+                        <li id="notifMenu">
                             <a href="@Url.Action("Index", "Notification")">
                                 <i class="fa fa-exclamation"></i> Quoi de neuf ?
                                 @if (notifCount > 0)
@@ -81,7 +81,7 @@
                                 }
                             </a>
                         </li>
-                        <li id="pay">
+                        <li id="payMenu">
                             <a href="@Url.Action("Create", "Don")">
                                 <i class="fa fa-credit-card"></i> Soyez sympa !
                             </a>
@@ -93,22 +93,22 @@
                     <li class="navigation" id="admin">
                         <a href="#" class="sidebar-toggle" data-toggle="#admin">Administration <i class="fa fa-angle-up"></i></a>
                         <ul class="menu">
-                            <li id="user">
+                            <li id="userMenu">
                                 <a href="@Url.Action("All", "Account")">
                                     <i class="fa fa-users"></i> Tout les utilisateurs
                                 </a>
                             </li>
-                            <li id="searchs">
+                            <li id="searchsMenu">
                                 <a href="@Url.Action("All", "Search")">
                                     <i class="fa fa-list"></i> Toutes les alertes
                                 </a>
                             </li>
-                            <li id="notification">
+                            <li id="notificationMenu">
                                 <a href="@Url.Action("All", "Notification")">
                                     <i class="fa fa-exclamation-circle"></i> Toutes les notifications
                                 </a>
                             </li>
-                            <li id="payments">
+                            <li id="paymentsMenu">
                                 <a href="@Url.Action("Index", "Don")">
                                     <i class="fa fa-usd"></i> Tout les paiements
                                 </a>

@@ -49,6 +49,14 @@ else
     @foreach (var script in nodes)
     {
         var val = string.Empty;
+        
+        if (script.Contains("hasAdBlocker") ||
+            script.Contains("oas_") ||
+            script.Contains("OAS_"))
+        {
+            continue;
+        }
+        
         if (script.Contains("perform_search"))
         {
             var start = script.IndexOf("window.location.href");
@@ -86,6 +94,15 @@ else
 
             val += script.Substring(0, start);
             val += script.Substring(stop + "})(window);".Length, script.Length - (stop + "})(window);".Length));
+            /*var secondPart = script.Substring(stop + "})(window);".Length, script.Length - (stop + "})(window);".Length));
+
+            start = secondPart.IndexOf("(function(f,e){");
+            stop = secondPart.IndexOf("})(jQuery);", start);
+
+            val += secondPart.Substring(0, start);
+            val += secondPart.Substring(stop + "})(jQuery);".Length, secondPart.Length - (stop + "})(jQuery);".Length));
+
+            val = val.Replace("(jQuery)", string.Empty);*/
         }
         else
         {

@@ -1,4 +1,6 @@
-﻿var widthLess1024 = function () {
+﻿"use strict";
+
+var widthLess1024 = function () {
     $(window).width() < 1024 ? ($("#sidebar, #navbar").addClass("collapsed"), $("#navigation").find(".dropdown.open").removeClass("open"), $("#navigation").find(".dropdown-menu.animated").removeClass("animated"), $("#sidebar").hasClass("collapsed") ? $("#content").animate({
         left: "0px",
         paddingLeft: "55px"
@@ -34,13 +36,14 @@ $(function () {
     function e(o) {
         $(o).unblock()
     }
+
     $("#mmenu").mmenu({
         position: "right",
         zposition: "next",
         moveBackground: !1
-    }), $(".quick-actions .dropdown").on("show.bs.dropdown", function () {
+    }), $(".quick-actions .dropdown").on("show.bs.dropdown", function() {
         $(this).find(".dropdown-menu").addClass("animated fadeInDown"), $(this).find("#user-inbox").addClass("animated bounceIn")
-    }), $("#navigation .dropdown").on("show.bs.dropdown", function () {
+    }), $("#navigation .dropdown").on("show.bs.dropdown", function() {
         $(this).find(".dropdown-menu").addClass("animated fadeInLeft")
     }), $("#sales-chart").sparkline([5, 6, 7, 2, 1, 4, 6, 8, 10, 14], {
         width: "60px",
@@ -56,7 +59,7 @@ $(function () {
         barWidth: "6px",
         barSpacing: 1,
         barColor: "#418bca"
-    }), $("#sidebar .sidebar-toggle").on("click", function () {
+    }), $("#sidebar .sidebar-toggle").on("click", function() {
         var o = $(this).data("toggle");
         $(o).toggleClass("collapsed")
     }), $("#sidebar").niceScroll({
@@ -92,6 +95,7 @@ $(function () {
             }
         })
     };
+    
     n(), $("#mmenu").on("opened.mm", function () {
         $("#content").getNiceScroll().hide()
     }), $("#mmenu").on("closed.mm", function () {

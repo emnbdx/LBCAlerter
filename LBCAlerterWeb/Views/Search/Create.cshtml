@@ -57,6 +57,13 @@ else
 
     @foreach (var script in nodes)
     {
+        if (script.Contains("hasAdBlocker") ||
+            script.Contains("oas_") ||
+            script.Contains("OAS_"))
+        {
+            continue;
+        }
+        
         @Html.Raw(script)
     }
 }
