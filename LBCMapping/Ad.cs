@@ -8,6 +8,16 @@
     public class Ad
     {
         /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ad id.
+        /// </summary>
+        public int SearchId { get; set; }
+
+        /// <summary>
         /// Gets or sets the date.
         /// </summary>
         public DateTime Date { get; set; }

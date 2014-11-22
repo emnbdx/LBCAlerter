@@ -71,10 +71,7 @@ else
                                            url: '" + @Url.Action("Create") + @"',
                                            type: 'POST',
                                            data: {
-                                               Url: searchUrl,
-                                               RefreshTime: 15,
-                                               MailAlert: true,
-                                               MailRecap: false,
+                                               Url: searchUrl
                                            },
                                            success: function (data) {
                                                if(!data['success']) {

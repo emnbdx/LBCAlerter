@@ -56,6 +56,20 @@
     @Html.ValidationMessageFor(model => model.KeyWord)
 
     <div class="onoffswitch-container">
+        @Html.Label("", "Activé ?", new { @class = "control-label" })
+        <div class="col-xs-4 control-block">
+            <div class="onoffswitch labeled primary">
+                @Html.CheckBoxFor(m => m.Enabled, new { @class = "onoffswitch-checkbox" })
+                <label class="onoffswitch-label" for="Enabled">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                </label>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="onoffswitch-container">
         @Html.Label("", "Alertes email ?", new { @class = "control-label" })
         <div class="col-xs-4 control-block">
             <div class="onoffswitch labeled primary">

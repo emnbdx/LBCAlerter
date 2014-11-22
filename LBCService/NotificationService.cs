@@ -32,37 +32,49 @@
         /// The log.
         /// </summary>
         private static readonly ILog Log = LogManager.GetLogger(typeof(NotificationService));
-        
+
         /// <summary>
         /// The process.
         /// </summary>
-        public override void Process()
+        /// <param name="firstProcess">
+        /// The first Process.
+        /// </param>
+        public override void Process(bool firstProcess)
         {
-            base.Process();
+            base.Process(firstProcess);
 
             using (var db = new ApplicationDbContext())
             {
-                // Add or edit job
-                foreach (var s in db.Searches.Where(s => s.MailAlert || s.MailRecap))
+                if (firstProcess)
                 {
-                    this.SendMailRecap(s);
-
-                    RandomJobLauncher jobLauncher;
-                    Jobs.TryGetValue(s.ID, out jobLauncher);
-
-                    if (jobLauncher == null)
+                    foreach (var s in db.Searches.Where(s => s.Enabled && (s.MailAlert || s.MailRecap)))
                     {
                         this.CreateNewJob(s);
                     }
-                    else
-                    {
-                        this.UpdateJob(s, jobLauncher);
-                    }
                 }
+                else
+                {
+                    foreach (var s in db.Searches)
+                    {
+                        this.SendMailRecap(s);
 
-                this.StopDeletedJobs(db.Searches);
+                        RandomJobLauncher jobLauncher;
+                        Jobs.TryGetValue(s.ID, out jobLauncher);
+
+                        if (jobLauncher == null)
+                        {
+                            this.CreateNewJob(s);
+                        }
+                        else
+                        {
+                            this.UpdateJob(s, jobLauncher);
+                        }
+                    }
+
+                    this.StopDeletedJobs(db.Searches);
+                }
             }
-            
+
             GC.Collect();
         }
 
@@ -88,34 +100,13 @@
         }
 
         /// <summary>
-        /// Delete job if deleted by user
-        /// </summary>
-        /// <param name="searches">Search in context</param>
-        private void StopDeletedJobs(IQueryable<Search> searches)
-        {
-            if (Jobs.Count() <= searches.Count())
-            {
-                return;
-            }
-
-            var toStop = Jobs.Keys.Where(id => searches.FirstOrDefault(entry => entry.ID == id) == null).ToList();
-
-            foreach (var id in toStop)
-            {
-                Jobs[id].Stop();
-                Jobs.Remove(id);
-            }
-        }
-
-        /// <summary>
         /// Send daily mail if not already send
         /// </summary>
         /// <param name="search">Current search</param>
         private void SendMailRecap(Search search)
         {
-            if (!search.MailRecap
-                || (search.LastRecap.HasValue
-                    && (search.LastRecap.Value.DayOfYear >= DateTime.Today.DayOfYear))
+            if (!search.Enabled || !search.MailRecap
+                || (search.LastRecap.HasValue && (search.LastRecap.Value.DayOfYear >= DateTime.Today.DayOfYear))
                 || DateTime.Now.Hour != Convert.ToInt32(ConfigurationManager.AppSettings["Heure mail recap"]))
             {
                 return;
@@ -124,6 +115,8 @@
             var lastDay = DateTime.Now.AddDays(-1);
 
             var mail = new EMMail();
+            var attempsCount = search.Attempts.Count(entry => entry.ProcessDate > lastDay);
+            var todayAds = search.Ads.Where(entry => entry.Date > lastDay).OrderBy(entry => entry.Date);
             var parameters = new Dictionary<string, object>
                                  {
                                      {
@@ -133,22 +126,26 @@
                                      {
                                          "{AdCount}",
                                          search.Ads.Count(entry => entry.Date > lastDay)
+                                     },
+                                     { "{AttemptCount}", attempsCount },
+                                     {
+                                         "{AttemptCadence}",
+                                         24 * 60 / (attempsCount <= 0 ? 1 : attempsCount)
+                                     },
+                                     { "{Id}", search.ID },
+                                     {
+                                         "{AdId}",
+                                         todayAds.FirstOrDefault() == null ? 0 : todayAds.FirstOrDefault().ID
                                      }
                                  };
-            var attempsCount = search.Attempts.Count(entry => entry.ProcessDate > lastDay);
-            parameters.Add("{AttemptCount}", attempsCount);
-            parameters.Add("{AttemptCadence}", 24 * 60 / (attempsCount <= 0 ? 1 : attempsCount));
 
             var ads = new StringBuilder();
-            foreach (
-                var formater in
-                    search.Ads.Where(entry => entry.Date > lastDay)
-                        .OrderBy(entry => entry.Date)
-                        .Select(
-                            ad =>
-                            this.IsPremium(search.User)
-                                ? new MailFormater(mail.GetPattern("LBC_RECAP_AD_FULL").CONTENT, ad)
-                                : new MailFormater(mail.GetPattern("LBC_RECAP_AD").CONTENT, ad)))
+            foreach (var formater in
+                todayAds.Select(
+                    ad =>
+                    this.IsPremium(search.User)
+                        ? new MailFormater(mail.GetPattern("LBC_RECAP_AD_FULL").CONTENT, ad)
+                        : new MailFormater(mail.GetPattern("LBC_RECAP_AD").CONTENT, ad)))
             {
                 ads.Append(formater.Formated);
             }
@@ -160,6 +157,7 @@
                 search.User.UserName,
                 this.IsPremium(search.User) ? "LBC_RECAP" : "LBC_RECAP_FULL",
                 parameters);
+
 
             using (var db = new ApplicationDbContext())
             {
@@ -180,7 +178,7 @@
         /// <param name="search">Current search</param>
         private void CreateNewJob(Search search)
         {
-            if (!search.MailAlert)
+            if (!search.Enabled)
             {
                 return;
             }
@@ -217,13 +215,15 @@
         /// <param name="jobLauncher">Launcher of this search</param>
         private void UpdateJob(Search search, JobLauncher jobLauncher)
         {
-            if (jobLauncher != null && jobLauncher.IntervalTime != search.RefreshTime)
+            if (jobLauncher.IntervalTime != search.RefreshTime)
             {
                 jobLauncher.IntervalTime = search.RefreshTime;
             }
 
-            if (jobLauncher == null)
+            if (!search.Enabled)
             {
+                jobLauncher.Stop();
+                Jobs.Remove(search.ID);
                 return;
             }
 
@@ -273,6 +273,26 @@
 
                 alerter = new MailAlerter(search.User.UserName, "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]", this.IsPremium(search.User));
                 job.Alerters.Add(alerter);
+            }
+        }
+
+        /// <summary>
+        /// Delete job if deleted by user
+        /// </summary>
+        /// <param name="searches">Search in context</param>
+        private void StopDeletedJobs(IQueryable<Search> searches)
+        {
+            if (Jobs.Count() <= searches.Count())
+            {
+                return;
+            }
+
+            var toStop = Jobs.Keys.Where(id => searches.FirstOrDefault(entry => entry.ID == id) == null);
+
+            foreach (var id in toStop)
+            {
+                Jobs[id].Stop();
+                Jobs.Remove(id);
             }
         }
     }

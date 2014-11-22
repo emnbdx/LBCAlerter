@@ -64,6 +64,9 @@
             this.db.Ads.Add(tmpAd);
 
             this.db.SaveChanges();
+
+            ad.Id = tmpAd.ID;
+            ad.SearchId = this.searchId;
             return true;
         }
     }

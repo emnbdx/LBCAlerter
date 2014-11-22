@@ -166,7 +166,7 @@
         /// The <see cref="ActionResult"/>.
         /// </returns>
         [HttpPost]
-        public ActionResult Create([Bind(Include = "Url,RefreshTime,MailAlert,MailRecap")] Search search)
+        public ActionResult Create([Bind(Include = "Url")] Search search)
         {
             var currentUser = this.UserManager.FindById(User.Identity.GetUserId());
 
@@ -192,6 +192,8 @@
             search.Url = HtmlParser.CleanCriteria(search.Url);
             search.CreationDate = DateTime.Now;
             search.KeyWord = HtmlParser.ExtractKeyWordFromCriteria(search.Url);
+            search.MailAlert = true;
+            search.MailRecap = false;
             search.User = currentUser;
 
             if (!Roles.IsUserInRole("admin") && !Roles.IsUserInRole("premium"))
@@ -202,6 +204,8 @@
             {
                 search.RefreshTime = 15;
             }
+
+            search.Enabled = true;
 
             this.db.Searches.Add(search);
             this.db.SaveChanges();
@@ -254,7 +258,7 @@
         /// </returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ID,Url,KeyWord,MailAlert,MailRecap,RefreshTime,CreationDate,LastRecap")] Search search)
+        public async Task<ActionResult> Edit([Bind(Include = "ID,Url,KeyWord,MailAlert,MailRecap,RefreshTime,Enabled,CreationDate,LastRecap")] Search search)
         {
             if (!this.ModelState.IsValid)
             {
@@ -269,6 +273,42 @@
             this.db.Entry(search).State = EntityState.Modified;
             await this.db.SaveChangesAsync();
             return this.RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// GET: /Search/Disable?id=5&amp;adId=&
+        /// </summary>
+        /// <param name="id">
+        /// The id.
+        /// </param>
+        /// <param name="adId">
+        /// The ad id
+        /// </param>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
+        public async Task<ActionResult> Disable(int? id, int? adId)
+        {
+            if (id == null || adId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var search = this.db.Searches.Find(id);
+            if (search == null)
+            {
+                return this.HttpNotFound();
+            }
+
+            if (search.Ads.Any(entry => entry.ID == adId))
+            {
+                search.Enabled = false;
+            }
+
+            this.db.Entry(search).State = EntityState.Modified;
+            await this.db.SaveChangesAsync();
+
+            return this.View(search);
         }
 
         /// <summary>

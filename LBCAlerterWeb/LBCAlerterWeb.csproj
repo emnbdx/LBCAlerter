@@ -447,6 +447,7 @@
     <Content Include="Views\Don\Merci.cshtml" />
     <Content Include="Views\Don\PayPalPaymentNotification.cshtml" />
     <Content Include="Views\Search\CreateStepTwo.cshtml" />
+    <Content Include="Views\Search\Disable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

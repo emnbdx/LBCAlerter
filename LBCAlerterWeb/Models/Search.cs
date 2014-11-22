@@ -64,6 +64,12 @@ namespace LBCAlerterWeb.Models
         public int RefreshTime { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether enabled.
+        /// </summary>
+        [Display(Name = " ")]
+        public bool Enabled { get; set; }
+
+        /// <summary>
         /// Gets or sets the user.
         /// </summary>
         public virtual ApplicationUser User { get; set; }
