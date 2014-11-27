@@ -80,6 +80,11 @@ namespace LBCAlerterWeb.Models
         public DbSet<Ad> Ads { get; set; }
 
         /// <summary>
+        /// Gets or sets the ad contents.
+        /// </summary>
+        public DbSet<AdContent> AdContents { get; set; }
+
+        /// <summary>
         /// Gets or sets the notifications.
         /// </summary>
         public DbSet<Notification> Notifications { get; set; }

@@ -1,1 +1,20 @@
-﻿
+﻿@model LBCAlerterWeb.Models.Search
+@{
+    ViewBag.Title = "Désactivation";
+}
+
+<h4>@ViewBag.Title</h4>
+<hr />
+
+<p>
+    Votre alerte "@Model.KeyWord" à bien été désactivé, s'il s'agit d'une erreur cliquez @Html.ActionLink("ici", "Edit", "Search", new { ID = Model.ID })
+</p>
+
+<div class="links">
+    @Html.ActionLink("Retour à la liste", "Index", "Search")
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

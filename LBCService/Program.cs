@@ -1,4 +1,13 @@
-﻿namespace LBCService
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Program.cs" company="Eddy MONTUS">
+//   2014
+// </copyright>
+// <summary>
+//   The program.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace LBCService
 {
     using EMToolBox.Services;
 

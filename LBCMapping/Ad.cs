@@ -30,7 +30,7 @@
         /// <summary>
         /// Gets or sets the picture url.
         /// </summary>
-        public string PictureUrl { get; set; }
+        public string[] PictureUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the place.
@@ -70,7 +70,7 @@
         /// <summary>
         /// Gets or sets the param.
         /// </summary>
-        public string Param { get; set; }
+        public string[] Param { get; set; }
 
         /// <summary>
         /// Gets or sets the description.

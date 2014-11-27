@@ -243,6 +243,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Ad.cs" />
+    <Compile Include="Models\AdContent.cs" />
     <Compile Include="Models\Attempt.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Don.cs" />

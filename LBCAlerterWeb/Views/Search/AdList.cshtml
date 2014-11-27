@@ -1,4 +1,5 @@
-﻿@model LBCAlerterWeb.Models.Search
+﻿@using LBCAlerterWeb.Models
+@model LBCAlerterWeb.Models.Search
 @{
     ViewBag.Title = "Dernières annonces";
     ViewBag.Current = "search_" + Model.ID;
@@ -48,16 +49,16 @@
                         @Html.DisplayFor(modelItem => item.Date)
                     </td>
                     <td>
-                        @if (item != null && item.PictureUrl.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length > 0)
+                        @if (item != null && item.Contents.Count(entry => entry.Type == AdContent.ContentType.PictureUrl.ToString()) > 0)
                         {
-                            <img src="@Html.DisplayFor(modelItem => item.PictureUrl).ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First()" />
+                            <img src="@Html.DisplayFor(modelItem => item.Contents.FirstOrDefault(entry => entry.Type == AdContent.ContentType.PictureUrl.ToString()).Value)" />
                         }
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Place)
+                        @Html.DisplayFor(modelItem => item.Contents.FirstOrDefault(entry => entry.Type == AdContent.ContentType.Place.ToString()).Value)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Price).ToString().Replace("&amp;nbsp;&amp;euro;", " €")
+                        @Html.DisplayFor(modelItem => item.Contents.FirstOrDefault(entry => entry.Type == AdContent.ContentType.Price.ToString()).Value.Replace("&amp;nbsp;&amp;euro;", " €"))
                     </td>
                 </tr>
             }

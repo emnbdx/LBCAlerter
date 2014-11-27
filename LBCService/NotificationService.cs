@@ -1,4 +1,13 @@
-﻿namespace LBCService
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="NotificationService.cs" company="Eddy MONTUS">
+//   2014
+// </copyright>
+// <summary>
+//   The notification service.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace LBCService
 {
     using System;
     using System.Collections.Generic;

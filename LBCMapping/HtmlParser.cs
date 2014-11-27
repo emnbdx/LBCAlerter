@@ -268,8 +268,11 @@
                               AdUrl = link.GetAttributeValue("href", string.Empty),
                               PictureUrl =
                                   imgNode != null
-                                      ? imgNode.GetAttributeValue("src", string.Empty).Replace("thumbs", "images")
-                                      : string.Empty,
+                                      ? new[]
+                                            {
+                                                imgNode.GetAttributeValue("src", string.Empty).Replace("thumbs", "images")
+                                            }
+                                      : null,
                               Place =
                                   placementNode != null
                                       ? placementNode.InnerText.Replace("\r", string.Empty)
@@ -355,13 +358,13 @@
 
             var descriptionNode = content.SelectSingleNode("//div[@class='AdviewContent']/div[@class='content']");
 
-            ad.PictureUrl = string.Join(",", pictures);
+            ad.PictureUrl = pictures.ToArray();
             /*TODO : find good solution to get phone number and commercial information
             ad.Phone = phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", "")) : "";
             ad.AllowCommercial = commercialNode == null;*/
             ad.Name = nameNode != null ? nameNode.InnerText : string.Empty;
             ad.ContactUrl = emailNode != null ? emailNode.GetAttributeValue("href", string.Empty) : string.Empty;
-            ad.Param = string.Join(",", parameters);
+            ad.Param = parameters.ToArray();
             ad.Description = descriptionNode != null ? descriptionNode.InnerHtml : string.Empty;
 
             return ad;
