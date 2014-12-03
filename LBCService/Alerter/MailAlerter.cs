@@ -17,7 +17,7 @@
         /// <summary>
         /// The mailer.
         /// </summary>
-        private readonly EMMail mailer = new EMMail();
+        private readonly EmMail mailer = new EmMail();
         
         /// <summary>
         /// Initializes a new instance of the <see cref="MailAlerter"/> class.

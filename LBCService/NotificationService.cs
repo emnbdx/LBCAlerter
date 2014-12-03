@@ -123,7 +123,7 @@ namespace LBCService
 
             var lastDay = DateTime.Now.AddDays(-1);
 
-            var mail = new EMMail();
+            var mail = new EmMail();
             var attempsCount = search.Attempts.Count(entry => entry.ProcessDate > lastDay);
             var todayAds = search.Ads.Where(entry => entry.Date > lastDay).OrderBy(entry => entry.Date);
             var parameters = new Dictionary<string, object>
@@ -153,10 +153,10 @@ namespace LBCService
                 todayAds.Select(
                     ad =>
                     this.IsPremium(search.User)
-                        ? new MailFormater(mail.GetPattern("LBC_RECAP_AD_FULL").CONTENT, ad)
-                        : new MailFormater(mail.GetPattern("LBC_RECAP_AD").CONTENT, ad)))
+                        ? new MailFormatter(mail.GetPattern("LBC_RECAP_AD_FULL").CONTENT, ad)
+                        : new MailFormatter(mail.GetPattern("LBC_RECAP_AD").CONTENT, ad)))
             {
-                ads.Append(formater.Formated);
+                ads.Append(formater.Formatted);
             }
 
             parameters.Add("{Ads}", ads.ToString());

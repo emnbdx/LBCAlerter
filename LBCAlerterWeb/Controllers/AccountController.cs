@@ -38,7 +38,7 @@
         /// </param>
         private void SendEmailConfirmation(string to, string confirmationToken)
         {
-            var mail = new EMMail();
+            var mail = new EmMail();
             var parameters = new Dictionary<string, object>
                                  {
                                      {
@@ -205,7 +205,7 @@
         /// </param>
         private void SendEmailReset(string to, string confirmationToken)
         {
-            var mail = new EMMail();
+            var mail = new EmMail();
             var parameters = new Dictionary<string, object>
                                  {
                                      { "{Title}", "Réinitialision de mot de passe" },
