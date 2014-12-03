@@ -240,6 +240,10 @@
     <Compile Include="Migrations\201410251033141_UpdateDon.Designer.cs">
       <DependentUpon>201410251033141_UpdateDon.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201412032353087_AddAdContent.cs" />
+    <Compile Include="Migrations\201412032353087_AddAdContent.Designer.cs">
+      <DependentUpon>201412032353087_AddAdContent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Ad.cs" />
@@ -364,6 +368,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <EmbeddedResource Include="Migrations\201412032353087_AddAdContent.resx">
+      <DependentUpon>201412032353087_AddAdContent.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\PublishProfiles\perso.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />

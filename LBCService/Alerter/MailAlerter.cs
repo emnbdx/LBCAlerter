@@ -4,6 +4,8 @@
     using LBCMapping;
     using log4net;
 
+    using Newtonsoft.Json;
+
     /// <summary>
     /// Send mail to alert
     /// </summary>
@@ -62,8 +64,9 @@
         public void Alert(Ad ad)
         {
             Log.Info("Ajout d'un mail à la file d'envoie [" + ad.Title + "]");
+            var parameters = JsonConvert.SerializeObject(ad);
 
-            this.mailer.Add(this.Subject, this.To, this.FullMode ? "LBC_AD_FULL" : "LBC_AD", ad);
+            this.mailer.Add(this.Subject, this.To, this.FullMode ? "LBC_AD_FULL" : "LBC_AD", parameters);
         }
     }
 }

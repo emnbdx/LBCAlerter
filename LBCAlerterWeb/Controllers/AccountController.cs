@@ -39,14 +39,11 @@
         private void SendEmailConfirmation(string to, string confirmationToken)
         {
             var mail = new EmMail();
-            var parameters = new Dictionary<string, object>
-                                 {
-                                     {
-                                         "{Title}",
-                                         "Vous venez de vous inscrire sur LBCAlerter, MERCI !"
-                                     },
-                                     { "{Token}", confirmationToken }
-                                 };
+            var parameters = @" {
+                                    'Title': 'Vous venez de vous inscrire sur LBCAlerter, MERCI !',
+                                    'Token': '" + confirmationToken + @"'
+                                }";
+
             mail.Add("[LBCAlerter] - Confirmation de votre compte", to, "LBC_CONFIRMATION", parameters);
         }
 
@@ -206,11 +203,11 @@
         private void SendEmailReset(string to, string confirmationToken)
         {
             var mail = new EmMail();
-            var parameters = new Dictionary<string, object>
-                                 {
-                                     { "{Title}", "Réinitialision de mot de passe" },
-                                     { "{Token}", confirmationToken }
-                                 };
+            var parameters = @" {
+                                    'Title': 'Réinitialision de mot de passe',
+                                    'Token': '" + confirmationToken + @"'
+                                }";
+
             mail.Add("[LBCAlerter] - réinitialision de mot de passe", to, "LBC_RESET", parameters);
         }
 

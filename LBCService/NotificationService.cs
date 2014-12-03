@@ -27,6 +27,8 @@ namespace LBCService
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
 
+    using Newtonsoft.Json;
+
     /// <summary>
     /// The notification service.
     /// </summary>
@@ -126,47 +128,33 @@ namespace LBCService
             var mail = new EmMail();
             var attempsCount = search.Attempts.Count(entry => entry.ProcessDate > lastDay);
             var todayAds = search.Ads.Where(entry => entry.Date > lastDay).OrderBy(entry => entry.Date);
-            var parameters = new Dictionary<string, object>
-                                 {
-                                     {
-                                         "{Title}",
-                                         "Recap quotidien pour [" + search.KeyWord + "]"
-                                     },
-                                     {
-                                         "{AdCount}",
-                                         search.Ads.Count(entry => entry.Date > lastDay)
-                                     },
-                                     { "{AttemptCount}", attempsCount },
-                                     {
-                                         "{AttemptCadence}",
-                                         24 * 60 / (attempsCount <= 0 ? 1 : attempsCount)
-                                     },
-                                     { "{Id}", search.ID },
-                                     {
-                                         "{AdId}",
-                                         todayAds.FirstOrDefault() == null ? 0 : todayAds.FirstOrDefault().ID
-                                     }
-                                 };
-
+            
             var ads = new StringBuilder();
             foreach (var formater in
                 todayAds.Select(
                     ad =>
                     this.IsPremium(search.User)
-                        ? new MailFormatter(mail.GetPattern("LBC_RECAP_AD_FULL").CONTENT, ad)
-                        : new MailFormatter(mail.GetPattern("LBC_RECAP_AD").CONTENT, ad)))
+                        ? new MailFormatter(mail.GetPattern("LBC_RECAP_AD_FULL").CONTENT, JsonConvert.SerializeObject(ad))
+                        : new MailFormatter(mail.GetPattern("LBC_RECAP_AD").CONTENT, JsonConvert.SerializeObject(ad))))
             {
                 ads.Append(formater.Formatted);
             }
 
-            parameters.Add("{Ads}", ads.ToString());
+            var parameters = @" {
+                                    'Title': 'Recap quotidien pour [" + search.KeyWord + @"]',
+                                    'AdCount': '" + search.Ads.Count(entry => entry.Date > lastDay) + @"',
+                                    'AttemptCount': '" + attempsCount + @"',
+                                    'AttemptCadence': '" + (4 * 60 / (attempsCount <= 0 ? 1 : attempsCount)) + @"',
+                                    'Id': '" + search.ID + @"',
+                                    'AdId': '" + (todayAds.FirstOrDefault() == null ? 0 : todayAds.FirstOrDefault().ID) + @"',
+                                    'Ads' : '" + ads.Replace("'", "\\'") + @"'
+                                }";
 
             mail.Add(
                 "[LBCAlerter] - Recap quotidien pour [" + search.KeyWord + "]",
                 search.User.UserName,
                 this.IsPremium(search.User) ? "LBC_RECAP" : "LBC_RECAP_FULL",
                 parameters);
-
 
             using (var db = new ApplicationDbContext())
             {
