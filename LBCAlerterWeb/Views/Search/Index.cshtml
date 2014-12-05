@@ -26,97 +26,179 @@
 
 @if (Model.Any())
 {
-    <div class="row cards">
+    var enabled = Model.Where(entry => entry.Enabled).ToList();
+    var disabled = Model.Where(entry => !entry.Enabled).ToList();
 
-        @foreach (var item in Model)
+    if (enabled.Any())
+    {
+        if (enabled.Count() > 1)
         {
-            <div class="card-container col-lg-3 col-sm-6 col-sm-12">
-                <div class="card card-blue hover">
-                    <div class="front">
-                        <div class="media">
-                            <span class="pull-left">
-                                <i class="fa fa-bell-o media-object"></i>
-                            </span>
-                            <div class="media-body">
-                                <small>@Html.DisplayFor(modelItem => item.KeyWord)</small>
-                            </div>
-                        </div>
-                        <div class="progress-list">
-                            <div class="details">
-                                @Html.DisplayNameFor(model => model.RefreshTime) :
-                                @Html.DisplayFor(modelItem => item.RefreshTime)
+            <label>Alertes actives</label>
+        }
+        else
+        {
+            <label>Alerte active</label>
+        }
+        <div class="row">
 
-                                <div class="onoffswitch-container">
-                                    @Html.Label("", "Alertes email ?", new { @class = "control-label" })
-                                    <div class="col-xs-4 control-block">
-                                        <div class="onoffswitch labeled success">
-                                            @Html.CheckBoxFor(modelItem => item.MailAlert, new { @class = "onoffswitch-checkbox", @disabled = "true" })
-                                            <label class="onoffswitch-label" for="MailAlert">
-                                                <span class="onoffswitch-inner"></span>
-                                                <span class="onoffswitch-switch"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div>
-
-                                <div class="onoffswitch-container">
-                                    @Html.Label("", "Recap. journalier ?", new { @class = "control-label" })
-                                    <div class="col-xs-4 control-block">
-                                        <div class="onoffswitch labeled success">
-                                            @Html.CheckBoxFor(modelItem => item.MailRecap, new { @class = "onoffswitch-checkbox", @disabled = "true" })
-                                            <label class="onoffswitch-label" for="MailRecap">
-                                                <span class="onoffswitch-inner"></span>
-                                                <span class="onoffswitch-switch"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="clearfix"></div>
+            @foreach (var item in enabled)
+            {
+                <div class="card-container col-lg-3 col-sm-6 col-sm-12">
+                    <div class="card card-blue hover">
+                        <div class="front">
+                            <div class="media">
+                                <span class="pull-left">
+                                    <i class="fa fa-bell-o media-object"></i>
+                                </span>
+                                <div class="media-body">
+                                    <small>@Html.DisplayFor(modelItem => item.KeyWord)</small>
                                 </div>
                             </div>
+                            <div class="progress-list">
+                                <div class="details">
+                                    @Html.DisplayNameFor(model => model.RefreshTime) :
+                                    @Html.DisplayFor(modelItem => item.RefreshTime)
+
+                                    <div class="onoffswitch-container">
+                                        @Html.Label("", "Alertes email ?", new { @class = "control-label" })
+                                        <div class="col-xs-4 control-block">
+                                            <div class="onoffswitch labeled success">
+                                                @Html.CheckBoxFor(modelItem => item.MailAlert, new { @class = "onoffswitch-checkbox", @disabled = "true" })
+                                                <label class="onoffswitch-label" for="MailAlert">
+                                                    <span class="onoffswitch-inner"></span>
+                                                    <span class="onoffswitch-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+
+                                    <div class="onoffswitch-container">
+                                        @Html.Label("", "Recap. journalier ?", new { @class = "control-label" })
+                                        <div class="col-xs-4 control-block">
+                                            <div class="onoffswitch labeled success">
+                                                @Html.CheckBoxFor(modelItem => item.MailRecap, new { @class = "onoffswitch-checkbox", @disabled = "true" })
+                                                <label class="onoffswitch-label" for="MailRecap">
+                                                    <span class="onoffswitch-inner"></span>
+                                                    <span class="onoffswitch-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
                         </div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="back">
-                        <div class="back-links pull-left">
-                            <a href="@Url.Action("AdList", new { id = item.ID })">
-                                <i class="fa fa-search fa-4x"></i>
-                                <span>Résultats</span>
-                            </a>
-                        </div>
-                        <div class="back-links pull-left">
-                            <a href="@Url.Action("Edit", new { id = item.ID })">
-                                <i class="fa fa-edit fa-4x"></i>
-                                <span>Modifier</span>
-                            </a>
-                        </div>
-                        <div class="back-links pull-right">
-                            <a href="@Url.Action("Delete", new { id = item.ID })">
-                                <i class="fa fa-remove fa-4x"></i>
-                                <span>Supprimer</span>
-                            </a>
+                        <div class="back">
+                            <div class="back-links pull-left">
+                                <a href="@Url.Action("AdList", new { id = item.ID })">
+                                    <i class="fa fa-search fa-4x"></i>
+                                    <span>Résultats</span>
+                                </a>
+                            </div>
+                            <div class="back-links pull-left">
+                                <a href="@Url.Action("Edit", new { id = item.ID })">
+                                    <i class="fa fa-edit fa-4x"></i>
+                                    <span>Modifier</span>
+                                </a>
+                            </div>
+                            <div class="back-links pull-right">
+                                <a href="@Url.Action("Delete", new { id = item.ID })">
+                                    <i class="fa fa-remove fa-4x"></i>
+                                    <span>Supprimer</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            /*
-         * Rss useless
-         *
-         * @Html.ActionLink("Flux", "AdListFeed", new { id = item.ID })*/
+                /*
+                 * Rss useless
+                 *
+                 * @Html.ActionLink("Flux", "AdListFeed", new { id = item.ID })*/
 
-            cardCount++;
+                cardCount++;
 
-            if (cardCount % 4 != 0)
-            {
-                continue;
+                if (cardCount % 4 != 0)
+                {
+                    continue;
+                }
+
+                cardCount = 0;
+                @Html.Raw("</div><div class=\"row cards\">")
             }
+        </div>
+    }
 
-            cardCount = 0;
-            @Html.Raw("</div><div class=\"row cards\">")
-            ;
+    if (disabled.Any())
+    {
+        if (disabled.Count() > 1)
+        {
+            <label>Alertes désactivées</label>
         }
-    </div>
+        else
+        {
+            <label>Alerte désactivée</label>
+        }
+        <div class="row">
+
+            @foreach (var item in disabled)
+            {
+                <div class="card-container col-lg-3 col-sm-6 col-sm-12">
+                    <div class="card card-red hover">
+                        <div class="front">
+                            <div class="media">
+                                <span class="pull-left">
+                                    <i class="fa fa-bell-o media-object"></i>
+                                </span>
+                                <div class="media-body">
+                                    <small>@Html.DisplayFor(modelItem => item.KeyWord)</small>
+                                </div>
+                            </div>
+                            <div class="progress-list">
+                                <div class="details">
+                                    @Html.DisplayNameFor(model => model.RefreshTime) :
+                                    @Html.DisplayFor(modelItem => item.RefreshTime)
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="back">
+                            <div class="back-links pull-left">
+                                <a href="@Url.Action("AdList", new { id = item.ID })">
+                                    <i class="fa fa-search fa-4x"></i>
+                                    <span>Résultats</span>
+                                </a>
+                            </div>
+                            <div class="back-links pull-left">
+                                <a href="@Url.Action("Edit", new { id = item.ID })">
+                                    <i class="fa fa-edit fa-4x"></i>
+                                    <span>Modifier</span>
+                                </a>
+                            </div>
+                            <div class="back-links pull-right">
+                                <a href="@Url.Action("Delete", new { id = item.ID })">
+                                    <i class="fa fa-remove fa-4x"></i>
+                                    <span>Supprimer</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                cardCount++;
+
+                if (cardCount % 4 != 0)
+                {
+                    continue;
+                }
+
+                cardCount = 0;
+                @Html.Raw("</div><div class=\"row cards\">")
+            }
+        </div>
+    }
 }
 else
 {

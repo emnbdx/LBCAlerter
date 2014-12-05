@@ -38,7 +38,7 @@
         /// </param>
         private void SendEmailConfirmation(string to, string confirmationToken)
         {
-            var mail = new EmMail();
+            var mail = new EMMail();
             var parameters = @" {
                                     'Title': 'Vous venez de vous inscrire sur LBCAlerter, MERCI !',
                                     'Token': '" + confirmationToken + @"'
@@ -202,7 +202,7 @@
         /// </param>
         private void SendEmailReset(string to, string confirmationToken)
         {
-            var mail = new EmMail();
+            var mail = new EMMail();
             var parameters = @" {
                                     'Title': 'Réinitialision de mot de passe',
                                     'Token': '" + confirmationToken + @"'

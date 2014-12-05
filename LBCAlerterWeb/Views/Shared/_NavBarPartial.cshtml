@@ -2,6 +2,7 @@
 
 @{
     var notifCount = Helper.GetNotificationCount(User.Identity.GetUserId());
+    var searchList = Helper.GetSearch(User.Identity.GetUserId()).ToList();
 }
 
 @if (User.Identity.IsAuthenticated)
@@ -26,7 +27,7 @@
                         <div class="profile-photo">
                             <img src="~/Content/images/profil.gif" alt="">
                         </div>
-                        <a class="dropdown-toggle options" data-toggle="dropdown" href="#">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             @User.Identity.GetUserName() <i class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu arrow settings animated fadeInDown">
@@ -52,21 +53,24 @@
                                 <i class="fa fa-dashboard"></i> Tableau de bord
                             </a>
                         </li>
-                        <li id="searchMenu" class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-list"></i> Alertes <b class="fa fa-plus dropdown-plus"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                @foreach (var search in Helper.GetSearch(User.Identity.GetUserId()))
-                                {
-                                    <li id="search_@search.ID">
-                                        <a href="@Url.Action("Edit", "Search", new { ID = search.ID })">
-                                            <i class="fa fa-caret-right"></i> @search.KeyWord
-                                        </a>
-                                    </li>
-                                }
-                            </ul>
-                        </li>
+                        @if (searchList.Any())
+                        {
+                            <li id="searchMenu" class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-list"></i> Alertes <b class="fa fa-plus dropdown-plus"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    @foreach (var search in searchList)
+                                    {
+                                        <li id="search_@search.ID">
+                                            <a href="@Url.Action("Edit", "Search", new { search.ID })">
+                                                <i class="fa fa-caret-right"></i> @search.KeyWord
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
                         <li id="newMenu">
                             <a href="@Url.Action("Create", "Search")">
                                 <i class="fa fa-edit"></i> Nouvelle alerte

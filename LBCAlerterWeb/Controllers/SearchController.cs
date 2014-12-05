@@ -166,7 +166,7 @@
         /// The <see cref="ActionResult"/>.
         /// </returns>
         [HttpPost]
-        public ActionResult Create([Bind(Include = "Url")] Search search)
+        public ActionResult Create([Bind(Include = "Url,RefreshTime")] Search search)
         {
             var currentUser = this.UserManager.FindById(User.Identity.GetUserId());
 

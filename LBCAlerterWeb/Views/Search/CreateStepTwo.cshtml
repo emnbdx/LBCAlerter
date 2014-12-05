@@ -60,27 +60,27 @@ else
         if (script.Contains("perform_search"))
         {
             var start = script.IndexOf("window.location.href");
-            val = script.Insert(start, @"var searchUrl = new_url.replace('?&', '?\\');
-                                        if(searchUrl.indexOf('&q=') == -1) {
+            val = script.Insert(start, @"if(new_url.indexOf('&q=') == -1) {
                                             if(!confirm('Attention vous n\'avez pas spécifié de mots clé, est-ce volontaire ?')) {
                                                 return false;
                                             }
                                         }
 
                                         $.ajax({
-                                           url: '" + @Url.Action("Create") + @"',
-                                           type: 'POST',
-                                           data: {
-                                               Url: searchUrl
-                                           },
-                                           success: function (data) {
-                                               if(!data['success']) {
-                                                  alert(data['message']);
-                                               } else {
-                                                   alert('Votre recherche a bien été crée vous allez recevoir 5 mails correspondants aux dernières annonces parues.');
-                                               }
+                                            url: '" + @Url.Action("Create") + @"',
+                                            type: 'POST',
+                                            data: {
+                                                Url: new_url,
+                                                RefreshTime: 60
+                                            },
+                                            success: function (data) {
+                                                if(!data['success']) {
+                                                    alert(data['message']);
+                                                } else {
+                                                    alert('Votre recherche a bien été crée vous allez recevoir 5 mails correspondants aux dernières annonces parues.');
+                                                }
                                                 window.top.location.href = '" + @Url.Action("Index") + @"';
-                                           }
+                                            }
                                         });
                                         return false;");
         }

@@ -125,7 +125,7 @@ namespace LBCService
 
             var lastDay = DateTime.Now.AddDays(-1);
 
-            var mail = new EmMail();
+            var mail = new EMMail();
             var attempsCount = search.Attempts.Count(entry => entry.ProcessDate > lastDay);
             var todayAds = search.Ads.Where(entry => entry.Date > lastDay).OrderBy(entry => entry.Date);
             

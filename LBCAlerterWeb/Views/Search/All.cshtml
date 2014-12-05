@@ -30,6 +30,9 @@
             Nom d'utilisateur
         </th>
         <th>
+            Activé ?
+        </th>
+        <th>
             Alertes email ?
         </th>
         <th>
@@ -50,13 +53,22 @@
         <th></th>
     </tr>
 
-    @foreach (var item in Model) {
+    @foreach (var item in Model.OrderByDescending(entry => entry.Enabled)) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.KeyWord)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.User.UserName)
+            </td>
+            <td>
+                <div class="onoffswitch labeled success">
+                    @Html.CheckBoxFor(modelItem => item.Enabled, new { @class = "onoffswitch-checkbox", @disabled = "true" })
+                    <label class="onoffswitch-label" for="Enabled">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
             </td>
             <td>
                 <div class="onoffswitch labeled success">
