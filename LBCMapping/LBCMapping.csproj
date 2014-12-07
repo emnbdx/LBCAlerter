@@ -72,7 +72,6 @@
   <ItemGroup>
     <Compile Include="ContentType.cs" />
     <Compile Include="IAlerter.cs" />
-    <Compile Include="Ad.cs" />
     <Compile Include="HtmlParser.cs" />
     <Compile Include="ICounter.cs" />
     <Compile Include="PageType.cs" />

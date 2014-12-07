@@ -1,7 +1,18 @@
-﻿namespace LBCService.Alerter
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="LogAlerter.cs" company="Eddy MONTUS">
+//   2014
+// </copyright>
+// <summary>
+//   Display alert in log file
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace LBCService.Alerter
 {
     using LBCMapping;
     using log4net;
+
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Display alert in log file
@@ -19,9 +30,9 @@
         /// <param name="ad">
         /// The ad.
         /// </param>
-        public void Alert(Ad ad)
+        public void Alert(JObject ad)
         {
-            Log.Info("Nouvelle annonce [" + ad.Title + "]");
+            Log.Info("Nouvelle annonce [" + ad["Title"] + "]");
         }
     }
 }

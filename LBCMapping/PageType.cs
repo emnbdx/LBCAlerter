@@ -1,4 +1,13 @@
-﻿namespace LBCMapping
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="PageType.cs" company="Eddy MONTUS">
+//   2014
+// </copyright>
+// <summary>
+//   The page type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace LBCMapping
 {
     /// <summary>
     /// The page type.
@@ -11,7 +20,7 @@
         Home,
 
         /// <summary>
-        /// The critera.
+        /// The criteria.
         /// </summary>
         Criteria
     }

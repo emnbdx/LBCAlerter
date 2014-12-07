@@ -11,6 +11,8 @@
     using HtmlAgilityPack;
     using log4net;
 
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// The html parser.
     /// </summary>
@@ -167,7 +169,7 @@
         /// </summary>
         /// <param name="link">Base node for parsing</param>
         /// <returns>Ad instance with all data collected</returns>
-        public static Ad ExtractAdInformation(HtmlNode link)
+        public static JObject ExtractAdInformation(HtmlNode link)
         {
             var ad = link.SelectSingleNode("div[@class='lbc']");
 
@@ -262,28 +264,36 @@
                 realDate = realDate.AddYears(-1);
             }
 
-            var tmp = new Ad
-                          {
-                              Date = realDate,
-                              AdUrl = link.GetAttributeValue("href", string.Empty),
-                              PictureUrl =
-                                  imgNode != null
-                                      ? new[]
-                                            {
-                                                imgNode.GetAttributeValue("src", string.Empty).Replace("thumbs", "images")
-                                            }
-                                      : null,
-                              Place =
-                                  placementNode != null
-                                      ? placementNode.InnerText.Replace("\r", string.Empty)
-                                            .Replace("\n", string.Empty)
-                                            .Replace(" ", string.Empty)
-                                      : string.Empty,
-                              Price = priceNode != null ? priceNode.InnerText.Trim() : string.Empty,
-                              Title = titleNode != null ? titleNode.InnerText.Trim() : string.Empty
-                          };
+            var tmp = @" {
+                                'Url': '" + link.GetAttributeValue("href", string.Empty) + @"',
+                                'Date': '" + realDate + @"',
+                                'Title': '" + (titleNode != null ? titleNode.InnerText.Trim() : string.Empty) + @"'
+                                'Contents': [
+                                    { 
+                                        'Type' : 'PictureUrl',
+                                        'Value': '"
+                         + (imgNode != null
+                                ? new[] { imgNode.GetAttributeValue("src", string.Empty).Replace("thumbs", "images") }
+                                : null) + @"'
+                                    },
+                                    { 
+                                        'Type' : 'Place',
+                                        'Value': '"
+                         + (placementNode != null
+                                ? placementNode.InnerText.Replace("\r", string.Empty)
+                                      .Replace("\n", string.Empty)
+                                      .Replace(" ", string.Empty)
+                                : string.Empty) + @"'
+                                    },
+                                    { 
+                                        'Type' : 'Price',
+                                        'Value': '" + (priceNode != null ? priceNode.InnerText.Trim() : string.Empty)
+                         + @"'
+                                    },
+                                ]
+                        }";
 
-            return tmp;
+            return JObject.Parse(tmp);
         }
 
         /// <summary>
@@ -293,12 +303,12 @@
         /// The ad.
         /// </param>
         /// <returns>
-        /// The <see cref="Ad"/>.
+        /// The <see cref="JObject"/>.
         /// </returns>
-        public static Ad ExtractAllAdInformation(Ad ad)
+        public static JObject ExtractAllAdInformation(JObject ad)
         {
             var web = new HtmlWeb { OverrideEncoding = System.Text.Encoding.GetEncoding(Encoding) };
-            var doc = web.Load(ad.AdUrl);
+            var doc = web.Load(ad["Url"].ToString());
             var content = doc.DocumentNode.SelectSingleNode("//div[@class='content-border']");
 
             var pictures = new List<string>();
@@ -358,6 +368,8 @@
 
             var descriptionNode = content.SelectSingleNode("//div[@class='AdviewContent']/div[@class='content']");
 
+            
+            
             ad.PictureUrl = pictures.ToArray();
             /*TODO : find good solution to get phone number and commercial information
             ad.Phone = phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", "")) : "";

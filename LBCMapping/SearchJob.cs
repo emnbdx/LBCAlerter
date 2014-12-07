@@ -1,4 +1,13 @@
-﻿namespace LBCMapping
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="SearchJob.cs" company="Eddy MONTUS">
+//   2014
+// </copyright>
+// <summary>
+//   The search job.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace LBCMapping
 {
     using System;
     using System.Collections.Generic;
@@ -8,6 +17,8 @@
 
     using EMToolBox.Job;
     using log4net;
+
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// The search job.
@@ -159,7 +170,7 @@
         /// Call Alert() method on all alerter
         /// </summary>
         /// <param name="ad">New Ad</param>
-        public void Alert(Ad ad)
+        public void Alert(JObject ad)
         {
             foreach (var alerter in this.Alerters)
             {

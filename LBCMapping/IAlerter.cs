@@ -1,5 +1,16 @@
-﻿namespace LBCMapping
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="IAlerter.cs" company="Eddy MONTUS">
+//   2014
+// </copyright>
+// <summary>
+//   Implement this interface to make your own alert system
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace LBCMapping
 {
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Implement this interface to make your own alert system
     /// </summary>
@@ -11,6 +22,6 @@
         /// <param name="ad">
         /// The ad.
         /// </param>
-        void Alert(Ad ad);
+        void Alert(JObject ad);
     }
 }

@@ -1,10 +1,19 @@
-﻿namespace LBCService.Alerter
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="MailAlerter.cs" company="Eddy MONTUS">
+//   2014
+// </copyright>
+// <summary>
+//   Send mail to alert
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace LBCService.Alerter
 {
     using EMToolBox.Mail;
     using LBCMapping;
     using log4net;
 
-    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Send mail to alert
@@ -61,12 +70,11 @@
         /// <param name="ad">
         /// The ad.
         /// </param>
-        public void Alert(Ad ad)
+        public void Alert(JObject ad)
         {
-            Log.Info("Ajout d'un mail à la file d'envoie [" + ad.Title + "]");
-            var parameters = JsonConvert.SerializeObject(ad);
+            Log.Info("Ajout d'un mail à la file d'envoie [" + ad["Title"] + "]");
 
-            this.mailer.Add(this.Subject, this.To, this.FullMode ? "LBC_AD_FULL" : "LBC_AD", parameters);
+            this.mailer.Add(this.Subject, this.To, this.FullMode ? "LBC_AD_FULL" : "LBC_AD", ad.ToString());
         }
     }
 }

@@ -9,6 +9,8 @@
     using LBCAlerterWeb.Models;
     using LBCMapping;
 
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// The ef saver.
     /// </summary>
@@ -47,9 +49,9 @@
         /// <exception cref="Exception">
         /// If search doesn't exist
         /// </exception>
-        public bool Store(LBCMapping.Ad ad)
+        public bool Store(JToken ad)
         {
-            var hash = GetMd5Hash(ad.Title + ad.Description);
+            var hash = GetMd5Hash(ad["Title"].ToString() + ad.SelectToken("Contents").Children().FirstOrDefault(x => x.Type.ToString() == "Description"));
             var databaseAd = this.db.Ads.FirstOrDefault(entry => entry.Search.ID == this.searchId && entry.Hash == hash);
 
             if (databaseAd != null)
@@ -108,24 +110,22 @@
                 contents.Add(content);
             }
 
-            foreach (var param in ad.Param)
+            if (ad.Param != null)
             {
-                content = new AdContent
-                                  {
-                                      Type = AdContent.ContentType.Param.ToString(),
-                                      Value = param
-                                  };
-                contents.Add(content);
+                foreach (var param in ad.Param)
+                {
+                    content = new AdContent { Type = AdContent.ContentType.Param.ToString(), Value = param };
+                    contents.Add(content);
+                }
             }
 
-            foreach (var pictureUrl in ad.PictureUrl)
+            if (ad.PictureUrl != null)
             {
-                content = new AdContent
-                                  {
-                                      Type = AdContent.ContentType.PictureUrl.ToString(),
-                                      Value = pictureUrl
-                                  };
-                contents.Add(content);
+                foreach (var pictureUrl in ad.PictureUrl)
+                {
+                    content = new AdContent { Type = AdContent.ContentType.PictureUrl.ToString(), Value = pictureUrl };
+                    contents.Add(content);
+                }
             }
 
             var tmpAd = new LBCAlerterWeb.Models.Ad

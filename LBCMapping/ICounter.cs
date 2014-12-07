@@ -1,4 +1,13 @@
-﻿namespace LBCMapping
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ICounter.cs" company="Eddy MONTUS">
+//   2014
+// </copyright>
+// <summary>
+//   Implement this interface to make your own log system
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace LBCMapping
 {
     /// <summary>
     /// Implement this interface to make your own log system
