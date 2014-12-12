@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Security.Cryptography;
     using System.Text;
 
@@ -49,7 +50,7 @@
         /// <exception cref="Exception">
         /// If search doesn't exist
         /// </exception>
-        public bool Store(JToken ad)
+        public bool Store(JObject ad)
         {
             var hash = GetMd5Hash(ad["Title"].ToString() + ad.SelectToken("Contents").Children().FirstOrDefault(x => x.Type.ToString() == "Description"));
             var databaseAd = this.db.Ads.FirstOrDefault(entry => entry.Search.ID == this.searchId && entry.Hash == hash);
@@ -67,73 +68,110 @@
 
             var contents = new List<AdContent>();
 
-            var content = new AdContent
-                              {
-                                  Type = AdContent.ContentType.AllowCommercial.ToString(),
-                                  Value = ad.AllowCommercial.ToString()
-                              };
-            contents.Add(content);
-
-            if (!string.IsNullOrEmpty(ad.ContactUrl))
+            var tmp = ad["Contents"].Children().FirstOrDefault(entry => entry["Type"].ToString() == "AllowCommercial");
+            if (tmp != null)
             {
-                content = new AdContent { Type = AdContent.ContentType.ContactUrl.ToString(), Value = ad.ContactUrl };
+                var allowCommercial = (string)tmp["Value"];
+                var content = new AdContent
+                                  {
+                                      Type = AdContent.ContentType.AllowCommercial.ToString(),
+                                      Value = allowCommercial
+                                  };
                 contents.Add(content);
             }
 
-            if (!string.IsNullOrEmpty(ad.Description))
+            tmp = ad["Contents"].Children().FirstOrDefault(entry => entry["Type"].ToString() == "ContactUrl");
+            if (tmp != null)
             {
-                content = new AdContent { Type = AdContent.ContentType.Description.ToString(), Value = ad.Description };
-                contents.Add(content);
-            }
-
-            if (!string.IsNullOrEmpty(ad.Name))
-            {
-                content = new AdContent { Type = AdContent.ContentType.Name.ToString(), Value = ad.Name };
-                contents.Add(content);
-            }
-
-            if (!string.IsNullOrEmpty(ad.Phone))
-            {
-                content = new AdContent { Type = AdContent.ContentType.Phone.ToString(), Value = ad.Phone };
-                contents.Add(content);
-            }
-
-            if (!string.IsNullOrEmpty(ad.Place))
-            {
-                content = new AdContent { Type = AdContent.ContentType.Place.ToString(), Value = ad.Place };
-                contents.Add(content);
-            }
-
-            if (!string.IsNullOrEmpty(ad.Price))
-            {
-                content = new AdContent { Type = AdContent.ContentType.Price.ToString(), Value = ad.Price };
-                contents.Add(content);
-            }
-
-            if (ad.Param != null)
-            {
-                foreach (var param in ad.Param)
+                var contactUrl = (string)tmp["Value"];
+                if (!string.IsNullOrEmpty(contactUrl))
                 {
-                    content = new AdContent { Type = AdContent.ContentType.Param.ToString(), Value = param };
+                    var content = new AdContent { Type = AdContent.ContentType.ContactUrl.ToString(), Value = contactUrl };
                     contents.Add(content);
                 }
             }
 
-            if (ad.PictureUrl != null)
+            tmp = ad["Contents"].Children().FirstOrDefault(entry => entry["Type"].ToString() == "Description");
+            if (tmp != null)
             {
-                foreach (var pictureUrl in ad.PictureUrl)
+                var description = (string)tmp["Value"];
+                if (!string.IsNullOrEmpty(description))
                 {
-                    content = new AdContent { Type = AdContent.ContentType.PictureUrl.ToString(), Value = pictureUrl };
+                    var content = new AdContent { Type = AdContent.ContentType.Description.ToString(), Value = description };
                     contents.Add(content);
                 }
             }
 
-            var tmpAd = new LBCAlerterWeb.Models.Ad
+            tmp = ad["Contents"].Children().FirstOrDefault(entry => entry["Type"].ToString() == "Name");
+            if (tmp != null)
+            {
+                var name = (string)tmp["Value"];
+                if (!string.IsNullOrEmpty(name))
+                {
+                    var content = new AdContent { Type = AdContent.ContentType.Name.ToString(), Value = name };
+                    contents.Add(content);
+                }
+            }
+
+            tmp = ad["Contents"].Children().FirstOrDefault(entry => entry["Type"].ToString() == "Phone");
+            if (tmp != null)
+            {
+                var phone = (string)tmp["Value"];
+                if (!string.IsNullOrEmpty(phone))
+                {
+                    var content = new AdContent { Type = AdContent.ContentType.Phone.ToString(), Value = phone };
+                    contents.Add(content);
+                }
+            }
+
+            tmp = ad["Contents"].Children().FirstOrDefault(entry => entry["Type"].ToString() == "Place");
+            if (tmp != null)
+            {
+                var place = (string)tmp["Value"];
+                if (!string.IsNullOrEmpty(place))
+                {
+                    var content = new AdContent { Type = AdContent.ContentType.Place.ToString(), Value = place };
+                    contents.Add(content);
+                }
+            }
+
+            tmp = ad["Contents"].Children().FirstOrDefault(entry => entry["Type"].ToString() == "Price");
+            if (tmp != null)
+            {
+                var price = (string)tmp["Value"];
+                if (!string.IsNullOrEmpty(price))
+                {
+                    var content = new AdContent { Type = AdContent.ContentType.Price.ToString(), Value = price };
+                    contents.Add(content);
+                }
+            }
+
+            var tmps = ad["Contents"].Children().Where(entry => entry["Type"].ToString() == "Param");
+            if (tmps != null)
+            {
+                foreach (var t in tmps)
+                {
+                    var content = new AdContent { Type = AdContent.ContentType.Param.ToString(), Value = (string)t["Value"] };
+                    contents.Add(content);
+                }
+            }
+
+            tmps = ad["Contents"].Children().Where(entry => entry["Type"].ToString() == "PictureUrl");
+            if (tmps != null)
+            {
+                foreach (var t in tmps)
+                {
+                    var content = new AdContent { Type = AdContent.ContentType.PictureUrl.ToString(), Value = (string)t["Value"] };
+                    contents.Add(content);
+                }
+            }
+
+            var tmpAd = new Ad
                             {
-                                Url = ad.AdUrl,
+                                Url = (string)ad["AdUrl"],
                                 Hash = hash,
-                                Date = ad.Date,
-                                Title = ad.Title,
+                                Date = (DateTime)ad["Date"],
+                                Title = (string)ad["Title"],
                                 Search = s,
                                 Contents = contents
                             };
@@ -141,8 +179,8 @@
 
             this.db.SaveChanges();
 
-            ad.Id = tmpAd.ID;
-            ad.SearchId = this.searchId;
+            /*ad.Id = tmpAd.ID;
+            ad.SearchId = this.searchId;*/
             return true;
         }
 

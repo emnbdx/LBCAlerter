@@ -265,16 +265,16 @@
             }
 
             var tmp = @" {
-                                'Url': '" + link.GetAttributeValue("href", string.Empty) + @"',
+                                'Url': '" + link.GetAttributeValue("href", string.Empty).Replace("'", "\'") + @"',
                                 'Date': '" + realDate + @"',
-                                'Title': '" + (titleNode != null ? titleNode.InnerText.Trim() : string.Empty) + @"'
+                                'Title': '" + (titleNode != null ? titleNode.InnerText.Trim() : string.Empty).Replace("'", "\'") + @"',
                                 'Contents': [
                                     { 
                                         'Type' : 'PictureUrl',
                                         'Value': '"
                          + (imgNode != null
-                                ? new[] { imgNode.GetAttributeValue("src", string.Empty).Replace("thumbs", "images") }
-                                : null) + @"'
+                                ? imgNode.GetAttributeValue("src", string.Empty).Replace("thumbs", "images")
+                                : string.Empty).Replace("'", "\'") + @"'
                                     },
                                     { 
                                         'Type' : 'Place',
@@ -283,15 +283,17 @@
                                 ? placementNode.InnerText.Replace("\r", string.Empty)
                                       .Replace("\n", string.Empty)
                                       .Replace(" ", string.Empty)
-                                : string.Empty) + @"'
+                                : string.Empty).Replace("'", "\'") + @"'
                                     },
                                     { 
                                         'Type' : 'Price',
-                                        'Value': '" + (priceNode != null ? priceNode.InnerText.Trim() : string.Empty)
+                                        'Value': '" + (priceNode != null ? priceNode.InnerText.Trim() : string.Empty).Replace("'", "\'")
                          + @"'
                                     },
                                 ]
                         }";
+
+            Log.Debug(tmp);
 
             return JObject.Parse(tmp);
         }
@@ -368,16 +370,28 @@
 
             var descriptionNode = content.SelectSingleNode("//div[@class='AdviewContent']/div[@class='content']");
 
-            
-            
-            ad.PictureUrl = pictures.ToArray();
+            var obj = ad["Contents"] as JObject;
+            var existingPictures = ad.SelectToken("Contents").Children().Where(x => x["Type"].ToString() == "PictureUrl");
+            foreach (var picture in pictures)
+            {
+                if (existingPictures.Contains(picture))
+                {
+                    continue;
+                }
+
+                obj.Add("{ 'Type' : 'Param', 'Value': '" + picture.Replace("'", "\'") + "'");
+            }
+
             /*TODO : find good solution to get phone number and commercial information
-            ad.Phone = phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", "")) : "";
-            ad.AllowCommercial = commercialNode == null;*/
-            ad.Name = nameNode != null ? nameNode.InnerText : string.Empty;
-            ad.ContactUrl = emailNode != null ? emailNode.GetAttributeValue("href", string.Empty) : string.Empty;
-            ad.Param = parameters.ToArray();
-            ad.Description = descriptionNode != null ? descriptionNode.InnerHtml : string.Empty;
+            obj.Add("{ 'Type' : 'Phone', 'Value': '" + (phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", "")) : "") + "'");
+            obj.Add("{ 'Type' : 'AllowCommercial', 'Value': '" + (commercialNode == null) + "'");*/
+            obj.Add("{ 'Type' : 'Name', 'Value': '" + (nameNode != null ? nameNode.InnerText : string.Empty).Replace("'", "\'") + "'");
+            obj.Add("{ 'Type' : 'ContactUrl', 'Value': '" + (emailNode != null ? emailNode.GetAttributeValue("href", string.Empty) : string.Empty).Replace("'", "\'") + "'");
+            foreach (var parameter in parameters)
+            {
+                obj.Add("{ 'Type' : 'Param', 'Value': '" + parameter.Replace("'", "\'") + "'");
+            }
+            obj.Add("{ 'Type' : 'Description', 'Value': '" + (descriptionNode != null ? descriptionNode.InnerHtml : string.Empty).Replace("'", "\'") + "'");
 
             return ad;
         }        
