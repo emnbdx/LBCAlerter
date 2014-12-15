@@ -141,13 +141,13 @@ namespace LBCService
             }
 
             var parameters = @" {
-                                    'Title': 'Recap quotidien pour [" + search.KeyWord + @"]',
+                                    'Title': 'Recap quotidien pour [" + search.KeyWord.Replace("'", "\'") + @"]',
                                     'AdCount': '" + search.Ads.Count(entry => entry.Date > lastDay) + @"',
                                     'AttemptCount': '" + attempsCount + @"',
                                     'AttemptCadence': '" + (4 * 60 / (attempsCount <= 0 ? 1 : attempsCount)) + @"',
                                     'Id': '" + search.ID + @"',
                                     'AdId': '" + (todayAds.FirstOrDefault() == null ? 0 : todayAds.FirstOrDefault().ID) + @"',
-                                    'Ads' : '" + ads.Replace("'", "\\'") + @"'
+                                    'Ads' : '" + ads.Replace("'", "\'") + @"'
                                 }";
 
             mail.Add(
