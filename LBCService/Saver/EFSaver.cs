@@ -134,7 +134,7 @@
                             {
                                 Url = (string)ad["AdUrl"],
                                 Hash = hash,
-                                Date = DateTime.Parse((string)ad["Date"], new CultureInfo("en-US")),
+                                Date = DateTime.Parse((string)ad["Date"], new CultureInfo("fr-FR")),
                                 Title = (string)ad["Title"],
                                 Search = s,
                                 Contents = contents

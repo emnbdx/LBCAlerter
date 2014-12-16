@@ -278,7 +278,7 @@
                 writer.WritePropertyName("Url");
                 writer.WriteValue(link.GetAttributeValue("href", string.Empty));
                 writer.WritePropertyName("Date");
-                writer.WriteValue(realDate.ToString(new CultureInfo("en-US")));
+                writer.WriteValue(realDate.ToString(new CultureInfo("fr-FR")));
                 writer.WritePropertyName("Title");
                 writer.WriteValue(titleNode != null ? titleNode.InnerText.Trim() : string.Empty);
 
@@ -388,7 +388,7 @@
 
             using (var writer = ((JArray)ad["Contents"]).CreateWriter())
             {
-                var existingPictures = ad.GetToken("Contents>PictureUrl");
+                var existingPictures = ad.GetTokenValue("Contents>PictureUrl");
                 foreach (var picture in pictures.Where(picture => !existingPictures.Contains(picture)))
                 {
                     writer.WriteStartObject();
