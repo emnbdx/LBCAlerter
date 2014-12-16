@@ -2,15 +2,20 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
     using System.Runtime.Serialization.Configuration;
+    using System.Text;
     using System.Web;
-    
+
+    using EMToolBox;
+
     using HtmlAgilityPack;
     using log4net;
 
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
     /// <summary>
@@ -264,29 +269,49 @@
                 realDate = realDate.AddYears(-1);
             }
 
-            var tmp = @" {
-                                'Url': '" + link.GetAttributeValue("href", string.Empty).Replace("'", "\'") + @"',
-                                'Date': '" + realDate + @"',
-                                'Title': '" + (titleNode != null ? titleNode.InnerText.Trim() : string.Empty).Replace("'", "\'") + @"',
-                                'Contents': [
-                                    { 
-                                        'Type' : 'PictureUrl',
-                                        'Value': '" + (imgNode != null ? imgNode.GetAttributeValue("src", string.Empty).Replace("thumbs", "images") : string.Empty).Replace("'", "\'") + @"'
-                                    },
-                                    { 
-                                        'Type' : 'Place',
-                                        'Value': '" + (placementNode != null ? placementNode.InnerText.Replace("\r", string.Empty).Replace("\n", string.Empty).Replace(" ", string.Empty) : string.Empty).Replace("'", "\'") + @"'
-                                    },
-                                    { 
-                                        'Type' : 'Price',
-                                        'Value': '" + (priceNode != null ? priceNode.InnerText.Trim() : string.Empty).Replace("'", "\'") + @"'
-                                    },
-                                ]
-                        }";
+            var sb = new StringBuilder();
+            var sw = new StringWriter(sb);
+            using (var writer = new JsonTextWriter(sw))
+            {
+                writer.WriteStartObject();
 
-            Log.Debug(tmp);
+                writer.WritePropertyName("Url");
+                writer.WriteValue(link.GetAttributeValue("href", string.Empty));
+                writer.WritePropertyName("Date");
+                writer.WriteValue(realDate.ToString(new CultureInfo("en-US")));
+                writer.WritePropertyName("Title");
+                writer.WriteValue(titleNode != null ? titleNode.InnerText.Trim() : string.Empty);
 
-            return JObject.Parse(tmp);
+                writer.WritePropertyName("Contents");
+                writer.WriteStartArray();
+
+                writer.WriteStartObject();
+                writer.WritePropertyName("Type");
+                writer.WriteValue("PictureUrl");
+                writer.WritePropertyName("Value");
+                writer.WriteValue(imgNode != null ? imgNode.GetAttributeValue("src", string.Empty).Replace("thumbs", "images") : string.Empty);
+                writer.WriteEndObject();
+
+                writer.WriteStartObject();
+                writer.WritePropertyName("Type");
+                writer.WriteValue("Place");
+                writer.WritePropertyName("Value");
+                writer.WriteValue(placementNode != null ? placementNode.InnerText.Replace("\r", string.Empty).Replace("\n", string.Empty).Replace(" ", string.Empty) : string.Empty);
+                writer.WriteEndObject();
+
+                writer.WriteStartObject();
+                writer.WritePropertyName("Type");
+                writer.WriteValue("Price");
+                writer.WritePropertyName("Value");
+                writer.WriteValue(priceNode != null ? priceNode.InnerText.Trim() : string.Empty);
+                writer.WriteEndObject();
+
+                writer.WriteEndArray();
+
+                writer.WriteEndObject();
+            }
+
+            return JObject.Parse(sb.ToString());
         }
 
         /// <summary>
@@ -337,7 +362,7 @@
             {
                 foreach (var parameter in
                     content.SelectNodes(
-                            "//div[contains(@class, 'lbcParamsContainer')]/div[contains(@class, 'lbcParams')]//tr"))
+                        "//div[contains(@class, 'lbcParamsContainer')]/div[contains(@class, 'lbcParams')]//tr"))
                 {
                     var title = parameter.SelectSingleNode("th").InnerText.Replace(":", string.Empty).Trim();
                     string value;
@@ -361,31 +386,57 @@
 
             var descriptionNode = content.SelectSingleNode("//div[@class='AdviewContent']/div[@class='content']");
 
-            var obj = ad["Contents"] as JObject;
-            if (obj == null)
+            using (var writer = ((JArray)ad["Contents"]).CreateWriter())
             {
-                return ad;
-            }
+                var existingPictures = ad.GetToken("Contents>PictureUrl");
+                foreach (var picture in pictures.Where(picture => !existingPictures.Contains(picture)))
+                {
+                    writer.WriteStartObject();
+                    writer.WritePropertyName("Type");
+                    writer.WriteValue("PictureUrl");
+                    writer.WritePropertyName("Value");
+                    writer.WriteValue(picture);
+                    writer.WriteEndObject();
+                }
 
-            var existingPictures = ad.SelectToken("Contents").Children().Where(x => x["Type"].ToString() == "PictureUrl").ToList();
-            foreach (var picture in pictures.Where(picture => !existingPictures.Contains(picture)))
-            {
-                obj.Add("{ 'Type' : 'Param', 'Value': '" + picture.Replace("'", "\'") + "' }");
-            }
+                /*TODO : find good solution to get phone number and commercial information
+                ad.AddContentsToToken("Phone", phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", string.Empty)) : string.Empty), "Contents");
+                ad.AddContentsToToken("AllowCommercial", commercialNode == null, "Contents");*/
 
-            /*TODO : find good solution to get phone number and commercial information
-            obj.Add("{ 'Type' : 'Phone', 'Value': '" + (phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", "")) : "") + "' }");
-            obj.Add("{ 'Type' : 'AllowCommercial', 'Value': '" + (commercialNode == null) + "' }");*/
-            obj.Add("{ 'Type' : 'Name', 'Value': '" + (nameNode != null ? nameNode.InnerText : string.Empty).Replace("'", "\'") + "' }");
-            obj.Add("{ 'Type' : 'ContactUrl', 'Value': '" + (emailNode != null ? emailNode.GetAttributeValue("href", string.Empty) : string.Empty).Replace("'", "\'") + "' }");
-            foreach (var parameter in parameters)
-            {
-                obj.Add("{ 'Type' : 'Param', 'Value': '" + parameter.Replace("'", "\'") + "' }");
+                writer.WriteStartObject();
+                writer.WritePropertyName("Type");
+                writer.WriteValue("Name");
+                writer.WritePropertyName("Value");
+                writer.WriteValue(nameNode != null ? nameNode.InnerText : string.Empty);
+                writer.WriteEndObject();
+
+                writer.WriteStartObject();
+                writer.WritePropertyName("Type");
+                writer.WriteValue("ContactUrl");
+                writer.WritePropertyName("Value");
+                writer.WriteValue(emailNode != null ? emailNode.GetAttributeValue("href", string.Empty) : string.Empty);
+                writer.WriteEndObject();
+
+                foreach (var parameter in parameters)
+                {
+                    writer.WriteStartObject();
+                    writer.WritePropertyName("Type");
+                    writer.WriteValue("Param");
+                    writer.WritePropertyName("Value");
+                    writer.WriteValue(parameter);
+                    writer.WriteEndObject();
+                }
+
+                writer.WriteStartObject();
+                writer.WritePropertyName("Type");
+                writer.WriteValue("Description");
+                writer.WritePropertyName("Value");
+                writer.WriteValue(descriptionNode != null ? descriptionNode.InnerHtml : string.Empty);
+                writer.WriteEndObject();
             }
-            obj.Add("{ 'Type' : 'Description', 'Value': '" + (descriptionNode != null ? descriptionNode.InnerHtml : string.Empty).Replace("'", "\'") + "' }");
 
             return ad;
-        }        
+        }
 
         /// <summary>
         /// Return clean page

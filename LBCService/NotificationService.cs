@@ -12,6 +12,8 @@ namespace LBCService
     using System;
     using System.Collections.Generic;
     using System.Configuration;
+    using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Text;
 
@@ -140,21 +142,35 @@ namespace LBCService
                 ads.Append(formater.Formatted);
             }
 
-            var parameters = @" {
-                                    'Title': 'Recap quotidien pour [" + search.KeyWord.Replace("'", "\'") + @"]',
-                                    'AdCount': '" + search.Ads.Count(entry => entry.Date > lastDay) + @"',
-                                    'AttemptCount': '" + attempsCount + @"',
-                                    'AttemptCadence': '" + (4 * 60 / (attempsCount <= 0 ? 1 : attempsCount)) + @"',
-                                    'Id': '" + search.ID + @"',
-                                    'AdId': '" + (todayAds.FirstOrDefault() == null ? 0 : todayAds.FirstOrDefault().ID) + @"',
-                                    'Ads' : '" + ads.Replace("'", "\'") + @"'
-                                }";
+            var sb = new StringBuilder();
+            var sw = new StringWriter(sb);
+            using (var writer = new JsonTextWriter(sw))
+            {
+                writer.WriteStartObject();
+
+                writer.WritePropertyName("Title");
+                writer.WriteValue("Recap quotidien pour [" + search.KeyWord + "]");
+                writer.WritePropertyName("AdCount");
+                writer.WriteValue(search.Ads.Count(entry => entry.Date > lastDay));
+                writer.WritePropertyName("AttemptCount");
+                writer.WriteValue(attempsCount);
+                writer.WritePropertyName("AttemptCadence");
+                writer.WriteValue(4 * 60 / (attempsCount <= 0 ? 1 : attempsCount));
+                writer.WritePropertyName("Id");
+                writer.WriteValue(search.ID);
+                writer.WritePropertyName("AdId");
+                writer.WriteValue(todayAds.FirstOrDefault() == null ? 0 : todayAds.FirstOrDefault().ID);
+                writer.WritePropertyName("Ads");
+                writer.WriteValue(ads);
+
+                writer.WriteEndObject();
+            }
 
             mail.Add(
                 "[LBCAlerter] - Recap quotidien pour [" + search.KeyWord + "]",
                 search.User.UserName,
                 this.IsPremium(search.User) ? "LBC_RECAP" : "LBC_RECAP_FULL",
-                parameters);
+                sb.ToString());
 
             using (var db = new ApplicationDbContext())
             {

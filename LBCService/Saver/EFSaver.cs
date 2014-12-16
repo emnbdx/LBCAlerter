@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
@@ -53,7 +54,7 @@
         /// </exception>
         public bool Store(JObject ad)
         {
-            var hash = (ad["Title"] + ad.GetTagValue("Contents>Description").FirstOrDefault()).GetMd5Hash();
+            var hash = (ad["Title"].ToString() + ad["Place"]).GetMd5Hash();
             var databaseAd = this.db.Ads.FirstOrDefault(entry => entry.Search.ID == this.searchId && entry.Hash == hash);
 
             if (databaseAd != null)
@@ -68,63 +69,62 @@
             }
 
             var contents = new List<AdContent>();
-
             var content = new AdContent
                               {
                                   Type = AdContent.ContentType.AllowCommercial.ToString(),
-                                  Value = ad.GetTagValue("Contents>AllowCommercial").FirstOrDefault()
+                                  Value = ad.GetTokenValue("Contents>AllowCommercial").FirstOrDefault()
                               };
             contents.Add(content);
 
             content = new AdContent
                           {
                               Type = AdContent.ContentType.ContactUrl.ToString(),
-                              Value = ad.GetTagValue("Contents>ContactUrl").FirstOrDefault()
+                              Value = ad.GetTokenValue("Contents>ContactUrl").FirstOrDefault()
                           };
             contents.Add(content);
 
             content = new AdContent
                           {
                               Type = AdContent.ContentType.Description.ToString(),
-                              Value = ad.GetTagValue("Contents>Description").FirstOrDefault()
+                              Value = ad.GetTokenValue("Contents>Description").FirstOrDefault()
                           };
             contents.Add(content);
 
             content = new AdContent
                           {
                               Type = AdContent.ContentType.Name.ToString(),
-                              Value = ad.GetTagValue("Contents>Name").FirstOrDefault()
+                              Value = ad.GetTokenValue("Contents>Name").FirstOrDefault()
                           };
             contents.Add(content);
 
             content = new AdContent
                           {
                               Type = AdContent.ContentType.Phone.ToString(),
-                              Value = ad.GetTagValue("Contents>Phone").FirstOrDefault()
+                              Value = ad.GetTokenValue("Contents>Phone").FirstOrDefault()
                           };
             contents.Add(content);
 
             content = new AdContent
                           {
                               Type = AdContent.ContentType.Place.ToString(),
-                              Value = ad.GetTagValue("Contents>Place").FirstOrDefault()
+                              Value = ad.GetTokenValue("Contents>Place").FirstOrDefault()
                           };
             contents.Add(content);
 
             content = new AdContent
                           {
                               Type = AdContent.ContentType.Price.ToString(),
-                              Value = ad.GetTagValue("Contents>Price").FirstOrDefault()
+                              Value = ad.GetTokenValue("Contents>Price").FirstOrDefault()
                           };
             contents.Add(content);
 
-            foreach (var param in ad.GetTagValue("Contents>Param"))
+            foreach (var param in ad.GetTokenValue("Contents>Param"))
             {
                 content = new AdContent { Type = AdContent.ContentType.Param.ToString(), Value = param };
                 contents.Add(content);
             }
 
-            foreach (var picture in ad.GetTagValue("Contents>PictureUrl"))
+            foreach (var picture in ad.GetTokenValue("Contents>PictureUrl"))
             {
                 content = new AdContent { Type = AdContent.ContentType.PictureUrl.ToString(), Value = picture };
                 contents.Add(content);
@@ -134,7 +134,7 @@
                             {
                                 Url = (string)ad["AdUrl"],
                                 Hash = hash,
-                                Date = (DateTime)ad["Date"],
+                                Date = DateTime.Parse((string)ad["Date"], new CultureInfo("en-US")),
                                 Title = (string)ad["Title"],
                                 Search = s,
                                 Contents = contents
@@ -143,8 +143,14 @@
 
             this.db.SaveChanges();
 
-            /*ad.Id = tmpAd.ID;
-            ad.SearchId = this.searchId;*/
+            using (var writer = ad.CreateWriter())
+            {
+                writer.WritePropertyName("Id");
+                writer.WriteValue(tmpAd.ID);
+                writer.WritePropertyName("SearchId");
+                writer.WriteValue(this.searchId);
+            }
+
             return true;
         }
     }
