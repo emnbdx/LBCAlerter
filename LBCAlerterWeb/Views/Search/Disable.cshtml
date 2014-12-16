@@ -7,11 +7,11 @@
 <hr />
 
 <p>
-    Votre alerte "@Model.KeyWord" à bien été désactivé, s'il s'agit d'une erreur cliquez @Html.ActionLink("ici", "Edit", "Search", new { ID = Model.ID })
+    Votre alerte "@Model.KeyWord" à bien été désactivé, s'il s'agit d'une erreur cliquez @Html.ActionLink("ici", "Edit", new { Model.ID })
 </p>
 
 <div class="links">
-    @Html.ActionLink("Retour à la liste", "Index", "Search")
+    @Html.ActionLink("Retour à la liste", "Index")
 </div>
 
 

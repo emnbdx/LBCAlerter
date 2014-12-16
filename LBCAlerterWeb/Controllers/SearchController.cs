@@ -287,6 +287,7 @@
         /// <returns>
         /// The <see cref="ActionResult"/>.
         /// </returns>
+        [AllowAnonymous]
         public async Task<ActionResult> Disable(int? id, int? adId)
         {
             if (id == null || adId == null)
