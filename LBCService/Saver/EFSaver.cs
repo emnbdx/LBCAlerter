@@ -54,9 +54,19 @@
         /// </exception>
         public bool Store(JObject ad)
         {
-            var hash = (ad["Title"].ToString() + ad["Place"]).GetMd5Hash();
-            var databaseAd = this.db.Ads.FirstOrDefault(entry => entry.Search.ID == this.searchId && entry.Hash == hash);
+            var url = (string)ad["Url"];
+            var databaseAd = this.db.Ads.FirstOrDefault(entry => entry.Search.ID == this.searchId && entry.Url == url);
 
+            // If ad have same url
+            if (databaseAd != null)
+            {
+                return false;
+            }
+
+            var hash = (ad["Title"].ToString() + ad["Place"]).GetMd5Hash();
+            databaseAd = this.db.Ads.FirstOrDefault(entry => entry.Search.ID == this.searchId && entry.Hash == hash);
+
+            // If ad have same hash
             if (databaseAd != null)
             {
                 return false;
@@ -132,7 +142,7 @@
 
             var tmpAd = new Ad
                             {
-                                Url = (string)ad["AdUrl"],
+                                Url = (string)ad["Url"],
                                 Hash = hash,
                                 Date = DateTime.Parse((string)ad["Date"], new CultureInfo("fr-FR")),
                                 Title = (string)ad["Title"],

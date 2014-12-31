@@ -239,8 +239,6 @@ namespace LBCMapping
                             }
                         }
 
-                        Log.Info(tmp.ToString());
-
                         if (!this.SaveMode.Store(tmp))
                         {
                             elementFoundCount++;
