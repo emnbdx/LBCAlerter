@@ -3,7 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
@@ -13,6 +15,8 @@
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.Owin.Security;
+
+    using Newtonsoft.Json;
 
     /// <summary>
     /// The account controller.
@@ -39,12 +43,22 @@
         private void SendEmailConfirmation(string to, string confirmationToken)
         {
             var mail = new EMMail();
-            var parameters = @" {
-                                    'Title': 'Vous venez de vous inscrire sur LBCAlerter, MERCI !',
-                                    'Token': '" + confirmationToken + @"'
-                                }";
 
-            mail.Add("[LBCAlerter] - Confirmation de votre compte", to, "LBC_CONFIRMATION", parameters);
+            var sb = new StringBuilder();
+            var sw = new StringWriter(sb);
+            using (var writer = new JsonTextWriter(sw))
+            {
+                writer.WriteStartObject();
+
+                writer.WritePropertyName("Title");
+                writer.WriteValue("Vous venez de vous inscrire sur LBCAlerter, MERCI !");
+                writer.WritePropertyName("Token");
+                writer.WriteValue(confirmationToken);
+
+                writer.WriteEndObject();
+            }
+
+            mail.Add("[LBCAlerter] - Confirmation de votre compte", to, "LBC_CONFIRMATION", sb.ToString());
         }
 
         /// <summary>
@@ -168,21 +182,21 @@
         /// <summary>
         /// The register confirmation.
         /// </summary>
-        /// <param name="Id">
+        /// <param name="id">
         /// The id.
         /// </param>
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
         [AllowAnonymous]
-        public async Task<ActionResult> RegisterConfirmation(string Id)
+        public async Task<ActionResult> RegisterConfirmation(string id)
         {
-            if (!this.ConfirmAccount(Id))
+            if (!this.ConfirmAccount(id))
             {
                 return this.RedirectToAction("Failure", new { id = "Register" });
             }
 
-            var user = this.db.Users.SingleOrDefault(entry => entry.EmailVerificationToken == Id && entry.IsEmailVerified == true);
+            var user = this.db.Users.SingleOrDefault(entry => entry.EmailVerificationToken == id && entry.IsEmailVerified == true);
             await this.SignInAsync(user, isPersistent: false);
 
             return this.RedirectToAction("Success", new { id = "Register" });
@@ -203,12 +217,22 @@
         private void SendEmailReset(string to, string confirmationToken)
         {
             var mail = new EMMail();
-            var parameters = @" {
-                                    'Title': 'Réinitialision de mot de passe',
-                                    'Token': '" + confirmationToken + @"'
-                                }";
 
-            mail.Add("[LBCAlerter] - réinitialision de mot de passe", to, "LBC_RESET", parameters);
+            var sb = new StringBuilder();
+            var sw = new StringWriter(sb);
+            using (var writer = new JsonTextWriter(sw))
+            {
+                writer.WriteStartObject();
+
+                writer.WritePropertyName("Title");
+                writer.WriteValue("Réinitialision de mot de passe");
+                writer.WritePropertyName("Token");
+                writer.WriteValue(confirmationToken);
+
+                writer.WriteEndObject();
+            }
+
+            mail.Add("[LBCAlerter] - réinitialision de mot de passe", to, "LBC_RESET", sb.ToString());
         }
 
         /// <summary>

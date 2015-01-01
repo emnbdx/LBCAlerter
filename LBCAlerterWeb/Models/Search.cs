@@ -7,6 +7,8 @@ namespace LBCAlerterWeb.Models
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    using Newtonsoft.Json;
+
     /// <summary>
     /// The search.
     /// </summary>

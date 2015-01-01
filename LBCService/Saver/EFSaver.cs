@@ -1,11 +1,18 @@
-﻿namespace LBCService.Saver
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="EFSaver.cs" company="Eddy MONTUS">
+//   2014
+// </copyright>
+// <summary>
+//   The entity framework saver.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace LBCService.Saver
 {
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using System.Security.Cryptography;
-    using System.Text;
 
     using EMToolBox;
 
@@ -132,7 +139,7 @@
 
             var tmpAd = new Ad
                             {
-                                Url = (string)ad["AdUrl"],
+                                Url = (string)ad["Url"],
                                 Hash = hash,
                                 Date = DateTime.Parse((string)ad["Date"], new CultureInfo("fr-FR")),
                                 Title = (string)ad["Title"],

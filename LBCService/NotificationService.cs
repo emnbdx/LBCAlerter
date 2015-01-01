@@ -12,7 +12,6 @@ namespace LBCService
     using System;
     using System.Collections.Generic;
     using System.Configuration;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -130,14 +129,19 @@ namespace LBCService
             var mail = new EMMail();
             var attempsCount = search.Attempts.Count(entry => entry.ProcessDate > lastDay);
             var todayAds = search.Ads.Where(entry => entry.Date > lastDay).OrderBy(entry => entry.Date);
-            
+
+            var mailPattern = mail.GetPattern("LBC_RECAP_AD" + (this.IsPremium(search.User) ? "_FULL" : string.Empty)).CONTENT;
             var ads = new StringBuilder();
-            foreach (var formater in
-                todayAds.Select(
-                    ad =>
-                    this.IsPremium(search.User)
-                        ? new MailFormatter(mail.GetPattern("LBC_RECAP_AD_FULL").CONTENT, JsonConvert.SerializeObject(ad))
-                        : new MailFormatter(mail.GetPattern("LBC_RECAP_AD").CONTENT, JsonConvert.SerializeObject(ad))))
+
+            var settings = new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
+
+            foreach (
+                var formater in
+                    todayAds.Select(
+                        todayAd =>
+                        new MailFormatter(
+                            mailPattern,
+                            JsonConvert.SerializeObject(todayAd, Formatting.Indented, settings))))
             {
                 ads.Append(formater.Formatted);
             }
@@ -161,7 +165,7 @@ namespace LBCService
                 writer.WritePropertyName("AdId");
                 writer.WriteValue(todayAds.FirstOrDefault() == null ? 0 : todayAds.FirstOrDefault().ID);
                 writer.WritePropertyName("Ads");
-                writer.WriteValue(ads);
+                writer.WriteValue(ads.ToString());
 
                 writer.WriteEndObject();
             }

@@ -14,6 +14,8 @@ namespace LBCAlerterWeb.Models
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    using Newtonsoft.Json;
+
     /// <summary>
     /// The ad.
     /// </summary>
@@ -50,6 +52,7 @@ namespace LBCAlerterWeb.Models
         /// <summary>
         /// Gets or sets the search.
         /// </summary>
+        [JsonIgnore]
         public virtual Search Search { get; set; }
 
         /// <summary>
