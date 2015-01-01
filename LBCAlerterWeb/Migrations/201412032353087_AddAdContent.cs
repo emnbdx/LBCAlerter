@@ -19,7 +19,17 @@ namespace LBCAlerterWeb.Migrations
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.Ad", t => t.Ad_ID)
                 .Index(t => t.Ad_ID);
-            
+
+            Sql("INSERT INTO AdContent SELECT 'PictureUrl', s.data, ad.id FROM Ad CROSS APPLY dbo.Split(Ad.PictureUrl, ',') AS s");
+            Sql("INSERT INTO AdContent SELECT 'Place', Place, ID from Ad");
+            Sql("INSERT INTO AdContent SELECT 'Price', Price, ID from Ad");
+            Sql("INSERT INTO AdContent SELECT 'Phone', Phone, ID from Ad");
+            Sql("INSERT INTO AdContent SELECT 'AllowCommercial', AllowCommercial, ID from Ad");
+            Sql("INSERT INTO AdContent SELECT 'Name', Name, ID from Ad");
+            Sql("INSERT INTO AdContent SELECT 'ContactUrl', ContactUrl, ID from Ad");
+            Sql("INSERT INTO AdContent SELECT 'Param', s.data, ad.id FROM Ad CROSS APPLY dbo.Split(Ad.Param, ',') AS s");
+            Sql("INSERT INTO AdContent SELECT 'Description', Description, ID from Ad");
+
             AddColumn("dbo.Ad", "Hash", c => c.String());
             AddColumn("dbo.Search", "Enabled", c => c.Boolean(nullable: false));
             DropColumn("dbo.Ad", "PictureUrl");
