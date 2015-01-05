@@ -70,7 +70,10 @@ namespace LBCService.Saver
                 return false;
             }
 
-            var hash = (ad["Title"].ToString() + ad["Place"]).GetMd5Hash();
+            var uniqueId = ad["Title"] + ad.GetTokenValue("Contents>Place").FirstOrDefault()
+                           + ad.GetTokenValue("Contents>Price").FirstOrDefault()
+                           + ad.GetTokenValue("Contents>Description").FirstOrDefault();
+            var hash = uniqueId.GetMd5Hash();
             databaseAd = this.db.Ads.FirstOrDefault(entry => entry.Search.ID == this.searchId && entry.Hash == hash);
 
             // If ad have same hash
