@@ -37,33 +37,26 @@
             <i class="fa fa-rss"></i>
             @Html.ActionLink("Flux Rss", "AdListFeed", new { id = Model.ID })
         }
-        <table class="table">
 
+        <div class="table">
             @foreach (var item in Model.Ads.Take(50))
             {
-                <tr>
-                    <td>
-                        <a href="@Html.DisplayFor(modelItem => item.Url)">@Html.DisplayFor(modelItem => item.Title)</a>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Date)
-                    </td>
-                    <td>
+                <div class="row row-margin">
+                    <div class="col-md-6">
                         @if (item != null && item.Contents.Count(entry => entry.Type == AdContent.ContentType.PictureUrl.ToString()) > 0)
                         {
-                            <img src="@Html.DisplayFor(modelItem => item.Contents.FirstOrDefault(entry => entry.Type == AdContent.ContentType.PictureUrl.ToString()).Value)" />
+                            <img src="@Html.DisplayFor(modelItem => item.Contents.FirstOrDefault(entry => entry.Type == AdContent.ContentType.PictureUrl.ToString()).Value)" width="200px" />
                         }
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Contents.FirstOrDefault(entry => entry.Type == AdContent.ContentType.Place.ToString()).Value)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Contents.FirstOrDefault(entry => entry.Type == AdContent.ContentType.Price.ToString()).Value.Replace("&amp;nbsp;&amp;euro;", " €"))
-                    </td>
-                </tr>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="@Html.DisplayFor(modelItem => item.Url)">@Html.Raw(item.Title)</a><br />
+                        @Html.Raw(item.Date)<br />
+                        @Html.Raw(item.Contents.FirstOrDefault(entry => entry.Type == AdContent.ContentType.Place.ToString()).Value)<br />
+                        @Html.Raw(item.Contents.FirstOrDefault(entry => entry.Type == AdContent.ContentType.Price.ToString()).Value)
+                    </div>
+                </div>
             }
-
-        </table>
+        </div>
         <div class="links">
             @Html.ActionLink("Retour à la liste", "Index")
         </div>

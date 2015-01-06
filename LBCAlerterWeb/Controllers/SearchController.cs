@@ -15,6 +15,8 @@
     using LBCMapping;
 
     using log4net;
+
+    using Microsoft.Ajax.Utilities;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -356,9 +358,16 @@
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var search = await this.db.Searches.FindAsync(id);
-            this.db.Ads.RemoveRange(this.db.Ads.Where(entry => entry.Search.ID == search.ID).ToList());
-            this.db.Attempts.RemoveRange(this.db.Attempts.Where(entry => entry.Search.ID == search.ID).ToList());
+
+            foreach (var ad in search.Ads)
+            {
+                this.db.AdContents.RemoveRange(ad.Contents);
+            }
+            
+            this.db.Ads.RemoveRange(search.Ads);
+            this.db.Attempts.RemoveRange(search.Attempts);
             this.db.Searches.Remove(search);
+
             await this.db.SaveChangesAsync();
             return this.RedirectToAction("Index");
         }
