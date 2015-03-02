@@ -24,9 +24,6 @@ namespace LBCAlerterWeb
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            // Init log
-            log4net.Config.XmlConfigurator.Configure();
-
             if (ConfigurationManager.AppSettings["dbMode"] == "debug")
             {
                 Database.SetInitializer<ApplicationDbContext>(new DebugInitializer());

@@ -10,13 +10,12 @@
     using System.Web.Mvc;
     using System.Web.Security;
 
+    using Elmah;
+
     using LBCAlerterWeb.Models;
 
     using LBCMapping;
 
-    using log4net;
-
-    using Microsoft.Ajax.Utilities;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -26,11 +25,6 @@
     [Authorize]
     public class SearchController : Controller
     {
-        /// <summary>
-        /// The log.
-        /// </summary>
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SearchController));
-
         /// <summary>
         /// The db.
         /// </summary>
@@ -212,7 +206,7 @@
             this.db.Searches.Add(search);
             this.db.SaveChanges();
 
-            Log.Info("Add search #" + search.ID + " Url [" + search.Url + "] Keyword [" + search.KeyWord + "] by [" + search.User.UserName + "]");
+            ErrorSignal.FromCurrentContext().Raise(new Exception("Add search #" + search.ID + " Url [" + search.Url + "] Keyword [" + search.KeyWord + "] by [" + search.User.UserName + "]"));
 
             return this.Json(new { success = true, message = "ok" });
         }

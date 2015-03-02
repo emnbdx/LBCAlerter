@@ -12,14 +12,12 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    using LBCAlerterWeb.Models;
+    using Elmah;
 
-    using log4net;
+    using LBCAlerterWeb.Models;
 
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
-
-    using LogManager = log4net.LogManager;
 
     /// <summary>
     /// The payment controller.
@@ -27,11 +25,6 @@
     [Authorize]
     public class DonController : Controller
     {
-        /// <summary>
-        /// The log.
-        /// </summary>
-        private static readonly ILog Log = LogManager.GetLogger(typeof(DonController));
-
         /// <summary>
         /// The db.
         /// </summary>
@@ -120,7 +113,7 @@
         [AllowAnonymous]
         public ActionResult PayPalPaymentNotification()
         {
-            Log.Debug("New IPN notification...");
+            ErrorSignal.FromCurrentContext().Raise(new Exception("New IPN fired"));
             
             // Receive IPN request from PayPal and parse all the variables returned
             var formVals = new Dictionary<string, string> { { "cmd", "_notify-validate" } };
