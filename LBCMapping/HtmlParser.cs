@@ -687,6 +687,16 @@
         {
             foreach (var node in doc.DocumentNode.SelectNodes(xpathQuery))
             {
+                if (node.Attributes.Contains("src") && node.Attributes["src"].Value.StartsWith("//"))
+                {
+                    node.SetAttributeValue("src", "http:" + node.Attributes["src"].Value);
+                }
+
+                if (node.Attributes.Contains("href") && node.Attributes["href"].Value.StartsWith("//"))
+                {
+                    node.SetAttributeValue("href", "http:" + node.Attributes["href"].Value);
+                }
+                
                 if (node.Attributes.Contains("src") && node.Attributes["src"].Value.StartsWith("/"))
                 {
                     node.SetAttributeValue("src", UrlBase + node.Attributes["src"].Value);
