@@ -118,7 +118,7 @@ namespace LBCService
         private void SendMailRecap(Search search)
         {
             if (!search.Enabled || !search.MailRecap
-                || (search.LastRecap.HasValue && (search.LastRecap.Value.DayOfYear >= DateTime.Today.DayOfYear))
+                || (search.LastRecap.HasValue && (search.LastRecap.Value >= DateTime.Today))
                 || DateTime.Now.Hour != Convert.ToInt32(ConfigurationManager.AppSettings["Heure mail recap"]))
             {
                 return;
