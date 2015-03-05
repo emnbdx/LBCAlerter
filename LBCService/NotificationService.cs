@@ -159,7 +159,7 @@ namespace LBCService
                 writer.WritePropertyName("AttemptCount");
                 writer.WriteValue(attempsCount);
                 writer.WritePropertyName("AttemptCadence");
-                writer.WriteValue(4 * 60 / (attempsCount <= 0 ? 1 : attempsCount));
+                writer.WriteValue(24 * 60 / (attempsCount <= 0 ? 1 : attempsCount));
                 writer.WritePropertyName("Id");
                 writer.WriteValue(search.ID);
                 writer.WritePropertyName("AdId");
@@ -304,8 +304,28 @@ namespace LBCService
                 return;
             }
 
-            var toStop = Jobs.Keys.Where(id => searches.FirstOrDefault(entry => entry.ID == id) == null);
+            var toStop = new List<int>();
 
+            var found = false;
+            foreach (var key in Jobs.Keys)
+            {
+                foreach (var search in searches)
+                {
+                    if (search.ID != key)
+                    {
+                        continue;
+                    }
+
+                    found = true;
+                    break;
+                }
+
+                if (!found)
+                {
+                    toStop.Add(key);
+                }
+            }
+            
             foreach (var id in toStop)
             {
                 Jobs[id].Stop();

@@ -490,7 +490,7 @@
 
             var web = new HtmlWeb { OverrideEncoding = System.Text.Encoding.GetEncoding(Encoding) };
             var doc = web.Load(requestUrl);
-            var links = doc.DocumentNode.SelectNodes("//div[@class='list-lbc']//a");
+            var links = doc.DocumentNode.SelectNodes("//div[@class='list-lbc']/a");
 
             return links == null ? null : links.ToList();
         }
