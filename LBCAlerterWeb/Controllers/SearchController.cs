@@ -375,18 +375,6 @@
                 command.Connection.Close();
             }
             
-            /*var search = await this.db.Searches.FindAsync(id);
-
-            foreach (var ad in search.Ads)
-            {
-                this.db.AdContents.RemoveRange(ad.Contents);
-            }
-            
-            this.db.Ads.RemoveRange(search.Ads);
-            this.db.Attempts.RemoveRange(search.Attempts);
-            this.db.Searches.Remove(search);
-
-            await this.db.SaveChangesAsync();*/
             return this.RedirectToAction("Index");
         }
 
