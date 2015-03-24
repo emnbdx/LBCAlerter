@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Data.Entity;
+    using System.Data.SqlClient;
     using System.Linq;
     using System.Net;
     using System.ServiceModel.Syndication;
@@ -351,7 +353,29 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            var search = await this.db.Searches.FindAsync(id);
+            this.db.Database.SqlQuery<object>("exec DeleteSearch @id", id);
+
+            var command = this.db.Database.Connection.CreateCommand();
+
+            command.CommandText = "DeleteSearch";
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.Add(new SqlParameter("@id", id));
+            command.Connection.Open();
+
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                ErrorSignal.FromCurrentContext().Raise(ex);
+            }
+            finally
+            {
+                command.Connection.Close();
+            }
+            
+            /*var search = await this.db.Searches.FindAsync(id);
 
             foreach (var ad in search.Ads)
             {
@@ -362,7 +386,7 @@
             this.db.Attempts.RemoveRange(search.Attempts);
             this.db.Searches.Remove(search);
 
-            await this.db.SaveChangesAsync();
+            await this.db.SaveChangesAsync();*/
             return this.RedirectToAction("Index");
         }
 
