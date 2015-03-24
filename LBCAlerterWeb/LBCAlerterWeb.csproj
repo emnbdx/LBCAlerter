@@ -51,11 +51,11 @@
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -262,6 +262,16 @@
     <Content Include="Content\addons\jquery.mmenu.header.css" />
     <Content Include="Content\addons\jquery.mmenu.labels.css" />
     <Content Include="Content\addons\jquery.mmenu.searchfield.css" />
+    <Content Include="Content\video\backgrounds\1.mp4" />
+    <Content Include="Content\video\backgrounds\10.mp4" />
+    <Content Include="Content\video\backgrounds\2.mp4" />
+    <Content Include="Content\video\backgrounds\3.mp4" />
+    <Content Include="Content\video\backgrounds\4.mp4" />
+    <Content Include="Content\video\backgrounds\5.mp4" />
+    <Content Include="Content\video\backgrounds\6.mp4" />
+    <Content Include="Content\video\backgrounds\7.mp4" />
+    <Content Include="Content\video\backgrounds\8.mp4" />
+    <Content Include="Content\video\backgrounds\9.mp4" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -280,6 +290,22 @@
     <Content Include="Content\images\backgrounds\4.jpg" />
     <Content Include="Content\images\backgrounds\5.jpg" />
     <Content Include="Content\images\backgrounds\6.jpg" />
+    <Content Include="Content\images\backgrounds\thumbs\1.jpg" />
+    <Content Include="Content\images\backgrounds\thumbs\2.jpg" />
+    <Content Include="Content\images\backgrounds\thumbs\3.jpg" />
+    <Content Include="Content\images\backgrounds\thumbs\4.jpg" />
+    <Content Include="Content\images\backgrounds\thumbs\5.jpg" />
+    <Content Include="Content\images\backgrounds\thumbs\6.jpg" />
+    <Content Include="Content\video\backgrounds\thumbs\1.jpg" />
+    <Content Include="Content\video\backgrounds\thumbs\10.jpg" />
+    <Content Include="Content\video\backgrounds\thumbs\2.jpg" />
+    <Content Include="Content\video\backgrounds\thumbs\3.jpg" />
+    <Content Include="Content\video\backgrounds\thumbs\4.jpg" />
+    <Content Include="Content\video\backgrounds\thumbs\5.jpg" />
+    <Content Include="Content\video\backgrounds\thumbs\6.jpg" />
+    <Content Include="Content\video\backgrounds\thumbs\7.jpg" />
+    <Content Include="Content\video\backgrounds\thumbs\8.jpg" />
+    <Content Include="Content\video\backgrounds\thumbs\9.jpg" />
     <Content Include="Content\images\chaton.gif" />
     <Content Include="Content\images\dot_pattern.png" />
     <Content Include="Content\images\loader.gif" />
@@ -372,6 +398,26 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\video\backgrounds\1.ogv" />
+    <Content Include="Content\video\backgrounds\1.webm" />
+    <Content Include="Content\video\backgrounds\10.ogv" />
+    <Content Include="Content\video\backgrounds\10.webm" />
+    <Content Include="Content\video\backgrounds\2.ogv" />
+    <Content Include="Content\video\backgrounds\2.webm" />
+    <Content Include="Content\video\backgrounds\3.ogv" />
+    <Content Include="Content\video\backgrounds\3.webm" />
+    <Content Include="Content\video\backgrounds\4.ogv" />
+    <Content Include="Content\video\backgrounds\4.webm" />
+    <Content Include="Content\video\backgrounds\5.ogv" />
+    <Content Include="Content\video\backgrounds\5.webm" />
+    <Content Include="Content\video\backgrounds\6.ogv" />
+    <Content Include="Content\video\backgrounds\6.webm" />
+    <Content Include="Content\video\backgrounds\7.ogv" />
+    <Content Include="Content\video\backgrounds\7.webm" />
+    <Content Include="Content\video\backgrounds\8.ogv" />
+    <Content Include="Content\video\backgrounds\8.webm" />
+    <Content Include="Content\video\backgrounds\9.ogv" />
+    <Content Include="Content\video\backgrounds\9.webm" />
     <None Include="Properties\PublishProfiles\perso.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\addons\jquery.mmenu.counters.js" />
@@ -390,8 +436,8 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
-    <Content Include="Scripts\jquery-ui-1.11.3.js" />
-    <Content Include="Scripts\jquery-ui-1.11.3.min.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.min.js" />
     <Content Include="Scripts\jquery.animateNumbers.js" />
     <Content Include="Scripts\jquery.mmenu.js" />
     <Content Include="Scripts\jquery.mmenu.min.all.js" />
@@ -406,6 +452,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jquery.videobackground.js" />
     <Content Include="Scripts\minimal.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
