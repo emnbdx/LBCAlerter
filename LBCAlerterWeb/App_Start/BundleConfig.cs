@@ -31,6 +31,7 @@ namespace LBCAlerterWeb
                         "~/Scripts/jquery.sparkline.js",
                         "~/Scripts/jquery.nicescroll.js",
                         "~/Scripts/jquery.animateNumbers.js",
+                        "~/Scripts/jquery.videobackground.js",
                         "~/Scripts/bootstrap-datepicker.js",                 
                         "~/Scripts/minimal.js"));
 

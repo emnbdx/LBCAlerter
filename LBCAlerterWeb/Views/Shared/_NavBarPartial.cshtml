@@ -31,6 +31,56 @@
                             @User.Identity.GetUserName() <i class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu arrow settings animated fadeInDown">
+                            @if (Roles.IsUserInRole("premium"))
+                            {
+                                <li>
+                                    <h3>Backgrounds:</h3>
+                                    <ul id="color-schemes">
+                                        <li><a href="#" class="bg-1"></a></li>
+                                        <li><a href="#" class="bg-2"></a></li>
+                                        <li><a href="#" class="bg-3"></a></li>
+                                        <li><a href="#" class="bg-4"></a></li>
+                                        <li><a href="#" class="bg-5"></a></li>
+                                        <li><a href="#" class="bg-6"></a></li>
+                                        <li class="title">Solid Backgrounds:</li>
+                                        <li><a href="#" class="solid-bg-1"></a></li>
+                                        <li><a href="#" class="solid-bg-2"></a></li>
+                                        <li><a href="#" class="solid-bg-3"></a></li>
+                                        <li><a href="#" class="solid-bg-4"></a></li>
+                                        <li><a href="#" class="solid-bg-5"></a></li>
+                                        <li><a href="#" class="solid-bg-6"></a></li>
+                                    </ul>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <div class="form-group videobg-check">
+                                        <label class="col-xs-8 control-label">Video BG</label>
+                                        <div class="col-xs-4 control-label">
+                                            <div class="onoffswitch greensea small">
+                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="videobg-check">
+                                                <label class="onoffswitch-label" for="videobg-check">
+                                                    <span class="onoffswitch-inner"></span>
+                                                    <span class="onoffswitch-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul id="videobackgrounds">
+                                        <li class="title">Choose type:</li>
+                                        <li><a href="#" class="video-bg-1"></a></li>
+                                        <li><a href="#" class="video-bg-2"></a></li>
+                                        <li><a href="#" class="video-bg-3"></a></li>
+                                        <li><a href="#" class="video-bg-4"></a></li>
+                                        <li><a href="#" class="video-bg-5"></a></li>
+                                        <li><a href="#" class="video-bg-6"></a></li>
+                                        <li><a href="#" class="video-bg-7"></a></li>
+                                        <li><a href="#" class="video-bg-8"></a></li>
+                                        <li><a href="#" class="video-bg-9"></a></li>
+                                        <li><a href="#" class="video-bg-10"></a></li>
+                                    </ul>
+                                </li>
+                                <li class="divider"></li>
+                            }
                             <li>
                                 <a href="@Url.Action("Manage", "Account")"><i class="fa fa-user"></i> Profil</a>
                             </li>

@@ -1,21 +1,90 @@
 ﻿"use strict";
 
-var widthLess1024 = function () {
-    $(window).width() < 1024 ? ($("#sidebar, #navbar").addClass("collapsed"), $("#navigation").find(".dropdown.open").removeClass("open"), $("#navigation").find(".dropdown-menu.animated").removeClass("animated"), $("#sidebar").hasClass("collapsed") ? $("#content").animate({
-        left: "0px",
-        paddingLeft: "55px"
-    }, 150) : $("#content").animate({
-        paddingLeft: "55px"
-    }, 150)) : ($("#sidebar, #navbar").removeClass("collapsed"), $("#sidebar").hasClass("collapsed") ? $("#content").animate({
-        left: "210px",
-        paddingLeft: "265px"
-    }, 150) : $("#content").animate({
-        paddingLeft: "265px"
-    }, 150))
-},
-    widthLess768 = function () {
-        $(window).width() < 768 ? (1 === $(".collapsed-content .search").length && $("#main-search").appendTo(".collapsed-content .search"), 0 === $(".collapsed-content li.user").length && $(".collapsed-content li.search").after($("#current-user"))) : ($("#current-user").show(), 2 === $(".collapsed-content .search").length && $(".nav.refresh").after($("#main-search")), 1 === $(".collapsed-content li.user").length && $(".quick-actions >li:last-child").before($("#current-user")))
-    };
+var widthLess1024 = function() {
+    if ($("#sidebar, #navbar").length <= 0) {
+        if ($(window).width() < 1024) {
+            $("#content").animate({
+                paddingLeft: "0",
+                paddingRight: "0"
+            }, 150);
+
+            $("#content .small-form").animate({
+                paddingTop: "0"
+            }, 150);
+        } else {
+            $("#content").animate({
+                paddingLeft: "0",
+                paddingRight: "0"
+            }, 150);
+
+            $("#content .small-form").animate({
+                paddingTop: "100px"
+            }, 150);
+        }
+
+        return;
+    }
+
+    if ($(window).width() < 1024) {
+        $("#sidebar, #navbar").addClass("collapsed");
+        $("#navigation").find(".dropdown.open").removeClass("open");
+        $("#navigation").find(".dropdown-menu.animated").removeClass("animated");
+
+        if($("#sidebar").hasClass("collapsed")) {
+
+            $("#content").animate({
+                left: "0px",
+                paddingLeft: "55px"
+            }, 150);
+
+            $("#content .small-form").animate({
+                paddingTop: "0"
+            }, 150);
+        } else {
+            $("#content").animate({
+                paddingLeft: "55px"
+            }, 150);
+
+            $("#content .small-form").animate({
+                paddingTop: "0"
+            }, 150);
+        }
+    } else {
+        $("#sidebar, #navbar").removeClass("collapsed");
+
+        if ($("#sidebar").hasClass("collapsed")) {
+            $("#content").animate({
+                left: "210px",
+                paddingLeft: "265px"
+            }, 150);
+
+            $("#content .small-form").animate({
+                paddingTop: "100px"
+            }, 150);
+
+        } else {
+            $("#content").animate({
+                paddingLeft: "265px"
+            }, 150);
+
+            $("#content .small-form").animate({
+                paddingTop: "100px"
+            }, 150);
+        }
+    }
+};
+
+var widthLess768 = function() {
+    if ($(window).width() < 768) {
+        1 === $(".collapsed-content .search").length && $("#main-search").appendTo(".collapsed-content .search"),
+        0 === $(".collapsed-content li.user").length && $(".collapsed-content li.search").after($("#current-user"));
+    } else {
+        $("#current-user").show(),
+        2 === $(".collapsed-content .search").length && $(".nav.refresh").after($("#main-search")),
+        1 === $(".collapsed-content li.user").length && $(".quick-actions >li:last-child").before($("#current-user"));
+    }
+};
+
 $(function () {
     function o(o) {
         $(o).block({
@@ -122,11 +191,13 @@ $(function () {
         $("#sidebar, #navbar").toggleClass("collapsed"), $("#navigation").find(".dropdown.open").removeClass("open"), $("#navigation").find(".dropdown-menu.animated").removeClass("animated"), $("#sidebar > li.collapsed").removeClass("collapsed"), $("#sidebar").hasClass("collapsed") ? $(window).width() < 1024 ? $("#content").animate({
             left: "0px"
         }, 150) : $("#content").animate({
-            paddingLeft: "55px"
+            paddingLeft: "55px",
+            paddingTop: "0"
         }, 150) : $(window).width() < 1024 ? $("#content").animate({
             left: "210px"
         }, 150) : $("#content").animate({
-            paddingLeft: "265px"
+            paddingLeft: "265px",
+            paddingTop: "100px"
         }, 150)
     }), $("#navigation .menu li").hover(function () {
         $(this).addClass("hovered"), $("#sidebar").addClass("open")
@@ -149,9 +220,9 @@ $(function () {
     var a = function () {
         $("body .videocontent").prepend('<div class="video-background video-bg-1"></div>'), $(".video-background").videobackground({
             videoSource: [
-                ["assets/videobg/1.mp4", "video/mp4"],
-                ["assets/videobg/1.webm", "video/webm"],
-                ["assets/videobg/1.ogv", "video/ogg"]
+                ["Content/video/backgrounds/1.mp4", "video/mp4"],
+                ["Content/video/backgrounds/1.webm", "video/webm"],
+                ["Content/video/backgrounds/1.ogv", "video/ogg"]
             ],
             controlPosition: "#video",
             loop: !0,
@@ -165,9 +236,9 @@ $(function () {
             var o = $(".video-background").attr("class").split(" ").pop().split("-").pop();
             $(".video-background").videobackground({
                 videoSource: [
-                    ["assets/videobg/" + o + ".mp4", "video/mp4"],
-                    ["assets/videobg/" + o + ".webm", "video/webm"],
-                    ["assets/videobg/" + o + ".ogv", "video/ogg"]
+                    ["Content/video/backgrounds/" + o + ".mp4", "video/mp4"],
+                    ["Content/video/backgrounds/" + o + ".webm", "video/webm"],
+                    ["Content/video/backgrounds/" + o + ".ogv", "video/ogg"]
                 ],
                 controlPosition: "#video",
                 loop: !0,
@@ -214,7 +285,8 @@ $(function () {
         $(this).removeClass('flip');
     });
 }), $(window).load(function () {
-    $("#loader").delay(500).fadeOut(300), $(".mask").delay(800).fadeOut(300, function () {
-        widthLess1024(), widthLess768()
-    })
+    $("#loader").delay(500).fadeOut(300), $(".mask").delay(800).fadeOut(300, function() {
+        widthLess1024();
+        widthLess768();
+    });
 });

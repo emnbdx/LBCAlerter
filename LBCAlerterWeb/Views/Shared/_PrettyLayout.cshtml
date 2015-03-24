@@ -1,76 +1,76 @@
 ﻿<!DOCTYPE html>
 <html>
-<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Eddy MONTUS">
-    <meta name="description" content="Fournisseur d’alertes sur le site leboncoin.fr, ce site n’est aucunement affilié à leboncoin.fr" />
-    <meta property="og:title" content="@ViewBag.Title" />
-    <meta property="og:type " content="leboncoin.alertes" />
-    <meta property="og:url" content="http://lbcalerter.com" />
-    <meta property="og:site_name" content="LBC Alerter" />
-    <meta property="og:description" content="Fournisseur d’alertes sur le site leboncoin.fr, ce site n’est aucunement affilié à leboncoin.fr" />
-    <title>@ViewBag.Title</title>
-    <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono|Roboto:100,300,300italic,400,500,700|Roboto+Condensed:300,400,700|Roboto+Slab:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-    @Styles.Render("~/Content/jqueryui")
-    @Styles.Render("~/Content/minimal")
-    @Scripts.Render("~/bundles/modernizr")
-    @RenderSection("styles", required: false)
+    <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Eddy MONTUS">
+        <meta name="description" content="Fournisseur d’alertes sur le site leboncoin.fr, ce site n’est aucunement affilié à leboncoin.fr" />
+        <meta property="og:title" content="@ViewBag.Title" />
+        <meta property="og:type " content="leboncoin.alertes" />
+        <meta property="og:url" content="http://lbcalerter.com" />
+        <meta property="og:site_name" content="LBC Alerter" />
+        <meta property="og:description" content="Fournisseur d’alertes sur le site leboncoin.fr, ce site n’est aucunement affilié à leboncoin.fr" />
+        <title>@ViewBag.Title</title>
+        <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono|Roboto:100,300,300italic,400,500,700|Roboto+Condensed:300,400,700|Roboto+Slab:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        @Styles.Render("~/Content/jqueryui")
+        @Styles.Render("~/Content/minimal")
+        @Scripts.Render("~/bundles/modernizr")
+        @RenderSection("styles", required: false)
 
     </head>
-<body class="bg-1">
+    <body class="bg-1">
+        <div class="mm-page">
+            <div id="wrap">
+                <div class="row">
+                    @Html.Partial("_NavBarPartial")
 
-    <div class="mm-page">
-        <div id="wrap">
-            <div class="row">
-                @Html.Partial("_NavBarPartial")
-
-                @if (ViewBag.Large != null && ViewBag.Large)
-                {
-                    <div id="content" class="col-md-12" tabindex="5001" style="overflow: hidden; outline: none; padding-left: 265px;">
-                        @RenderBody()
+                    <div id="content" class="col-md-12" tabindex="5001" style="overflow: hidden; outline: none;">
+                        @if (ViewBag.Large != null && ViewBag.Large)
+                        {
+                            @RenderBody()
+                        }
+                        else
+                        {
+                            <div class="small-form">
+                                @RenderBody()
+                            </div>
+                        }
                     </div>
-                }
-                else
-                {
-                    <div class="small-form">
-                        @RenderBody()
-                    </div>
-                }
+                </div>
             </div>
         </div>
-    </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/minimal")
+        <section class="videocontent" id="video"></section>
 
-    <script type="text/javascript">
-        if (!String.prototype.startsWith) {
-            Object.defineProperty(String.prototype, 'startsWith', {
-                enumerable: false,
-                configurable: false,
-                writable: false,
-                value: function (searchString, position) {
-                    position = position || 0;
-                    return this.lastIndexOf(searchString, position) === position;
-                }
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryui")
+        @Scripts.Render("~/bundles/bootstrap")
+        @Scripts.Render("~/bundles/minimal")
+
+        <script type="text/javascript">
+            if (!String.prototype.startsWith) {
+                Object.defineProperty(String.prototype, 'startsWith', {
+                    enumerable: false,
+                    configurable: false,
+                    writable: false,
+                    value: function (searchString, position) {
+                        position = position || 0;
+                        return this.lastIndexOf(searchString, position) === position;
+                    }
+                });
+            }
+
+            $('.menu li').each(function () {
+                $(this).removeClass('active');
             });
-        }
 
-        $('.menu li').each(function () {
-            $(this).removeClass('active');
-        });
+            if ('@ViewBag.Current'.startsWith('search_')) {
+                $('#search').addClass('open');
+            }
 
-        if ('@ViewBag.Current'.startsWith('search_')) {
-            $('#search').addClass('open');
-        }
-
-        $('#@ViewBag.Current' + 'Menu').addClass('active');
-    </script>
-    @RenderSection("scripts", required: false)
-</body>
-
+            $('#@ViewBag.Current' + 'Menu').addClass('active');
+        </script>
+        @RenderSection("scripts", required: false)
+    </body>
 </html>
