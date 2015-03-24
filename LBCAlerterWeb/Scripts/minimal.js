@@ -220,9 +220,9 @@ $(function () {
     var a = function () {
         $("body .videocontent").prepend('<div class="video-background video-bg-1"></div>'), $(".video-background").videobackground({
             videoSource: [
-                ["Content/video/backgrounds/1.mp4", "video/mp4"],
-                ["Content/video/backgrounds/1.webm", "video/webm"],
-                ["Content/video/backgrounds/1.ogv", "video/ogg"]
+                ["/Content/video/backgrounds/1.mp4", "video/mp4"],
+                ["/Content/video/backgrounds/1.webm", "video/webm"],
+                ["/Content/video/backgrounds/1.ogv", "video/ogg"]
             ],
             controlPosition: "#video",
             loop: !0,
@@ -236,9 +236,9 @@ $(function () {
             var o = $(".video-background").attr("class").split(" ").pop().split("-").pop();
             $(".video-background").videobackground({
                 videoSource: [
-                    ["Content/video/backgrounds/" + o + ".mp4", "video/mp4"],
-                    ["Content/video/backgrounds/" + o + ".webm", "video/webm"],
-                    ["Content/video/backgrounds/" + o + ".ogv", "video/ogg"]
+                    ["/Content/video/backgrounds/" + o + ".mp4", "video/mp4"],
+                    ["/Content/video/backgrounds/" + o + ".webm", "video/webm"],
+                    ["/Content/video/backgrounds/" + o + ".ogv", "video/ogg"]
                 ],
                 controlPosition: "#video",
                 loop: !0,
