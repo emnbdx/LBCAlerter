@@ -243,6 +243,10 @@
     <Compile Include="Migrations\201412032353087_AddAdContent.Designer.cs">
       <DependentUpon>201412032353087_AddAdContent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503261358340_UpdateUserBackground.cs" />
+    <Compile Include="Migrations\201503261358340_UpdateUserBackground.Designer.cs">
+      <DependentUpon>201503261358340_UpdateUserBackground.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Ad.cs" />
@@ -262,6 +266,9 @@
     <Content Include="Content\addons\jquery.mmenu.header.css" />
     <Content Include="Content\addons\jquery.mmenu.labels.css" />
     <Content Include="Content\addons\jquery.mmenu.searchfield.css" />
+    <Content Include="Content\minimal.min.css">
+      <DependentUpon>minimal.css</DependentUpon>
+    </Content>
     <Content Include="Content\video\backgrounds\1.mp4" />
     <Content Include="Content\video\backgrounds\10.mp4" />
     <Content Include="Content\video\backgrounds\2.mp4" />
@@ -418,6 +425,9 @@
     <Content Include="Content\video\backgrounds\8.webm" />
     <Content Include="Content\video\backgrounds\9.ogv" />
     <Content Include="Content\video\backgrounds\9.webm" />
+    <EmbeddedResource Include="Migrations\201503261358340_UpdateUserBackground.resx">
+      <DependentUpon>201503261358340_UpdateUserBackground.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\PublishProfiles\perso.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\addons\jquery.mmenu.counters.js" />
@@ -454,7 +464,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\jquery.videobackground.js" />
     <Content Include="Scripts\minimal.js" />
-    <Content Include="Scripts\minimal.min.js" />
+    <Content Include="Scripts\minimal.min.js">
+      <DependentUpon>minimal.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\npm.js" />
     <Content Include="Scripts\respond.js" />
@@ -505,6 +517,9 @@
     <Content Include="Views\Don\PayPalPaymentNotification.cshtml" />
     <Content Include="Views\Search\CreateStepTwo.cshtml" />
     <Content Include="Views\Search\Disable.cshtml" />
+    <Content Include="Scripts\minimal.min.js.map">
+      <DependentUpon>minimal.min.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

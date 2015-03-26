@@ -1,7 +1,6 @@
 ﻿namespace LBCAlerterWeb.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Data.Entity;
     using System.IO;
     using System.Linq;
@@ -639,6 +638,24 @@
 
             // Si nous sommes arrivés là, un échec s’est produit. Réafficher le formulaire
             return this.View(model);
+        }
+
+        [HttpGet]
+        public ActionResult GetBackground()
+        {
+            var currentUser = this.UserManager.FindById(this.User.Identity.GetUserId());
+            return this.Json(
+                string.IsNullOrEmpty(currentUser.Background) ? "bg-1" : currentUser.Background,
+                JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public void SetBackground(string backgroundId)
+        {
+            var currentUser = this.UserManager.FindById(this.User.Identity.GetUserId());
+
+            currentUser.Background = backgroundId;
+            this.db.SaveChanges();
         }
 
         /// <summary>

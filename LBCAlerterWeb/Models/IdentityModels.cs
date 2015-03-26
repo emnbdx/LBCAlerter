@@ -41,6 +41,11 @@ namespace LBCAlerterWeb.Models
         public DateTime? EmailResetDate { get; set; }
 
         /// <summary>
+        /// Gets or sets the background.
+        /// </summary>
+        public string Background { get; set; }
+
+        /// <summary>
         /// Gets or sets the searches.
         /// </summary>
         public virtual ICollection<Search> Searches { get; set; }
