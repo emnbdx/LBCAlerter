@@ -14,7 +14,7 @@ namespace LBCAlerterWeb
         /// <summary>
         /// The db.
         /// </summary>
-        private static readonly ApplicationDbContext Db = new ApplicationDbContext();
+        private static ApplicationDbContext Db = new ApplicationDbContext();
 
         /// <summary>
         /// The get notification count.
@@ -92,6 +92,19 @@ namespace LBCAlerterWeb
         public static IEnumerable<Search> GetSearch(string userId)
         {
             return Db.Searches.Where(search => search.User.Id == userId).ToList();
+        }
+
+        public static string GetBackground(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return "bg-1";
+            }
+
+            Db = new ApplicationDbContext();
+
+            var user = Db.Users.FirstOrDefault(entry => entry.Id == userId);
+            return string.IsNullOrEmpty(user.Background) ? "bg-1" : user.Background;
         }
     }
 }
