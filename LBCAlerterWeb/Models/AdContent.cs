@@ -67,6 +67,16 @@ namespace LBCAlerterWeb.Models
             /// The description.
             /// </summary>
             Description,
+
+            /// <summary>
+            /// The latitude.
+            /// </summary>
+            Latitude,
+
+            /// <summary>
+            /// The longitude.
+            /// </summary>
+            Longitude,
         }
         
         /// <summary>

@@ -112,6 +112,20 @@ namespace LBCService.Saver
 
             content = new AdContent
                           {
+                              Type = AdContent.ContentType.Latitude.ToString(),
+                              Value = ad.GetTokenValue("Contents>Latitude").FirstOrDefault()
+                          };
+            contents.Add(content);
+
+            content = new AdContent
+                          {
+                              Type = AdContent.ContentType.Longitude.ToString(),
+                              Value = ad.GetTokenValue("Contents>Longitude").FirstOrDefault()
+                          };
+            contents.Add(content);
+
+            content = new AdContent
+                          {
                               Type = AdContent.ContentType.Name.ToString(),
                               Value = ad.GetTokenValue("Contents>Name").FirstOrDefault()
                           };

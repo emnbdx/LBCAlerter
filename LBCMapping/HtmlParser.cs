@@ -6,7 +6,6 @@
     using System.IO;
     using System.Linq;
     using System.Net;
-    using System.Runtime.Serialization.Configuration;
     using System.Text;
     using System.Web;
 
@@ -180,7 +179,7 @@
 
             // Get all value
             var dateNode = ad.SelectNodes("div[@class='date']/div");
-            var titleNode = ad.SelectSingleNode("div[@class='detail']/div[@class='title']");
+            var titleNode = ad.SelectSingleNode("div[@class='detail']/h2[@class='title']");
             var placementNode = ad.SelectSingleNode("div[@class='detail']/div[@class='placement']");
             var priceNode = ad.SelectSingleNode("div[@class='detail']/div[@class='price']");
             var imgNode = ad.SelectSingleNode("div[@class='image']/div[@class='image-and-nb']/img");
@@ -355,6 +354,9 @@
             HtmlNode commercialNode = adContent.SelectSingleNode("//div[@class='lbc_links']/span[.='(Je refuse tout d&eacute;marchage commercial)']");*/
             var nameNode = content.SelectSingleNode("//div[@class='upload_by']/a");
             var emailNode = content.SelectSingleNode("//div[@class='lbc_links']/a[@class='sendMail']");
+            HtmlNode latitudeNode = null;
+            HtmlNode longitudeNode = null;
+            
             var parameters = new List<string>();
             if (
                 content.SelectNodes(
@@ -364,23 +366,31 @@
                     content.SelectNodes(
                         "//div[contains(@class, 'lbcParamsContainer')]/div[contains(@class, 'lbcParams')]//tr"))
                 {
-                    var title = parameter.SelectSingleNode("th").InnerText.Replace(":", string.Empty).Trim();
-                    string value;
-
-                    if (parameter.SelectSingleNode("td//span") != null)
+                    if (parameter.Attributes["itemprop"] != null && parameter.Attributes["itemprop"].Value == "geo")
                     {
-                        value = parameter.SelectSingleNode("td//span").InnerText;
-                    }
-                    else if (parameter.SelectSingleNode("td//a") != null)
-                    {
-                        value = parameter.SelectSingleNode("td//a").InnerText;
+                        latitudeNode = parameter.SelectSingleNode("//td//meta[@itemprop='latitude']");
+                        longitudeNode = parameter.SelectSingleNode("//td//meta[@itemprop='longitude']");
                     }
                     else
                     {
-                        value = parameter.SelectSingleNode("td").InnerText;
-                    }
+                        var title = parameter.SelectSingleNode("th").InnerText.Replace(":", string.Empty).Trim();
+                        string value;
 
-                    parameters.Add(title + ": " + value);
+                        if (parameter.SelectSingleNode("td//span") != null)
+                        {
+                            value = parameter.SelectSingleNode("td//span").InnerText;
+                        }
+                        else if (parameter.SelectSingleNode("td//a") != null)
+                        {
+                            value = parameter.SelectSingleNode("td//a").InnerText;
+                        }
+                        else
+                        {
+                            value = parameter.SelectSingleNode("td").InnerText;
+                        }
+
+                        parameters.Add(title + ": " + value);
+                    }
                 }
             }
 
@@ -432,6 +442,20 @@
                 writer.WriteValue("Description");
                 writer.WritePropertyName("Value");
                 writer.WriteValue(descriptionNode != null ? descriptionNode.InnerHtml : string.Empty);
+                writer.WriteEndObject();
+
+                writer.WriteStartObject();
+                writer.WritePropertyName("Type");
+                writer.WriteValue("Latitude");
+                writer.WritePropertyName("Value");
+                writer.WriteValue(latitudeNode != null ? latitudeNode.Attributes["content"].Value : null);
+                writer.WriteEndObject();
+
+                writer.WriteStartObject();
+                writer.WritePropertyName("Type");
+                writer.WriteValue("Longitude");
+                writer.WritePropertyName("Value");
+                writer.WriteValue(longitudeNode != null ? longitudeNode.Attributes["content"].Value : null);
                 writer.WriteEndObject();
             }
 
