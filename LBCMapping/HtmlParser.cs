@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Net;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Web;
 
     using EMToolBox;
@@ -350,12 +351,11 @@
                         .Replace("');", string.Empty));
             }
 
-            /*HtmlNode phoneNode = adContent.SelectSingleNode("//span[@class='lbcPhone']/span[@id='phoneNumber']/a");
-            HtmlNode commercialNode = adContent.SelectSingleNode("//div[@class='lbc_links']/span[.='(Je refuse tout d&eacute;marchage commercial)']");*/
+            //HtmlNode phoneNode = adContent.SelectSingleNode("//span[@class='lbcPhone']/span[@id='phoneNumber']/a");
+            var commercialNode = content.SelectSingleNode("//div[@class='lbc_nosalesmen']");
             var nameNode = content.SelectSingleNode("//div[@class='upload_by']/a");
             var emailNode = content.SelectSingleNode("//div[@class='lbc_links']/a[@class='sendMail']");
-            HtmlNode latitudeNode = null;
-            HtmlNode longitudeNode = null;
+            
             
             var parameters = new List<string>();
             if (
@@ -366,35 +366,60 @@
                     content.SelectNodes(
                         "//div[contains(@class, 'lbcParamsContainer')]/div[contains(@class, 'lbcParams')]//tr"))
                 {
-                    if (parameter.Attributes["itemprop"] != null && parameter.Attributes["itemprop"].Value == "geo")
+                    /*if (parameter.Attributes["itemprop"] != null && parameter.Attributes["itemprop"].Value == "geo")
                     {
                         latitudeNode = parameter.SelectSingleNode("//td//meta[@itemprop='latitude']");
                         longitudeNode = parameter.SelectSingleNode("//td//meta[@itemprop='longitude']");
                     }
                     else
+                    {*/
+
+                    if (parameter.SelectSingleNode("th") == null)
                     {
-                        var title = parameter.SelectSingleNode("th").InnerText.Replace(":", string.Empty).Trim();
-                        string value;
-
-                        if (parameter.SelectSingleNode("td//span") != null)
-                        {
-                            value = parameter.SelectSingleNode("td//span").InnerText;
-                        }
-                        else if (parameter.SelectSingleNode("td//a") != null)
-                        {
-                            value = parameter.SelectSingleNode("td//a").InnerText;
-                        }
-                        else
-                        {
-                            value = parameter.SelectSingleNode("td").InnerText;
-                        }
-
-                        parameters.Add(title + ": " + value);
+                        continue;
                     }
+
+                    var title = parameter.SelectSingleNode("th").InnerText.Replace(":", string.Empty).Trim();
+                    string value;
+
+                    if (parameter.SelectSingleNode("td//span") != null)
+                    {
+                        value = parameter.SelectSingleNode("td//span").InnerText;
+                    }
+                    else if (parameter.SelectSingleNode("td//a") != null)
+                    {
+                        value = parameter.SelectSingleNode("td//a").InnerText;
+                    }
+                    else
+                    {
+                        value = parameter.SelectSingleNode("td").InnerText;
+                    }
+
+                    parameters.Add(title + ": " + value);
                 }
             }
 
+            var positionScript = content.SelectSingleNode("//div[@class='colRight']/script");
+            string latitudeNode = null;
+            string longitudeNode = null;
+            var ville = true;
+            if (positionScript != null)
+            {
+                var regex = new Regex(
+                    "(?:.*(?:\"(.*)\").*)*",
+                    RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.IgnorePatternWhitespace
+                    | RegexOptions.Compiled);
+
+                var results = regex.Split(positionScript.InnerText);
+                var value = results.Select(entry => entry.Trim()).Where(entry => !string.IsNullOrEmpty(entry) && entry != "\n").ToArray();
+
+                latitudeNode = value[0];
+                longitudeNode = value[1];
+                ville = value[2] == "city";
+            }
+
             var descriptionNode = content.SelectSingleNode("//div[@class='AdviewContent']/div[@class='content']");
+
 
             using (var writer = ((JArray)ad["Contents"]).CreateWriter())
             {
@@ -409,9 +434,15 @@
                     writer.WriteEndObject();
                 }
 
-                /*TODO : find good solution to get phone number and commercial information
-                ad.AddContentsToToken("Phone", phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", string.Empty)) : string.Empty), "Contents");
-                ad.AddContentsToToken("AllowCommercial", commercialNode == null, "Contents");*/
+                // TODO : find good solution to get phone
+                // ad.AddContentsToToken("Phone", phoneNode != null ? GetPhoneUrl(phoneNode.GetAttributeValue("href", string.Empty)) : string.Empty), "Contents");
+
+                writer.WriteStartObject();
+                writer.WritePropertyName("Type");
+                writer.WriteValue("AllowCommercial");
+                writer.WritePropertyName("Value");
+                writer.WriteValue(commercialNode == null);
+                writer.WriteEndObject();
 
                 writer.WriteStartObject();
                 writer.WritePropertyName("Type");
@@ -444,18 +475,23 @@
                 writer.WriteValue(descriptionNode != null ? descriptionNode.InnerHtml : string.Empty);
                 writer.WriteEndObject();
 
+                if (ville)
+                {
+                    return ad;
+                }
+
                 writer.WriteStartObject();
                 writer.WritePropertyName("Type");
                 writer.WriteValue("Latitude");
                 writer.WritePropertyName("Value");
-                writer.WriteValue(latitudeNode != null ? latitudeNode.Attributes["content"].Value : null);
+                writer.WriteValue(latitudeNode);
                 writer.WriteEndObject();
 
                 writer.WriteStartObject();
                 writer.WritePropertyName("Type");
                 writer.WriteValue("Longitude");
                 writer.WritePropertyName("Value");
-                writer.WriteValue(longitudeNode != null ? longitudeNode.Attributes["content"].Value : null);
+                writer.WriteValue(longitudeNode);
                 writer.WriteEndObject();
             }
 
