@@ -406,16 +406,32 @@
             if (positionScript != null)
             {
                 var regex = new Regex(
-                    "(?:.*(?:\"(.*)\").*)*",
+                    "var\\s(\\w*)\\s=.*(?:\\\"(.*)\\\").*",
                     RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.IgnorePatternWhitespace
                     | RegexOptions.Compiled);
 
-                var results = regex.Split(positionScript.InnerText);
-                var value = results.Select(entry => entry.Trim()).Where(entry => !string.IsNullOrEmpty(entry) && entry != "\n").ToArray();
+                var values = positionScript.InnerText.Split("\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-                latitudeNode = value[0];
-                longitudeNode = value[1];
-                ville = value[2] == "city";
+                foreach (var match in values.Select(s => regex.Match(s)))
+                {
+                    if (match.Groups.Count < 3)
+                    {
+                        continue;
+                    }
+
+                    if (match.Groups[1].Value == "lat")
+                    {
+                        latitudeNode = match.Groups[2].Value;
+                    }
+                    if (match.Groups[1].Value == "lng")
+                    {
+                        longitudeNode = match.Groups[2].Value;
+                    }
+                    if (match.Groups[1].Value == "source")
+                    {
+                        ville = match.Groups[2].Value == "city";
+                    }
+                }
             }
 
             var descriptionNode = content.SelectSingleNode("//div[@class='AdviewContent']/div[@class='content']");
