@@ -421,15 +421,15 @@
 
                     if (match.Groups[1].Value == "lat")
                     {
-                        latitudeNode = match.Groups[2].Value;
+                        latitudeNode = match.Groups[2].Value.Trim();
                     }
                     if (match.Groups[1].Value == "lng")
                     {
-                        longitudeNode = match.Groups[2].Value;
+                        longitudeNode = match.Groups[2].Value.Trim();
                     }
                     if (match.Groups[1].Value == "source")
                     {
-                        ville = match.Groups[2].Value == "city";
+                        ville = match.Groups[2].Value.Trim() != "address";
                     }
                 }
             }
