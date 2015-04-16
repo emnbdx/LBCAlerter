@@ -92,10 +92,10 @@ else
             val += script.Substring(0, start);
             var secondPart = script.Substring(stop + "})(window);".Length, script.Length - (stop + "})(window);".Length));
 
-            start = secondPart.IndexOf("(function(f,e){");
+            start = secondPart.IndexOf("*/(function(a,b){");
             stop = secondPart.IndexOf("})(jQuery);", start);
 
-            val += secondPart.Substring(0, start);
+            val += secondPart.Substring(0, start + 2);
             val += secondPart.Substring(stop + "})(jQuery);".Length, secondPart.Length - (stop + "})(jQuery);".Length));
 
             val = val.Replace("(jQuery)", string.Empty);
