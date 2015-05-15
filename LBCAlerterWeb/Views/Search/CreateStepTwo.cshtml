@@ -93,6 +93,10 @@ else
             var secondPart = script.Substring(stop + "})(window);".Length, script.Length - (stop + "})(window);".Length));
 
             start = secondPart.IndexOf("*/(function(a,b){");
+            if (start <= 0)
+            {
+                start = secondPart.IndexOf("(function(f,e){");
+            }
             stop = secondPart.IndexOf("})(jQuery);", start);
 
             val += secondPart.Substring(0, start + 2);
