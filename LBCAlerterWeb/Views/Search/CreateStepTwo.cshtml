@@ -84,22 +84,18 @@ else
                                         });
                                         return false;");
         }
-        else if (script.Contains("})(window);"))
+        else if (script.Contains("/* jQuery v1.7.1"))
         {
-            var start = script.IndexOf("(function(a,b){");
+            var start = script.IndexOf("/* jQuery v1.7.1");
             var stop = script.IndexOf("})(window);");
 
             val += script.Substring(0, start);
             var secondPart = script.Substring(stop + "})(window);".Length, script.Length - (stop + "})(window);".Length));
 
-            start = secondPart.IndexOf("*/(function(a,b){");
-            if (start <= 0)
-            {
-                start = secondPart.IndexOf("(function(f,e){");
-            }
+            start = secondPart.IndexOf("/*");
             stop = secondPart.IndexOf("})(jQuery);", start);
 
-            val += secondPart.Substring(0, start + 2);
+            val += secondPart.Substring(0, start);
             val += secondPart.Substring(stop + "})(jQuery);".Length, secondPart.Length - (stop + "})(jQuery);".Length));
 
             val = val.Replace("(jQuery)", string.Empty);
