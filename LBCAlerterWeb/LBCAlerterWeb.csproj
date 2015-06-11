@@ -176,6 +176,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Views\HomeController.cs" />
     <Content Include="App_Code\Helper.cs" />
     <Compile Include="App_Code\RssActionResult.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -521,6 +522,7 @@
     <Content Include="Scripts\minimal.min.js.map">
       <DependentUpon>minimal.min.js</DependentUpon>
     </Content>
+    <Content Include="Views\Home\HowItsWork.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

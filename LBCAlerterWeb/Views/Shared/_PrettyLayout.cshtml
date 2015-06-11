@@ -2,6 +2,11 @@
 
 @{
     var background = Helper.GetBackground(User.Identity.GetUserId());
+    if (!string.IsNullOrEmpty(ViewBag.Video))
+    {
+        background = ViewBag.Video;
+    }   
+    
     var video = background.StartsWith("video-");
     var staticbg = string.Empty;
     if (!video)
@@ -31,83 +36,96 @@
         @RenderSection("styles", required: false)
 
     </head>
-    <body class="@staticbg">
-        <div class="mm-page">
-            <div id="wrap">
-                <div class="row">
-                    @Html.Partial("_NavBarPartial")
+<body class="@staticbg">
+    <div class="mm-page">
+        <div id="wrap">
+            <div class="row">
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    if (string.IsNullOrEmpty(ViewBag.Video))
+                    {
+                        @Html.ActionLink("Comment ça marche", "HowItsWork", "Home", null, new { @class = "btn btn-info btn-lg btn-home" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Connexion", "Login", "Account", null, new { @class = "btn btn-success btn-lg btn-home" })
+                    }
+                }
 
-                    <div id="content" class="col-md-12" tabindex="5001" style="overflow: hidden; outline: none;">
-                        @if (ViewBag.Large != null && ViewBag.Large)
-                        {
+                @Html.Partial("_NavBarPartial")
+
+                <div id="content" class="col-md-12" tabindex="5001" style="overflow: hidden; outline: none;">
+                    @if (ViewBag.Large != null && ViewBag.Large)
+                    {
+                        @RenderBody()
+                    }
+                    else
+                    {
+                        <div class="small-form">
                             @RenderBody()
-                        }
-                        else
-                        {
-                            <div class="small-form">
-                                @RenderBody()
-                            </div>
-                        }
-                    </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
+    </div>
 
-        <section class="videocontent" id="video">
-            @if (video)
-            {
-                @Html.Raw("<div class=\"video-background " + background + "\"></div>");
-            }
-        </section>
-
-        @Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/jqueryui")
-        @Scripts.Render("~/bundles/bootstrap")
-        @Scripts.Render("~/bundles/minimal")
-
+    <section class="videocontent" id="video">
         @if (video)
         {
-            <script type="text/javascript">
-                minimal.changeVideoBg();
-            </script>
+            @Html.Raw("<div class=\"video-background " + background + "\"></div>");
+        }
+    </section>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/minimal")
+
+    @if (video)
+    {
+        <script type="text/javascript">
+            minimal.changeVideoBg();
+        </script>
+    }
+
+    <script type="text/javascript">
+        if (!String.prototype.startsWith) {
+            Object.defineProperty(String.prototype, 'startsWith', {
+                enumerable: false,
+                configurable: false,
+                writable: false,
+                value: function (searchString, position) {
+                    position = position || 0;
+                    return this.lastIndexOf(searchString, position) === position;
+                }
+            });
         }
 
-        <script type="text/javascript">
-            if (!String.prototype.startsWith) {
-                Object.defineProperty(String.prototype, 'startsWith', {
-                    enumerable: false,
-                    configurable: false,
-                    writable: false,
-                    value: function (searchString, position) {
-                        position = position || 0;
-                        return this.lastIndexOf(searchString, position) === position;
-                    }
-                });
-            }
+        $('.menu li').each(function () {
+            $(this).removeClass('active');
+        });
 
-            $('.menu li').each(function () {
-                $(this).removeClass('active');
-            });
+        if ('@ViewBag.Current'.startsWith('search_')) {
+            $('#search').addClass('open');
+        }
 
-            if ('@ViewBag.Current'.startsWith('search_')) {
-                $('#search').addClass('open');
-            }
+        $('#@ViewBag.Current' + 'Menu').addClass('active');
+    </script>
 
-            $('#@ViewBag.Current' + 'Menu').addClass('active');
-        </script>
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-        <script>
-            (function (i, s, o, g, r, a, m) {
-                i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date(); a = s.createElement(o),
-                    m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        ga('create', 'UA-61043053-1', 'auto');
+        ga('send', 'pageview');
+    </script>
 
-            ga('create', 'UA-61043053-1', 'auto');
-            ga('send', 'pageview');
-        </script>
+    @RenderSection("scripts", required: false)
+</body>
 
-        @RenderSection("scripts", required: false)
-    </body>
 </html>
