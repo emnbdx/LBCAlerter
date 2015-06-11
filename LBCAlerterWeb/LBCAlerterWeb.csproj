@@ -276,6 +276,7 @@
     </Content>
     <Content Include="Content\video\backgrounds\1.mp4" />
     <Content Include="Content\video\backgrounds\10.mp4" />
+    <Content Include="Content\video\backgrounds\11.mp4" />
     <Content Include="Content\video\backgrounds\2.mp4" />
     <Content Include="Content\video\backgrounds\3.mp4" />
     <Content Include="Content\video\backgrounds\4.mp4" />
@@ -429,6 +430,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\video\backgrounds\11.ogv" />
+    <Content Include="Content\video\backgrounds\11.webm" />
     <None Include="Properties\PublishProfiles\perso.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Icon.png" />
