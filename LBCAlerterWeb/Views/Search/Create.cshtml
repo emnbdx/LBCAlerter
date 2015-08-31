@@ -41,7 +41,7 @@ else
     @Html.ActionLink("Retour à la liste", "Index")
 </div>
 
-@section Scripts {
+@section scripts {
     <script type="text/javascript">
         $(document).ready(function () {
             $('a[id^="county_"], area').each(function () {
@@ -63,7 +63,19 @@ else
         {
             continue;
         }
-        
+
+        if (script.Contains("/* jQuery v1.7.1"))
+        {
+            var start = script.IndexOf("/* jQuery v1.7.1");
+            var stop = script.IndexOf("})(window);");
+
+            var firstPart = script.Substring(0, start);
+            var secondPart = script.Substring(stop + "})(window);".Length, script.Length - (stop + "})(window);".Length));
+
+            @Html.Raw(firstPart + secondPart);
+            continue;
+        }
+
         @Html.Raw(script)
     }
 }
