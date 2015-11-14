@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{AC4ED8
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBCCleanService", "CleanService\LBCCleanService.csproj", "{E05293FE-1061-45C3-9DD2-47893416978D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBCCleanService", "LBCCleanService\LBCCleanService.csproj", "{E05293FE-1061-45C3-9DD2-47893416978D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
