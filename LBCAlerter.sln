@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBCMapping", "LBCMapping\LBCMapping.csproj", "{7825E753-0093-4429-89ED-B4DA3CFCDEE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMToolBox", "..\EMToolBox\EMToolBox\EMToolBox.csproj", "{CB581FED-FAFF-4450-9EBA-129B0BB2A446}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMToolBox", "EMToolBox\EMToolBox\EMToolBox.csproj", "{CB581FED-FAFF-4450-9EBA-129B0BB2A446}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBCAlerterWeb", "LBCAlerterWeb\LBCAlerterWeb.csproj", "{EAE129C3-0BF2-4CCB-A59C-85F3AD4F94F5}"
 EndProject
