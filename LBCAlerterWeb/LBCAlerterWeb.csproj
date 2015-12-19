@@ -49,6 +49,10 @@
     <Reference Include="Elmah">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
     </Reference>
+    <Reference Include="EMToolBox, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EMToolBox.1.0.0\lib\net45\EMToolBox.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -541,10 +545,6 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\EMToolBox\EMToolBox\EMToolBox.csproj">
-      <Project>{cb581fed-faff-4450-9eba-129b0bb2a446}</Project>
-      <Name>EMToolBox</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LBCMapping\LBCMapping.csproj">
       <Project>{7825e753-0093-4429-89ed-b4da3cfcdee3}</Project>
       <Name>LBCMapping</Name>
