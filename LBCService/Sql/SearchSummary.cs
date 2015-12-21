@@ -6,9 +6,9 @@ namespace LBCService.Sql
     {
         public int Id { get; set; }
 
-        public string KeyWord { get; set; }
-
         public string Url { get; set; }
+
+        public string KeyWord { get; set; }
 
         public int RefreshTime { get; set; }
 
@@ -27,9 +27,5 @@ namespace LBCService.Sql
         public int TodayAttempsCount { get; set; }
 
         public int AdsCount { get; set; }
-
-        public int TodayAdsCount { get; set; }
-
-        public int FirstAdId { get; set; }
     }
 }

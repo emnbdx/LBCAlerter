@@ -143,7 +143,7 @@ namespace LBCService
                     writer.WritePropertyName("Title");
                     writer.WriteValue("Recap quotidien pour [" + search.KeyWord + "]");
                     writer.WritePropertyName("AdCount");
-                    writer.WriteValue(search.TodayAdsCount);
+                    writer.WriteValue(todayAds.Count());
                     writer.WritePropertyName("AttemptCount");
                     writer.WriteValue(attempsCount);
                     writer.WritePropertyName("AttemptCadence");
@@ -151,7 +151,7 @@ namespace LBCService
                     writer.WritePropertyName("Id");
                     writer.WriteValue(search.Id);
                     writer.WritePropertyName("AdId");
-                    writer.WriteValue(search.FirstAdId);
+                    writer.WriteValue(todayAds.FirstOrDefault());
                     writer.WritePropertyName("Ads");
                     writer.WriteValue(ads.ToString());
 
