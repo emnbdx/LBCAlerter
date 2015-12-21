@@ -7,6 +7,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Data.SqlClient;
+
 namespace LBCService.Saver
 {
     using System;
@@ -26,11 +28,6 @@ namespace LBCService.Saver
     /// </summary>
     public class EfSaver : ISaver
     {
-        /// <summary>
-        /// The database context.
-        /// </summary>
-        private readonly ApplicationDbContext db = new ApplicationDbContext();
-
         /// <summary>
         /// The search id.
         /// </summary>
@@ -61,31 +58,43 @@ namespace LBCService.Saver
         /// </exception>
         public bool Store(JObject ad)
         {
-            var url = (string)ad["Url"];
-            var databaseAd = this.db.Ads.FirstOrDefault(entry => entry.Search.ID == this.searchId && entry.Url == url);
-
-            // If ad have same url
-            if (databaseAd != null)
+            decimal adId;
+            using (var db = new ApplicationDbContext())
             {
-                return false;
-            }
+                var url = (string) ad["Url"];
+                var databaseAd =
+                    db.Ads.FirstOrDefault(entry => entry.Search.ID == this.searchId && entry.Url == url);
 
-            var uniqueId = ad["Title"] + ad.GetTokenValue("Contents>Place").FirstOrDefault()
-                           + ad.GetTokenValue("Contents>Price").FirstOrDefault()
-                           + ad.GetTokenValue("Contents>Description").FirstOrDefault();
-            var hash = uniqueId.GetMd5Hash();
-            databaseAd = this.db.Ads.FirstOrDefault(entry => entry.Search.ID == this.searchId && entry.Hash == hash);
+                // If ad have same url
+                if (databaseAd != null)
+                {
+                    return false;
+                }
 
-            // If ad have same hash
-            if (databaseAd != null)
-            {
-                return false;
-            }
+                var uniqueId = ad["Title"] + ad.GetTokenValue("Contents>Place").FirstOrDefault()
+                               + ad.GetTokenValue("Contents>Price").FirstOrDefault()
+                               + ad.GetTokenValue("Contents>Description").FirstOrDefault();
+                var hash = uniqueId.GetMd5Hash();
+                databaseAd = db.Ads.FirstOrDefault(entry => entry.Search.ID == this.searchId && entry.Hash == hash);
 
-            var s = this.db.Searches.FirstOrDefault(entry => entry.ID == this.searchId);
-            if (s == null)
-            {
-                throw new Exception("Recherche inexistante...");
+                // If ad have same hash
+                if (databaseAd != null)
+                {
+                    return false;
+                }
+
+                var s = db.Searches.FirstOrDefault(entry => entry.ID == this.searchId);
+                if (s == null)
+                {
+                    throw new Exception("Recherche inexistante...");
+                }
+
+                adId = db.Database.SqlQuery<decimal>("exec AddAd @search_id, @url, @date, @title, @hash",
+                    new SqlParameter("search_id", s.ID),
+                    new SqlParameter("url", (string)ad["Url"]),
+                    new SqlParameter("date", DateTime.Parse((string)ad["Date"], new CultureInfo("fr-FR"))),
+                    new SqlParameter("title", (string)ad["Title"]),
+                    new SqlParameter("hash", hash)).First();
             }
 
             var contents = new List<AdContent>();
@@ -164,23 +173,22 @@ namespace LBCService.Saver
                 contents.Add(content);
             }
 
-            var tmpAd = new Ad
-                            {
-                                Url = (string)ad["Url"],
-                                Hash = hash,
-                                Date = DateTime.Parse((string)ad["Date"], new CultureInfo("fr-FR")),
-                                Title = (string)ad["Title"],
-                                Search = s,
-                                Contents = contents
-                            };
-            this.db.Ads.Add(tmpAd);
 
-            this.db.SaveChanges();
+            using (var db = new ApplicationDbContext())
+            {
+                foreach (var adContent in contents.Where(c => c.Value != null))
+                {
+                    db.Database.ExecuteSqlCommand("exec AddAdContent @ad_id, @type, @value",
+                        new SqlParameter("ad_id", (int)adId),
+                        new SqlParameter("type", adContent.Type),
+                        new SqlParameter("value", adContent.Value));
+                }
+            }
 
             using (var writer = ad.CreateWriter())
             {
                 writer.WritePropertyName("Id");
-                writer.WriteValue(tmpAd.ID);
+                writer.WriteValue(adId);
                 writer.WritePropertyName("SearchId");
                 writer.WriteValue(this.searchId);
             }
