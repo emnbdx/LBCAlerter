@@ -636,13 +636,21 @@
                                 var httpWebRequest =
                                     (HttpWebRequest)WebRequest.Create(node.Attributes["href"].Value);
 
-                                string style;
-                                using (var sr = new StreamReader(httpWebRequest.GetResponse().GetResponseStream(), System.Text.Encoding.GetEncoding(Encoding)))
+                                try
                                 {
-                                    style = sr.ReadToEnd();
-                                }
+                                    string style;
+                                    using (
+                                        var sr = new StreamReader(httpWebRequest.GetResponse().GetResponseStream(),
+                                            System.Text.Encoding.GetEncoding(Encoding)))
+                                    {
+                                        style = sr.ReadToEnd();
+                                    }
 
-                                results.Add("<style type=\"text/css\">\r\n" + style + "\r\n</style>");
+                                    results.Add("<style type=\"text/css\">\r\n" + style + "\r\n</style>");
+                                }
+                                catch (WebException e)
+                                {
+                                }
                             }
                             else
                             {
@@ -665,13 +673,21 @@
                                 var httpWebRequest =
                                     (HttpWebRequest)WebRequest.Create(node.Attributes["src"].Value);
 
-                                string script;
-                                using (var sr = new StreamReader(httpWebRequest.GetResponse().GetResponseStream(), System.Text.Encoding.GetEncoding(Encoding)))
+                                try
                                 {
-                                    script = sr.ReadToEnd();
-                                }
+                                    string script;
+                                    using (
+                                        var sr = new StreamReader(httpWebRequest.GetResponse().GetResponseStream(),
+                                            System.Text.Encoding.GetEncoding(Encoding)))
+                                    {
+                                        script = sr.ReadToEnd();
+                                    }
 
-                                results.Add("<script type=\"text/javascript\">\r\n" + script + "\r\n</script>");
+                                    results.Add("<script type=\"text/javascript\">\r\n" + script + "\r\n</script>");
+                                }
+                                catch (WebException e)
+                                {
+                                }
                             }
                             else
                             {
