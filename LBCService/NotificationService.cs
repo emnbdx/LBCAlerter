@@ -7,39 +7,31 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Data.SqlClient;
+using System;
+using System.Configuration;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+using LBCService.Alerter;
+using LBCService.Counter;
+using EMToolBox.Mail;
+using EMToolBox.Services;
+using LBCAlerterWeb.Models;
+using LBCMapping;
+using log4net;
+using Newtonsoft.Json;
+using LBCService.Saver;
 using LBCService.Sql;
 
 namespace LBCService
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Configuration;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-
-    using EMToolBox.Job;
-    using EMToolBox.Mail;
-    using EMToolBox.Services;
-    using LBCAlerterWeb.Models;
-    using LBCMapping;
-    using Alerter;
-    using Counter;
-    using Saver;
-    using log4net;
-
-    using Newtonsoft.Json;
-
+{   
     /// <summary>
     /// The notification service.
     /// </summary>
     public class NotificationService : SimpleService
-    {
-        /// <summary>
-        /// The jobs.
-        /// </summary>
-        private static readonly Dictionary<int, RandomJobLauncher> Jobs = new Dictionary<int, RandomJobLauncher>();
-        
+    {      
         /// <summary>
         /// The log.
         /// </summary>
@@ -57,40 +49,26 @@ namespace LBCService
 
             using (var db = new ApplicationDbContext())
             {
-                if (firstProcess)
+                var enabledSearch = db.Database.SqlQuery<SearchSummary>("exec GetEnabledSearch").ToList();
+                foreach (var s in enabledSearch)
                 {
-                    var enabledSearch = db.Database.SqlQuery<SearchSummary>("exec GetEnabledSearch");
-                    foreach (var s in enabledSearch)
-                    {
-                        CreateNewJob(s);
-                    }
-                }
-                else
-                {
-                    var allSearch = db.Database.SqlQuery<SearchSummary>("exec GetAllSearch");
-                    foreach (var s in allSearch)
-                    {
-                        SendMailRecap(s);
+                    var lastAttempt = db.Database.SqlQuery<DateTime?>("exec GetLastAttempt @search_id", new SqlParameter("search_id", s.Id)).FirstOrDefault();
 
-                        RandomJobLauncher jobLauncher;
-                        Jobs.TryGetValue(s.Id, out jobLauncher);
-
-                        if (jobLauncher == null)
-                        {
-                            CreateNewJob(s);
-                        }
-                        else
-                        {
-                            UpdateJob(s, jobLauncher);
-                        }
+                    var runNeeded = s.MailAlert && (!lastAttempt.HasValue ||
+                                                    lastAttempt.Value.AddMinutes(s.RefreshTime) < DateTime.Now);
+                    if (runNeeded)
+                    {
+                        this.DoSearch(s);
                     }
 
-                    if (Jobs.Count > allSearch.Count())
+                    var recapNeeded = s.MailRecap
+                                      && (!s.LastRecap.HasValue || (s.LastRecap.Value < DateTime.Today))
+                                      &&
+                                      DateTime.Now.Hour ==
+                                      Convert.ToInt32(ConfigurationManager.AppSettings["Heure mail recap"]);
+                    if (recapNeeded)
                     {
-                        foreach (var s in allSearch)
-                        {
-                            StopDeletedJobs(s);
-                        }
+                        this.SendMailRecap(s);
                     }
                 }
             }
@@ -103,20 +81,13 @@ namespace LBCService
         /// </summary>
         /// <param name="search">Current search</param>
         private void SendMailRecap(SearchSummary search)
-        {
-            if (!search.Enabled || !search.MailRecap
-                || (search.LastRecap.HasValue && (search.LastRecap.Value >= DateTime.Today))
-                || DateTime.Now.Hour != Convert.ToInt32(ConfigurationManager.AppSettings["Heure mail recap"]))
-            {
-                return;
-            }
-            
+        {           
             var mail = new EMMail();
             var attempsCount = search.TodayAttempsCount;
 
             using (var db = new ApplicationDbContext())
             {
-                var todayAds = db.Database.SqlQuery<Ad>("exec GetLastAdsFromSearch", search.Id);
+                var todayAds = db.Database.SqlQuery<Ad>("exec GetLastAdsFromSearch @search_id", new SqlParameter("search_id", search.Id));
 
                 var mailPattern = mail.GetPattern("LBC_RECAP_AD" + (search.IsPremiumUser ? "_FULL" : string.Empty)).CONTENT;
                 var ads = new StringBuilder();
@@ -172,13 +143,8 @@ namespace LBCService
         /// Create and launch new search job
         /// </summary>
         /// <param name="search">Current search</param>
-        private void CreateNewJob(SearchSummary search)
+        private void DoSearch(SearchSummary search)
         {
-            if (!search.Enabled)
-            {
-                return;
-            }
-
             var job = new SearchJob(search.Url, search.KeyWord, search.IsPremiumUser, search.AdsCount == 0)
                           {
                               FistTimeCount
@@ -189,102 +155,13 @@ namespace LBCService
                           };
             IAlerter alerter = new LogAlerter();
             job.Alerters.Add(alerter);
-            if (search.MailAlert)
-            {
-                alerter = new MailAlerter(search.UserName, "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]", search.IsPremiumUser);
-                job.Alerters.Add(alerter);
-            }
+            alerter = new MailAlerter(search.UserName, "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]", search.IsPremiumUser);
+            job.Alerters.Add(alerter);
 
             ICounter counter = new EfCounter(search.Id);
             job.Counter.Add(counter);
-            Log.Info("Add job [" + search.Id + "] to list");
-            var launcher = new RandomJobLauncher(job, search.RefreshTime);
-            Jobs.Add(search.Id, launcher);
-            Log.Info("Launch job...");
-            launcher.Start();
-        }
-
-        /// <summary>
-        /// Update job interval and/or alerter
-        /// </summary>
-        /// <param name="search">Current search</param>
-        /// <param name="jobLauncher">Launcher of this search</param>
-        private void UpdateJob(SearchSummary search, JobLauncher jobLauncher)
-        {
-            if (jobLauncher.IntervalTime != search.RefreshTime)
-            {
-                jobLauncher.IntervalTime = search.RefreshTime;
-            }
-
-            if (!search.Enabled)
-            {
-                jobLauncher.Stop();
-                Jobs.Remove(search.Id);
-                return;
-            }
-
-            var job = jobLauncher.Job as SearchJob;
-            if (job == null)
-            {
-                return;
-            }
-
-            var alerter = job.Alerters.OfType<MailAlerter>().Select(alert => alert).FirstOrDefault();
-
-            if (alerter != null)
-            {
-                // delete
-                if (!search.MailAlert) 
-                {
-                    job.Alerters.Remove(alerter);
-                    jobLauncher.Stop();
-                    Jobs.Remove(search.Id);
-                }
-                else
-                {
-                    // update
-                    if (alerter.Subject != null && alerter.Subject != "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]") 
-                    {
-                        alerter.Subject = "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]";
-                    }
-
-                    if (search.UserName != null && job.Complete != search.IsPremiumUser)
-                    {
-                        job.Complete = search.IsPremiumUser;
-                    }
-
-                    if (search.UserName != null && alerter.FullMode != search.IsPremiumUser)
-                    {
-                        alerter.FullMode = search.IsPremiumUser;
-                    }
-                }
-            }
-            else
-            {
-                // add
-                if (!search.MailAlert)
-                {
-                    return;
-                }
-
-                alerter = new MailAlerter(search.UserName, "[LBCAlerter] - Nouvelle annonce pour [" + search.KeyWord + "]", search.IsPremiumUser);
-                job.Alerters.Add(alerter);
-            }
-        }
-
-        /// <summary>
-        /// Delete job if deleted by user
-        /// </summary>
-        /// <param name="search">Search in context</param>
-        private void StopDeletedJobs(SearchSummary search)
-        {
-            var toStop = Jobs.Keys.Where(key => search.Id == key).ToList();
-
-            foreach (var id in toStop)
-            {
-                Jobs[id].Stop();
-                Jobs.Remove(id);
-            }
+            Log.InfoFormat("Launch job {0}...", search.KeyWord);
+            job.Launch();
         }
     }
 }

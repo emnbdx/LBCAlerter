@@ -1,8 +1,7 @@
-﻿namespace LBCService.Counter
-{
-    using System;
-    using System.Linq;
+﻿using System.Data.SqlClient;
 
+namespace LBCService.Counter
+{
     using LBCAlerterWeb.Models;
     using LBCMapping;
 
@@ -11,11 +10,6 @@
     /// </summary>
     public class EfCounter : ICounter
     {
-        /// <summary>
-        /// The db.
-        /// </summary>
-        private readonly ApplicationDbContext db = new ApplicationDbContext();
-
         /// <summary>
         /// The m_search id.
         /// </summary>
@@ -48,20 +42,11 @@
         /// </param>
         public void Result(int count)
         {
-            var search = this.db.Searches.FirstOrDefault(entry => entry.ID == this.searchId);
-
-            if (search != null)
+            using (var db = new ApplicationDbContext())
             {
-                search.Attempts.Add(
-                    new Attempt
-                        {
-                            ProcessDate = DateTime.Now,
-                            AdsFound = count,
-                            Search = search
-                        });
+                db.Database.ExecuteSqlCommand("exec AddAttempt @search_id, @count",
+                    new SqlParameter("search_id", this.searchId), new SqlParameter("count", count));
             }
-
-            this.db.SaveChanges();
         }
     }
 }

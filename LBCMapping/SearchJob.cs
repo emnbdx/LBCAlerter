@@ -235,7 +235,7 @@ namespace LBCMapping
                             }
                             catch (Exception e)
                             {
-                                Log.Error("Erreur lors de la récupération des informations complètes", e);
+                                Log.ErrorFormat("Erreur lors de la récupération des informations complètes\r\n{0}", e);
                             }
                         }
 
@@ -274,12 +274,12 @@ namespace LBCMapping
                 }
 
                 timer.Stop();
-                Log.Debug("Terminée en " + timer.ElapsedMilliseconds + "ms");
+                Log.DebugFormat("Terminée en {0}ms", timer.ElapsedMilliseconds);
                 this.Result(currentAd);
             }
             catch (Exception e)
             {
-                Log.Error("Erreur lors de la récupération des annonces pour [" + this.criteria + "]\r\n" + e);
+                Log.ErrorFormat("Erreur lors de la récupération des annonces pour [{0}]\r\n{1}", this.criteria, e);
             }
             finally
             {

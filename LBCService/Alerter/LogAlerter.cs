@@ -32,7 +32,7 @@ namespace LBCService.Alerter
         /// </param>
         public void Alert(JObject ad)
         {
-            Log.Info("Nouvelle annonce [" + ad["Title"] + "]");
+            Log.InfoFormat("Nouvelle annonce [{0}]", ad["Title"]);
         }
     }
 }
