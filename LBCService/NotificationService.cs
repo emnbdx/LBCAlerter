@@ -45,6 +45,14 @@ namespace LBCService
         /// </param>
         public override void Process(bool firstProcess)
         {
+            var openingHour = Convert.ToInt32(ConfigurationManager.AppSettings["Heure d'ouverture"]);
+            var closingHour = Convert.ToInt32(ConfigurationManager.AppSettings["Heure de fermeture"]);
+
+            if (DateTime.Now.Hour < openingHour || DateTime.Now.Hour > closingHour)
+            {
+                return;
+            }
+            
             base.Process(firstProcess);
 
             using (var db = new ApplicationDbContext())
@@ -87,7 +95,7 @@ namespace LBCService
 
             using (var db = new ApplicationDbContext())
             {
-                var todayAds = db.Database.SqlQuery<Ad>("exec GetLastAdsFromSearch @search_id", new SqlParameter("search_id", search.Id));
+                var todayAds = db.Database.SqlQuery<Ad>("exec GetLastAdsFromSearch @search_id", new SqlParameter("search_id", search.Id)).ToList();
 
                 var mailPattern = mail.GetPattern("LBC_RECAP_AD" + (search.IsPremiumUser ? "_FULL" : string.Empty)).CONTENT;
                 var ads = new StringBuilder();
@@ -122,12 +130,14 @@ namespace LBCService
                     writer.WritePropertyName("Id");
                     writer.WriteValue(search.Id);
                     writer.WritePropertyName("AdId");
-                    writer.WriteValue(todayAds.FirstOrDefault());
+                    writer.WriteValue(todayAds.FirstOrDefault() == null ? 0 : todayAds.FirstOrDefault().ID);
                     writer.WritePropertyName("Ads");
                     writer.WriteValue(ads.ToString());
 
                     writer.WriteEndObject();
                 }
+
+                Log.Info("Ajout d'un mail de récap à la file d'envoie [" + search.KeyWord + "]");
 
                 mail.Add(
                     "[LBCAlerter] - Recap quotidien pour [" + search.KeyWord + "]",
