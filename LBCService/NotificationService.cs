@@ -48,7 +48,7 @@ namespace LBCService
             var openingHour = Convert.ToInt32(ConfigurationManager.AppSettings["Heure d'ouverture"]);
             var closingHour = Convert.ToInt32(ConfigurationManager.AppSettings["Heure de fermeture"]);
 
-            if (DateTime.Now.Hour < openingHour || DateTime.Now.Hour > closingHour)
+            if (DateTime.Now.Hour < openingHour && DateTime.Now.Hour > closingHour)
             {
                 return;
             }
