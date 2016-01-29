@@ -26,7 +26,7 @@
         /// <summary>
         /// The ur l_ base.
         /// </summary>
-        public const string UrlBase = "http://www.leboncoin.fr/";
+        public const string UrlBase = "https://www.leboncoin.fr/";
 
         /// <summary>
         /// The encoding.
@@ -326,7 +326,7 @@
         public static JObject ExtractAllAdInformation(JObject ad)
         {
             var web = new HtmlWeb { OverrideEncoding = System.Text.Encoding.GetEncoding(Encoding) };
-            var doc = web.Load(ad["Url"].ToString());
+            var doc = web.Load(ad["Url"].ToString().StartsWith("//") ? "https:" + ad["Url"] : ad["Url"].ToString());
             var content = doc.DocumentNode.SelectSingleNode("//div[@class='content-border']");
 
             var pictures = new List<string>();
@@ -781,12 +781,12 @@
             {
                 if (node.Attributes.Contains("src") && node.Attributes["src"].Value.StartsWith("//"))
                 {
-                    node.SetAttributeValue("src", "http:" + node.Attributes["src"].Value);
+                    node.SetAttributeValue("src", "https:" + node.Attributes["src"].Value);
                 }
 
                 if (node.Attributes.Contains("href") && node.Attributes["href"].Value.StartsWith("//"))
                 {
-                    node.SetAttributeValue("href", "http:" + node.Attributes["href"].Value);
+                    node.SetAttributeValue("href", "https:" + node.Attributes["href"].Value);
                 }
                 
                 if (node.Attributes.Contains("src") && node.Attributes["src"].Value.StartsWith("/"))
