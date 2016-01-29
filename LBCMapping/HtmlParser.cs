@@ -185,6 +185,13 @@
             var priceNode = ad.SelectSingleNode("div[@class='detail']/div[@class='price']");
             var imgNode = ad.SelectSingleNode("div[@class='image']/div[@class='image-and-nb']/img");
 
+            string imgUrl = null;
+            if (imgNode != null)
+            {
+                imgUrl = imgNode.GetAttributeValue("src", string.Empty).Replace("thumbs", "images");
+                imgUrl = imgUrl.StartsWith("//") ? "https:" + imgUrl : imgUrl;
+            }
+
             // Make good date
             int month, day;
             var date = dateNode != null ? dateNode[0].InnerText.Trim() : string.Empty;
@@ -289,7 +296,7 @@
                 writer.WritePropertyName("Type");
                 writer.WriteValue("PictureUrl");
                 writer.WritePropertyName("Value");
-                writer.WriteValue(imgNode != null ? imgNode.GetAttributeValue("src", string.Empty).Replace("thumbs", "images") : string.Empty);
+                writer.WriteValue(imgUrl ?? string.Empty);
                 writer.WriteEndObject();
 
                 writer.WriteStartObject();
@@ -334,28 +341,29 @@
             {
                 foreach (var picture in content.SelectNodes("//div[@id='thumbs_carousel']//span[@class='thumbs']"))
                 {
-                    pictures.Add(
-                        picture.GetAttributeValue("style", string.Empty)
-                            .Replace("background-image: url('", string.Empty)
-                            .Replace("thumbs", "images")
-                            .Replace("');", string.Empty));
+                    var pictureUrl = picture.GetAttributeValue("style", string.Empty)
+                        .Replace("background-image: url('", string.Empty)
+                        .Replace("thumbs", "images")
+                        .Replace("');", string.Empty);
+
+                    pictures.Add(pictureUrl.StartsWith("//") ? "https:" + pictureUrl : pictureUrl);
                 }
             }
             else if (content.SelectSingleNode("//div[@class='images_cadre']/a") != null)
             {
                 var picture = content.SelectSingleNode("//div[@class='images_cadre']/a");
 
-                pictures.Add(
-                    picture.GetAttributeValue("style", string.Empty)
+                var pictureUrl = picture.GetAttributeValue("style", string.Empty)
                         .Replace("background-image: url('", string.Empty)
-                        .Replace("');", string.Empty));
+                        .Replace("');", string.Empty);
+
+                pictures.Add(pictureUrl.StartsWith("//") ? "https:" + pictureUrl : pictureUrl);
             }
 
             //HtmlNode phoneNode = adContent.SelectSingleNode("//span[@class='lbcPhone']/span[@id='phoneNumber']/a");
             var commercialNode = content.SelectSingleNode("//div[@class='lbc_nosalesmen']");
             var nameNode = content.SelectSingleNode("//div[@class='upload_by']/a");
             var emailNode = content.SelectSingleNode("//div[@class='lbc_links']/a[@class='sendMail']");
-            
             
             var parameters = new List<string>();
             if (
@@ -435,7 +443,6 @@
             }
 
             var descriptionNode = content.SelectSingleNode("//div[@class='AdviewContent']/div[@class='content']");
-
 
             using (var writer = ((JArray)ad["Contents"]).CreateWriter())
             {
