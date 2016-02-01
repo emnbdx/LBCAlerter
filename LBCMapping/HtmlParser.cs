@@ -283,7 +283,7 @@
                 writer.WriteStartObject();
 
                 writer.WritePropertyName("Url");
-                writer.WriteValue(link.GetAttributeValue("href", string.Empty));
+                writer.WriteValue(link.GetAttributeValue("href", string.Empty).StartsWith("//") ? "https:" + link.GetAttributeValue("href", string.Empty) : link.GetAttributeValue("href", string.Empty));
                 writer.WritePropertyName("Date");
                 writer.WriteValue(realDate.ToString(new CultureInfo("fr-FR")));
                 writer.WritePropertyName("Title");
