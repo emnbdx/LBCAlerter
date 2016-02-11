@@ -478,7 +478,7 @@
                 writer.WritePropertyName("Type");
                 writer.WriteValue("ContactUrl");
                 writer.WritePropertyName("Value");
-                writer.WriteValue(emailNode != null ? emailNode.GetAttributeValue("href", string.Empty) : string.Empty);
+                writer.WriteValue(emailNode != null ? (emailNode.GetAttributeValue("href", string.Empty).StartsWith("//") ? "https:" + emailNode.GetAttributeValue("href", string.Empty) : emailNode.GetAttributeValue("href", string.Empty)) : string.Empty);
                 writer.WriteEndObject();
 
                 foreach (var parameter in parameters)

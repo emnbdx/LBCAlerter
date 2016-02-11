@@ -46,7 +46,7 @@ else
         $(document).ready(function () {
             $('a[id^="county_"], area').each(function () {
                 var link = $(this).attr('href');
-                $(this).attr('href', '@Url.Action("CreateStepTwo")?url=' + link.replace('http://www.leboncoin.fr/', '') + '');
+                $(this).attr('href', '@Url.Action("CreateStepTwo")?url=' + link.replace('http://www.leboncoin.fr/', '').replace('https://www.leboncoin.fr/', '').replace('//', '') + '');
             });
         });
     </script>

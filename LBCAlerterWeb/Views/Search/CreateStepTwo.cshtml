@@ -93,12 +93,20 @@ else
             var secondPart = script.Substring(stop + "})(window);".Length, script.Length - (stop + "})(window);".Length));
 
             start = secondPart.IndexOf("/*");
-            stop = secondPart.IndexOf("})(jQuery);", start);
+            if (start != -1)
+            {
 
-            val += secondPart.Substring(0, start);
-            val += secondPart.Substring(stop + "})(jQuery);".Length, secondPart.Length - (stop + "})(jQuery);".Length));
+                stop = secondPart.IndexOf("})(jQuery);", start);
 
-            val = val.Replace("(jQuery)", string.Empty);
+                val += secondPart.Substring(0, start);
+                val += secondPart.Substring(stop + "})(jQuery);".Length, secondPart.Length - (stop + "})(jQuery);".Length));
+
+                val = val.Replace("(jQuery)", string.Empty);
+            }
+            else
+            {
+                val += secondPart;
+            }
         }
         else
         {
@@ -110,7 +118,7 @@ else
          * 
          * if (val.Contains("/ajax/"))
         {
-            val = val.Replace("/ajax/", "http://www.leboncoin.fr/ajax/");
+            val = val.Replace("/ajax/", "https://www.leboncoin.fr/ajax/");
         }*/
 
         @Html.Raw(val)
